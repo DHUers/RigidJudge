@@ -1,0 +1,2 @@
+# RigidJudge
+Judge of RigidOJ
