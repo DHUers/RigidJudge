@@ -1,6 +1,7 @@
 package team.dhuacm.RigidJudge.config;
 
 import team.dhuacm.RigidJudge.bean.OJAccount;
+import team.dhuacm.RigidJudge.bean.OJProperty;
 import team.dhuacm.RigidJudge.bean.Solution;
 
 import java.io.File;
@@ -16,57 +17,54 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class DataProvider {
 
-    // judge listen port
-    public static int ListenPort;
-    // user pool
-    public final static HashMap<team.dhuacm.RigidJudge.config.OJ, BlockingQueue<OJAccount>> Accounts = new HashMap<team.dhuacm.RigidJudge.config.OJ, BlockingQueue<OJAccount>>();
-    // oj config
-    public final static HashMap<team.dhuacm.RigidJudge.config.OJ, team.dhuacm.RigidJudge.bean.OJ> OJs = new HashMap<team.dhuacm.RigidJudge.config.OJ, team.dhuacm.RigidJudge.bean.OJ>();
+    // Judge common configurations
+    public static String RabbitMQ_Host;
+    public final static HashMap<OJ, OJProperty> OJs = new HashMap<OJ, OJProperty>();
+
+    // Local judge configurations
+    // TODO
+
+    // Remote judge configurations
+    public static List<Integer> Remote_QueryInterval = new ArrayList<Integer>();
+    public static int Remote_RetryTimes = 0;
+    public static int Remote_SocketTimeout = 0;
+    public static int Remote_ConnectionTimeout = 0;
+    public final static HashMap<OJ, BlockingQueue<OJAccount>> Remote_OJAccounts = new HashMap<OJ, BlockingQueue<OJAccount>>();
+
     // solution queue
     public final static LinkedBlockingQueue<Solution> SolutionQueue = new LinkedBlockingQueue<Solution>();
-    // judge server ip
-    public static String JudgeServerIp;
-    // judge server port
-    public static int JudgeServerPort;
-    // 查询时间间隔
-    public static List<Integer> QueryTime = new ArrayList<Integer>();
-    // Http请求重试次数
-    public static int RetryCount = 0;
-    // Socket等待时间
-    public static int SocketTimeout = 0;
-    // Connection建立时间
-    public static int ConnectionTimeout = 0;
 
     static {
         Properties p = new Properties();
         try {
-            p.load(new FileInputStream("Config.properties"));
+            p.load(new FileInputStream("configs/Config.properties"));
         } catch (FileNotFoundException e1) {
             System.out.println();
             System.exit(1);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        JudgeServerIp = p.getProperty("JudgeServer").split(":")[0];
-        JudgeServerPort = Integer.parseInt(p.getProperty("JudgeServer").split(":")[1]);
-        ListenPort = Integer.parseInt(p.getProperty("ListenPort"));
-        RetryCount = Integer.parseInt(p.getProperty("RetryCount"));
-        SocketTimeout = Integer.parseInt(p.getProperty("SocketTimeout"));
-        ConnectionTimeout = Integer.parseInt(p.getProperty("ConnectionTimeout"));
 
-        for (String str : p.getProperty("QueryTime").split(",")) {
-            QueryTime.add(Integer.parseInt(str));
+        RabbitMQ_Host = p.getProperty("RabbitMQ_Host");
+
+        // TODO: load local judge configurations
+
+        Remote_RetryTimes = Integer.parseInt(p.getProperty("Remote_RetryTimes"));
+        Remote_SocketTimeout = Integer.parseInt(p.getProperty("Remote_SocketTimeout"));
+        Remote_ConnectionTimeout = Integer.parseInt(p.getProperty("Remote_ConnectionTimeout"));
+        for (String str : p.getProperty("Remote_QueryInterval").split(",")) {
+            Remote_QueryInterval.add(Integer.parseInt(str));
         }
 
-        System.out.printf("INFO: Judge Server: %s:%s", JudgeServerIp, JudgeServerPort);
-        System.out.printf("INFO: Listen Port: %s", ListenPort);
-        System.out.printf("INFO: Retry Count: %s, Socket Timeout: %s, Connection Timeout: %s", RetryCount, SocketTimeout, ConnectionTimeout);
-        System.out.printf("INFO: Query Time:%s", QueryTime);
+        System.out.printf("INFO: RabbitMQ Server: %s\n", RabbitMQ_Host);
+        System.out.printf("INFO: [Local]\n");
+        System.out.printf("INFO: [Remote] Retry Num: %s, Socket Timeout: %s, Connection Timeout: %s\n", Remote_RetryTimes, Remote_SocketTimeout, Remote_ConnectionTimeout);
+        System.out.printf("INFO:          Query Time: %s\n", Remote_QueryInterval);
 
-        // users
+        // Remote OJ Accounts
         Scanner scanner = null;
         try {
-            scanner = new Scanner(new File("Accounts"));
+            scanner = new Scanner(new File("configs/Remote_OJAccounts.properties"));
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
                 if (line.isEmpty() || line.startsWith("#"))
@@ -74,42 +72,41 @@ public class DataProvider {
                 else {
                     String[] strs = line.split(",");
                     String ojName = strs[0].trim().toUpperCase();
-                    team.dhuacm.RigidJudge.config.OJ oj = team.dhuacm.RigidJudge.config.OJ.valueOf(ojName);
-                    OJAccount bean = new OJAccount();
-                    bean.setUsername(strs[1].trim());
-                    bean.setPassword(strs[2].trim());
-                    BlockingQueue<OJAccount> queue = Accounts.get(oj);
+                    OJ oj = OJ.valueOf(ojName);
+                    OJAccount account = new OJAccount();
+                    account.setUsername(strs[1].trim());
+                    account.setPassword(strs[2].trim());
+                    BlockingQueue<OJAccount> queue = Remote_OJAccounts.get(oj);
                     if (null == queue) {
                         queue = new LinkedBlockingQueue<OJAccount>();
-                        Accounts.put(oj, queue);
+                        Remote_OJAccounts.put(oj, queue);
                     }
-                    queue.put(bean);
+                    queue.put(account);
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Fatal Error: Cannot find Accounts File!");
+            System.out.println("Fatal Error: Cannot find Remote_OJAccounts.properties File!");
             System.exit(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             scanner.close();
         }
-        System.out.println("INFO: Init Accounts Config OK!");
-        for (team.dhuacm.RigidJudge.config.OJ oj : Accounts.keySet()) {
-            System.out.println(oj + "\t" + Accounts.get(oj).size());
+        System.out.println("INFO: Init Remote_OJAccounts.properties Config OK!");
+        for (OJ oj : Remote_OJAccounts.keySet()) {
+            System.out.println(oj + "\t" + Remote_OJAccounts.get(oj).size());
         }
 
         // OJs
-        File file = new File("OJs");
+        File file = new File("configs/OJProperty");
         if (file.isDirectory()) {
             for (File f : file.listFiles()) {
                 if (f.getName().endsWith(".properties")) {
-                    team.dhuacm.RigidJudge.bean.OJ oj = new team.dhuacm.RigidJudge.bean.OJ(f);
-                    OJs.put(team.dhuacm.RigidJudge.config.OJ.valueOf(oj.getOjName().toUpperCase()), oj);
+                    OJProperty ojProperty = new OJProperty(f);
+                    OJs.put(OJ.valueOf(ojProperty.getOjName().toUpperCase()), ojProperty);
                 }
             }
         }
         System.out.println("INFO: Init OJs Config OK!");
-
     }
 }

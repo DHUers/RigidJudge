@@ -9,7 +9,7 @@ import java.util.Properties;
 /**
  * Created by wujy on 15-1-7.
  */
-public class OJ {
+public class OJProperty {
 
     private String ojName;
     private String ojUrl;
@@ -42,10 +42,10 @@ public class OJ {
     private int queryRuntimeColumn;
     private String queryRuntimeUnit;
 
-    public OJ() {
+    public OJProperty() {
     }
 
-    public OJ(File file) {
+    public OJProperty(File file) {
         Properties p = new Properties();
         try {
             p.load(new FileInputStream(file));
