@@ -1,11 +1,5 @@
 package team.dhuacm.RigidJudge.bean;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
-
 /**
  * Created by wujy on 15-1-7.
  */

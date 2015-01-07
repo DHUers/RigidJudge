@@ -64,7 +64,7 @@ public class DataProvider {
         // Remote OJ Accounts
         Scanner scanner = null;
         try {
-            scanner = new Scanner(new File("configs/Remote_OJAccounts.properties"));
+            scanner = new Scanner(new File("configs/remote/OJAccounts.properties"));
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
                 if (line.isEmpty() || line.startsWith("#"))
@@ -85,20 +85,20 @@ public class DataProvider {
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Fatal Error: Cannot find Remote_OJAccounts.properties File!");
+            System.out.println("Fatal Error: Cannot find remote/OJAccounts.properties File!");
             System.exit(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             scanner.close();
         }
-        System.out.println("INFO: Init Remote_OJAccounts.properties Config OK!");
+        System.out.println("INFO: Init remote/OJAccounts.properties Config OK!");
         for (OJ oj : Remote_OJAccounts.keySet()) {
             System.out.println(oj + "\t" + Remote_OJAccounts.get(oj).size());
         }
 
         // OJs
-        File file = new File("configs/OJProperty");
+        File file = new File("configs/remote/OJProperty");
         if (file.isDirectory()) {
             for (File f : file.listFiles()) {
                 if (f.getName().endsWith(".properties")) {
@@ -107,6 +107,6 @@ public class DataProvider {
                 }
             }
         }
-        System.out.println("INFO: Init OJs Config OK!");
+        System.out.println("INFO: Init remote/OJProperty Config OK!");
     }
 }
