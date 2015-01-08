@@ -1,8 +1,8 @@
 package team.dhuacm.RigidJudge.config;
 
-import team.dhuacm.RigidJudge.bean.OJAccount;
-import team.dhuacm.RigidJudge.bean.OJProperty;
-import team.dhuacm.RigidJudge.bean.Solution;
+import team.dhuacm.RigidJudge.model.OJAccount;
+import team.dhuacm.RigidJudge.model.OJProperty;
+import team.dhuacm.RigidJudge.model.Solution;
 
 import java.io.File;
 import java.io.FileInputStream;

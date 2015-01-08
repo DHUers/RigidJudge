@@ -1,4 +1,4 @@
-package team.dhuacm.RigidJudge.bean;
+package team.dhuacm.RigidJudge.model;
 
 import team.dhuacm.RigidJudge.config.Language;
 import team.dhuacm.RigidJudge.config.Result;

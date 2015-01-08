@@ -1,4 +1,4 @@
-package team.dhuacm.RigidJudge.bean;
+package team.dhuacm.RigidJudge.model;
 
 /**
  * Created by wujy on 15-1-7.
