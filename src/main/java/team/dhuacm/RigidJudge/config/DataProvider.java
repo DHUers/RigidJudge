@@ -25,7 +25,7 @@ public class DataProvider {
     // TODO
 
     // Remote judge configurations
-    public static List<Integer> Remote_QueryInterval = new ArrayList<Integer>();
+    public final static List<Integer> Remote_QueryInterval = new ArrayList<Integer>();
     public static int Remote_RetryTimes = 0;
     public static int Remote_SocketTimeout = 0;
     public static int Remote_ConnectionTimeout = 0;

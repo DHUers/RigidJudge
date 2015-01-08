@@ -17,6 +17,10 @@ public class Solution {
     private int time;
     private int memory;
 
+    public Solution() {
+
+    }
+
     public Solution(int id, Problem problem, String code, Language language) {
         this.id = id;
         this.problem = problem;
