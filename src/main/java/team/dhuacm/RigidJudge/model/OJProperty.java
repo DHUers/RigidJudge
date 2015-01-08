@@ -10,7 +10,6 @@ import java.util.Properties;
  * Created by wujy on 15-1-7.
  */
 public class OJProperty {
-
     private String ojName;
     private String ojUrl;
     private String ojCharset;

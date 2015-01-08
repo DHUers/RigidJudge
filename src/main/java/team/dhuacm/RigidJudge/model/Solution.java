@@ -8,12 +8,61 @@ import team.dhuacm.RigidJudge.config.Result;
  */
 public class Solution {
     private int id;
+    private Problem problem;
     private String code;
     private Language language;
+
     private Result result;
     private String compileInfo;
     private int time;
     private int memory;
+
+    public Solution(int id, Problem problem, String code, Language language) {
+        this.id = id;
+        this.problem = problem;
+        this.code = code;
+        this.language = language;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Problem getProblem() {
+        return problem;
+    }
+
+    public void setProblem(Problem problem) {
+        this.problem = problem;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
 
     public String getCompileInfo() {
         return compileInfo;
@@ -38,37 +87,4 @@ public class Solution {
     public void setMemory(int memory) {
         this.memory = memory;
     }
-
-    public Result getResult() {
-        return result;
-    }
-
-    public void setResult(Result result) {
-        this.result = result;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Language getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
-
 }

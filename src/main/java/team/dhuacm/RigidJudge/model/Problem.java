@@ -7,6 +7,11 @@ public class Problem {
     protected int id;
     protected int judgeType;
 
+    public Problem(int id, int judgeType) {
+        this.id = id;
+        this.judgeType = judgeType;
+    }
+
     protected boolean prepare() {
         // TODO
         // download

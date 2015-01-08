@@ -17,7 +17,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class DataProvider {
 
-    // Judge common configurations
+    // Common configurations
     public static String RabbitMQ_Host;
     public final static HashMap<OJ, OJProperty> OJs = new HashMap<OJ, OJProperty>();
 
@@ -31,8 +31,8 @@ public class DataProvider {
     public static int Remote_ConnectionTimeout = 0;
     public final static HashMap<OJ, BlockingQueue<OJAccount>> Remote_OJAccounts = new HashMap<OJ, BlockingQueue<OJAccount>>();
 
-    // solution queue
-    public final static LinkedBlockingQueue<Solution> SolutionQueue = new LinkedBlockingQueue<Solution>();
+    // Common data structure
+    public final static LinkedBlockingQueue<Solution> JudgedSolutionQueue = new LinkedBlockingQueue<Solution>();
 
     static {
         Properties p = new Properties();
@@ -73,9 +73,7 @@ public class DataProvider {
                     String[] strs = line.split(",");
                     String ojName = strs[0].trim().toUpperCase();
                     OJ oj = OJ.valueOf(ojName);
-                    OJAccount account = new OJAccount();
-                    account.setUsername(strs[1].trim());
-                    account.setPassword(strs[2].trim());
+                    OJAccount account = new OJAccount(strs[1].trim(), strs[2].trim());
                     BlockingQueue<OJAccount> queue = Remote_OJAccounts.get(oj);
                     if (null == queue) {
                         queue = new LinkedBlockingQueue<OJAccount>();
