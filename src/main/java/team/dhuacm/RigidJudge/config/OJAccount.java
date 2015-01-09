@@ -1,4 +1,4 @@
-package team.dhuacm.RigidJudge.model;
+package team.dhuacm.RigidJudge.config;
 
 /**
  * Created by wujy on 15-1-7.

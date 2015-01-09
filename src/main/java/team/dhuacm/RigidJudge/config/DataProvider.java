@@ -1,7 +1,5 @@
 package team.dhuacm.RigidJudge.config;
 
-import team.dhuacm.RigidJudge.model.OJAccount;
-import team.dhuacm.RigidJudge.model.OJProperty;
 import team.dhuacm.RigidJudge.model.Solution;
 
 import java.io.File;

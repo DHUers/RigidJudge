@@ -4,6 +4,10 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.QueueingConsumer;
 import team.dhuacm.RigidJudge.config.DataProvider;
+import team.dhuacm.RigidJudge.config.Language;
+import team.dhuacm.RigidJudge.config.OJ;
+import team.dhuacm.RigidJudge.model.Problem;
+import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
 import java.io.IOException;
@@ -37,7 +41,16 @@ public class RemoteController implements Runnable {
                 System.out.println(" [x] Received '" + message + "'");
 
                 // RemoteResolver;
-                new Thread(new RemoteResolver(new Solution())).start();  // TODO: change to Coroutines later
+                new Thread(new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.UVA, "100"),
+                        "#include <iostream>" +
+                        "int a, b;" +
+                        "int main() {" +
+                        "   while (cin >> a >> b) {" +
+                        "       cout << a + b << endl;" +
+                        "   }" +
+                        "   return 0;" +
+                        "}",
+                        Language.CPP))).start();  // TODO: change to Coroutines later
                 /*
                 Scheduler scheduler = new Scheduler();
                 DailiTask task = new DailiTask(scheduler) {

@@ -1,4 +1,4 @@
-package team.dhuacm.RigidJudge.model;
+package team.dhuacm.RigidJudge.config;
 
 import java.io.File;
 import java.io.FileInputStream;
