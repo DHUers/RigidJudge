@@ -18,6 +18,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import team.dhuacm.RigidJudge.config.OJAccount;
 import team.dhuacm.RigidJudge.config.OJProperty;
+import team.dhuacm.RigidJudge.exception.JudgeException;
+import team.dhuacm.RigidJudge.exception.NetworkException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

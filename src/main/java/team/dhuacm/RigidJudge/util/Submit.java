@@ -10,6 +10,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import team.dhuacm.RigidJudge.config.OJProperty;
+import team.dhuacm.RigidJudge.exception.JudgeException;
+import team.dhuacm.RigidJudge.exception.NetworkException;
+import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
 import java.io.IOException;
@@ -27,7 +30,7 @@ public class Submit {
 
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 
-        NameValuePair problemNvp = new BasicNameValuePair(ojProperty.getSubmitProblem(), solution.getOjIndex() + "");
+        NameValuePair problemNvp = new BasicNameValuePair(ojProperty.getSubmitProblem(), ((RemoteProblem)solution.getProblem()).getOjIndex() + "");
         NameValuePair languageNVP = new BasicNameValuePair(ojProperty.getSubmitLanguage(), ojProperty.getOjLanguages()[(solution.getLanguage().ordinal())]);
         NameValuePair codeNVP = new BasicNameValuePair(ojProperty.getSubmitCode(), solution.getCode());
         nvps.add(problemNvp);

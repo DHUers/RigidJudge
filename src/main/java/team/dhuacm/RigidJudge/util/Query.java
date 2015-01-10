@@ -17,6 +17,9 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import team.dhuacm.RigidJudge.config.*;
+import team.dhuacm.RigidJudge.exception.JudgeException;
+import team.dhuacm.RigidJudge.exception.NetworkException;
+import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
 /**
@@ -77,7 +80,7 @@ public class Query {
             }
             String html = EntityUtils.toString(entity, ojProperty.getOjCharset());
             Source source = new Source(html);
-            if (solution.getOj() == OJ.UVALIVE) {
+            if (((RemoteProblem)solution.getProblem()).getOj() == OJ.UVALIVE) {
                 source = new Source(source.getAllElementsByClass("maincontent").toString());
             }
             source.setLogger(null);
@@ -93,7 +96,7 @@ public class Query {
                         String[] results = ojProperty.getOjResults();
                         Result result = null;
                         for (int i = 0; i < results.length; i++) {
-                            if (-1 != resultStr.toLowerCase().indexOf(results[i].toLowerCase())) {
+                            if (resultStr.toLowerCase().contains(results[i].toLowerCase())) {
                                 result = Result.values()[i];
                                 break;
                             }
