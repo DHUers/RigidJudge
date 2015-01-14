@@ -17,4 +17,24 @@ public class LocalResolver implements Runnable {
     public void run() {
 
     }
+
+    private boolean prepare() {
+        // TODO
+        // download
+
+        // check
+
+        // pre-compile special judge code
+
+        // store
+
+        return true;
+    }
+
+    private boolean load() {
+        // TODO
+        prepare();
+
+        return true;
+    }
 }

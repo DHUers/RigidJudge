@@ -26,6 +26,7 @@ public class Solution {
         this.problem = problem;
         this.code = code;
         this.language = language;
+        this.result = Result.Queue;
     }
 
     public int getId() {

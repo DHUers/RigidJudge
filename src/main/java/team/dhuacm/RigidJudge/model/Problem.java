@@ -12,26 +12,6 @@ public class Problem {
         this.judgeType = judgeType;
     }
 
-    protected boolean prepare() {
-        // TODO
-        // download
-
-        // check
-
-        // pre-compile special judge code
-
-        // store
-
-        return true;
-    }
-
-    public boolean load() {
-        // TODO
-        prepare();
-
-        return true;
-    }
-
     public int getId() {
         return id;
     }

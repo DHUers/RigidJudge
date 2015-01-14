@@ -12,7 +12,9 @@ public enum OJ {
     // uvalive 5
     // sgu 6
     // spoj 7
-    LOCAL, UVA, POJ, HDU, ZOJ, UVALIVE, SGU, SPOJ;
+    // cf 8
+    // aizu 9
+    LOCAL, UVA, POJ, HDU, ZOJ, UVALIVE, SGU, SPOJ, CF, AIZU;
 
     public static OJ fromOrdinal(int id) {
         for (OJ oj : OJ.values()) {

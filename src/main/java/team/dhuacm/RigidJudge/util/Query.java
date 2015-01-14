@@ -27,8 +27,6 @@ import team.dhuacm.RigidJudge.model.Solution;
  */
 public class Query {
 
-    public final static int QUERY_COUNT = 5;
-
     public static void doQuery(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount, Solution solution) throws JudgeException, NetworkException {
 
         for (int i = 0; i < DataProvider.Remote_QueryInterval.size(); i++) {
@@ -45,10 +43,10 @@ public class Query {
             if (Result.Queue == solution.getResult()) {
                 if ((i + 1) == DataProvider.Remote_QueryInterval.size()) {
                     solution.setResult(Result.Other_Error);
-                } else
-                    continue;
-            } else
+                }
+            } else {
                 break;
+            }
         }
     }
 
@@ -110,7 +108,7 @@ public class Query {
                                 Element memoryTdElement = tdElements.get(ojProperty.getQueryMemoryColumn() - 1);
                                 String memoryStr = memoryTdElement.getTextExtractor().toString();
                                 memoryStr = memoryStr.replace(ojProperty.getQueryMemoryUnit(), "");
-                                int memory = Integer.parseInt(memoryStr);
+                                int memory = Integer.parseInt(memoryStr.trim());
                                 solution.setMemory(memory);
                             }
                             if (ojProperty.getQueryRuntimeColumn() != 0) {
@@ -120,19 +118,16 @@ public class Query {
                                 //System.out.println(runtimeStr);
                                 int runtime = 0;
                                 if (ojProperty.getQueryRuntimeUnit().equalsIgnoreCase("S")) {
-                                    runtime = (int) (Double.parseDouble(runtimeStr) * 1000);
+                                    runtime = (int) (Double.parseDouble(runtimeStr.trim()) * 1000);
                                 } else {
-                                    runtime = Integer.parseInt(runtimeStr);
+                                    runtime = Integer.parseInt(runtimeStr.trim());
                                 }
                                 solution.setTime(runtime);
                             }
                         }
-                    } else
-                        continue;
-                } else
-                    continue;
+                    }
+                }
             }
-
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -146,6 +141,5 @@ public class Query {
             }
             get.releaseConnection();
         }
-
     }
 }
