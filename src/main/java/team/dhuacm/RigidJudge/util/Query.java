@@ -83,6 +83,9 @@ public class Query {
             }
             source.setLogger(null);
             List<Element> tableElements = source.getAllElements("table");
+            if (((RemoteProblem) solution.getProblem()).getOj() == OJ.SGU) {
+                tableElements = source.getAllElements("cellspacing", "3", true);
+            }
             for (Element tableElement : tableElements) {
                 List<Element> trElements = tableElement.getAllElements("tr");
                 if (trElements.size() >= 2) {

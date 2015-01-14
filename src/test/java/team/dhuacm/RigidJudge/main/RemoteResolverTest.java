@@ -70,12 +70,12 @@ public class RemoteResolverTest {
         remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.UVALIVE, "2000"), cppCode, Language.CPP));
         remoteResolver.run();
         assertEquals(DataProvider.JudgedSolutionQueue.take().getResult(), Result.Wrong_Answer);
-/*
+
         // SGU C++
         remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.SGU, "100"), cppCode, Language.CPP));
         remoteResolver.run();
-        assertEquals(DataProvider.JudgedSolutionQueue.take().getResult(), Result.Wrong_Answer);
-
+        assertEquals(DataProvider.JudgedSolutionQueue.take().getResult(), Result.Accept);
+/*
         // SPOJ C++
         remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.SPOJ, "100"), cppCode, Language.CPP));
         remoteResolver.run();

@@ -43,7 +43,7 @@ public class RemoteResolver implements Runnable {
             client = HttpClientUtil.get(DataProvider.Remote_RetryTimes, DataProvider.Remote_SocketTimeout, DataProvider.Remote_ConnectionTimeout);
             if (Login.doLogin(client, ojProperty, ojAccount)) {
                 System.out.println(info + " - Login success!");
-                if (Submit.doSubmit(client, ojProperty, solution)) {
+                if (Submit.doSubmit(client, ojProperty, ojAccount, solution)) {
                     System.out.println(info + " - Submit success!");
                     Query.doQuery(client, ojProperty, ojAccount, solution);
                 } else {

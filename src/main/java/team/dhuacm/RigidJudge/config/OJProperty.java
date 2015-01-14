@@ -58,7 +58,13 @@ public class OJProperty {
         this.ojCharset = p.getProperty("oj.charset");
         this.ojUrl = p.getProperty("oj.url");
         this.ojLanguages = p.getProperty("oj.languages").trim().split(",");
+        for (int i = 0; i < this.ojLanguages.length; i++) {
+            this.ojLanguages[i] = this.ojLanguages[i].replace("^", ",");
+        }
         this.ojResults = p.getProperty("oj.results").trim().split(",");
+        for (int i = 0; i < this.ojResults.length; i++) {
+            this.ojResults[i] = this.ojResults[i].replace("^", ",");
+        }
         this.loginUrl = p.getProperty("login.url");
         this.loginUsername = p.getProperty("login.username");
         this.loginPassword = p.getProperty("login.password");

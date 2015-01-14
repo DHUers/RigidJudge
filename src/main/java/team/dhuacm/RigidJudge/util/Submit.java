@@ -9,6 +9,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import team.dhuacm.RigidJudge.config.OJAccount;
 import team.dhuacm.RigidJudge.config.OJProperty;
 import team.dhuacm.RigidJudge.exception.JudgeException;
 import team.dhuacm.RigidJudge.exception.NetworkException;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class Submit {
 
-    public static boolean doSubmit(CloseableHttpClient httpClient, OJProperty ojProperty, Solution solution) throws JudgeException, NetworkException {
+    public static boolean doSubmit(CloseableHttpClient httpClient, OJProperty ojProperty, OJAccount ojAccount, Solution solution) throws JudgeException, NetworkException {
 
         HttpPost post = new HttpPost(ojProperty.getSubmitUrl());
 
@@ -36,6 +37,10 @@ public class Submit {
         nvps.add(problemNvp);
         nvps.add(languageNVP);
         nvps.add(codeNVP);
+        if (ojProperty.getOjName().equals("sgu")) {
+            nvps.add(new BasicNameValuePair("id", ojAccount.getUsername()));
+            nvps.add(new BasicNameValuePair("pass", ojAccount.getPassword()));
+        }
         post.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
 
         CloseableHttpResponse response = null;
@@ -46,7 +51,7 @@ public class Submit {
             if (HttpStatus.SC_MOVED_PERMANENTLY == statusCode || HttpStatus.SC_MOVED_TEMPORARILY == statusCode)
                 return true;
             //code is too long or too short, so compile error should be return.
-            if(HttpStatus.SC_OK == statusCode && !ojProperty.getSubmitUrl().equals("http://acm.zju.edu.cn/onlinejudge/submit.do"))
+            if (HttpStatus.SC_OK == statusCode && !ojProperty.getOjName().equals("zoj") && !ojProperty.getOjName().equals("sgu"))
                 return false;
             else
                 return true;
