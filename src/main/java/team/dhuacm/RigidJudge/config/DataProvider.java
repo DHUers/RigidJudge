@@ -17,6 +17,7 @@ public class DataProvider {
 
     // Common configurations
     public static String RabbitMQ_Host;
+    public static int RabbitMQ_Port;
     public final static HashMap<OJ, OJProperty> OJs = new HashMap<OJ, OJProperty>();
 
     // Local judge configurations
@@ -44,6 +45,7 @@ public class DataProvider {
         }
 
         RabbitMQ_Host = p.getProperty("RabbitMQ_Host");
+        RabbitMQ_Port = Integer.parseInt(p.getProperty("RabbitMQ_Port"));
 
         // TODO: load local judge configurations
 

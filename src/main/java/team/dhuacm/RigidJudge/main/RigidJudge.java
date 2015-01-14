@@ -16,6 +16,7 @@ public class RigidJudge {
     private static void initialization() throws IOException {
         factory = new ConnectionFactory();
         factory.setHost(DataProvider.RabbitMQ_Host);
+        factory.setPort(DataProvider.RabbitMQ_Port);
         connection = factory.newConnection();
         System.out.println("Initialize finished.");
     }
