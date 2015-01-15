@@ -12,7 +12,7 @@ import java.io.IOException;
  */
 public class Sender implements Runnable {
 
-    private static final String QUEUE_NAME = "judged_queue";
+    private static final String QUEUE_NAME = "result_queue";
     private static Channel channel;
 
     public Sender(Connection connection) throws IOException {

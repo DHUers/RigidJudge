@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class LocalController implements Runnable {
 
-    private static final String QUEUE_NAME = "local_unjudged_queue";
+    private static final String QUEUE_NAME = "judger_local_queue";
     private static Channel channel;
     private static QueueingConsumer consumer;
 

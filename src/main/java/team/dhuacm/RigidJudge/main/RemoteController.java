@@ -17,7 +17,7 @@ import java.io.IOException;
  */
 public class RemoteController implements Runnable {
 
-    private static final String QUEUE_NAME = "remote_unjudged_queue";
+    private static final String QUEUE_NAME = "judger_proxy_queue";
     private static Channel channel;
     private static QueueingConsumer consumer;
 
@@ -41,16 +41,18 @@ public class RemoteController implements Runnable {
                 System.out.println(" [x] Received '" + message + "'");
 
                 // RemoteResolver;
-                new Thread(new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.UVA, "100"),
-                        "#include <iostream>" +
-                        "int a, b;" +
-                        "int main() {" +
-                        "   while (cin >> a >> b) {" +
-                        "       cout << a + b << endl;" +
-                        "   }" +
-                        "   return 0;" +
+                Solution solution = new Solution(1, new RemoteProblem(1, 1, OJ.HDU, "1000"),
+                        "#include <iostream>\n" +
+                        "using namespace std;\n" +
+                        "int a, b;\n" +
+                        "int main() {\n" +
+                        "   while (cin >> a >> b) {\n" +
+                        "       cout << a + b << endl;\n" +
+                        "   }\n" +
+                        "   return 0;\n" +
                         "}",
-                        Language.CPP))).start();  // TODO: change to Coroutines later
+                        Language.CPP);
+                new Thread(new RemoteResolver(solution)).start();  // TODO: change to Coroutines later
                 /*
                 Scheduler scheduler = new Scheduler();
                 DailiTask task = new DailiTask(scheduler) {
@@ -63,11 +65,11 @@ public class RemoteController implements Runnable {
                 scheduler.loop();
                 */
 
-                System.out.println(" [x] Done");
+                //System.out.println(" [x] Done");
 
                 // Send result;
                 channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
-                DataProvider.JudgedSolutionQueue.put(new Solution());  // TODO
+                DataProvider.JudgedSolutionQueue.put(solution);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
