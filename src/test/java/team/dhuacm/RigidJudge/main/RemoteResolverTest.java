@@ -47,47 +47,47 @@ public class RemoteResolverTest {
     @Test
     public void testRun() throws Exception {
         // UVa C++
-        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.UVA, "100"), cppCode, Language.CPP));
+        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, OJ.UVA, "100"), cppCode, Language.CPP));
         remoteResolver.run();
         assertEquals(DataProvider.JudgedSolutionQueue.take().getResult(), Result.Wrong_Answer);
 
         // POJ C++
-        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.POJ, "1000"), cppCode, Language.CPP));
+        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, OJ.POJ, "1000"), cppCode, Language.CPP));
         remoteResolver.run();
         assertEquals(DataProvider.JudgedSolutionQueue.take().getResult(), Result.Accept);
 
         // HDU C++
-        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.HDU, "1000"), cppCode, Language.CPP));
+        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, OJ.HDU, "1000"), cppCode, Language.CPP));
         remoteResolver.run();
         assertEquals(DataProvider.JudgedSolutionQueue.take().getResult(), Result.Accept);
 
         // ZOJ C++
-        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.ZOJ, "1001"), cppCode, Language.CPP));
+        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, OJ.ZOJ, "1001"), cppCode, Language.CPP));
         remoteResolver.run();
         assertEquals(DataProvider.JudgedSolutionQueue.take().getResult(), Result.Accept);
 
         // UVaLive C++
-        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.UVALIVE, "2000"), cppCode, Language.CPP));
+        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, OJ.UVALIVE, "2000"), cppCode, Language.CPP));
         remoteResolver.run();
         assertEquals(DataProvider.JudgedSolutionQueue.take().getResult(), Result.Wrong_Answer);
 
         // SGU C++
-        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.SGU, "100"), cppCode, Language.CPP));
+        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, OJ.SGU, "100"), cppCode, Language.CPP));
         remoteResolver.run();
         assertEquals(DataProvider.JudgedSolutionQueue.take().getResult(), Result.Accept);
 /*
         // SPOJ C++
-        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.SPOJ, "100"), cppCode, Language.CPP));
+        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, OJ.SPOJ, "100"), cppCode, Language.CPP));
         remoteResolver.run();
         assertEquals(DataProvider.JudgedSolutionQueue.take().getResult(), Result.Wrong_Answer);
 
         // CF C++
-        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.CF, "100"), cppCode, Language.CPP));
+        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, OJ.CF, "100"), cppCode, Language.CPP));
         remoteResolver.run();
         assertEquals(DataProvider.JudgedSolutionQueue.take().getResult(), Result.Wrong_Answer);
 
         // AIZU C++
-        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, 1, OJ.AIZU, "100"), cppCode, Language.CPP));
+        remoteResolver = new RemoteResolver(new Solution(1, new RemoteProblem(1, OJ.AIZU, "100"), cppCode, Language.CPP));
         remoteResolver.run();
         assertEquals(DataProvider.JudgedSolutionQueue.take().getResult(), Result.Wrong_Answer);
 */

@@ -10,8 +10,8 @@ public class RemoteProblem extends Problem {
     private String ojIndex;
     //private String sourceUrl;
 
-    public RemoteProblem(int id, int judgeType, OJ oj, String ojIndex) {
-        super(id, judgeType);
+    public RemoteProblem(int id, OJ oj, String ojIndex) {
+        super(id, "remote_proxy");
         this.oj = oj;
         this.ojIndex = ojIndex;
     }

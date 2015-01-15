@@ -5,9 +5,9 @@ package team.dhuacm.RigidJudge.model;
  */
 public class Problem {
     protected int id;
-    protected int judgeType;
+    protected String judgeType;
 
-    public Problem(int id, int judgeType) {
+    public Problem(int id, String judgeType) {
         this.id = id;
         this.judgeType = judgeType;
     }
@@ -20,11 +20,11 @@ public class Problem {
         this.id = id;
     }
 
-    public int getJudgeType() {
+    public String getJudgeType() {
         return judgeType;
     }
 
-    public void setJudgeType(int judgeType) {
+    public void setJudgeType(String judgeType) {
         this.judgeType = judgeType;
     }
 
