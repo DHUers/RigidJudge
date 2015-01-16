@@ -1,1 +1,6 @@
 language: java
+notifications:
+  slack:
+    rooms:
+      - algalon:aPdVkFFhzaWZ5OIZRHY3l4nA#rigidoj
+
