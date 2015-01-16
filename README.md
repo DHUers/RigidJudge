@@ -9,9 +9,8 @@ Judge of RigidOJ
 - Special judge
 
 ## Requirements
-- RabbitMQ
-- Java 7
-- RigidOJ
+- JRE 7
+- RabbitMQ 3.4
 
 ## Support
 
