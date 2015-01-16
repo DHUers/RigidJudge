@@ -42,7 +42,7 @@ public class RemoteController implements Runnable {
                 QueueingConsumer.Delivery delivery = consumer.nextDelivery();
                 String message = new String(delivery.getBody());
 
-                System.out.println(" [x] Received '" + message + "'");
+                System.out.println(" [Remote] Received '" + message + "'");
 
                 // RemoteResolver;
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -54,6 +54,9 @@ public class RemoteController implements Runnable {
                 String[] vendor = ((String) judge_data.get("vendor")).split(",");
                 String source = (String) mapSolution.get("source");
                 String platform = (String) mapSolution.get("platform");
+                if (platform.equals("c++")) {
+                    platform = "cpp";
+                }
                 int solutionId = (Integer) mapSolution.get("id");
                 int problemId = (Integer) mapSolution.get("problem_id");
 
