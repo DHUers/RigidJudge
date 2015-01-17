@@ -15,7 +15,6 @@ import team.dhuacm.RigidJudge.model.Solution;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * Created by wujy on 15-1-8.
@@ -80,19 +79,12 @@ public class RemoteController implements Runnable {
                             scheduler.loop();
                             */
 
-                            System.out.println(info + " - result is " + solution.getResult());
-
-                            DataProvider.JudgedSolutionQueue.put(solution);
-                            System.out.println(info + " - send to finished queue success!");
-
                             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                         } catch (JsonMappingException e) {
                             e.printStackTrace();
                         } catch (JsonParseException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }

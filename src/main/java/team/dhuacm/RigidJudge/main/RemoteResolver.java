@@ -78,5 +78,14 @@ public class RemoteResolver implements Runnable {
                 e.printStackTrace();
             }
         }
+
+        System.out.println(info + " - result is " + solution.getResult());
+
+        try {
+            DataProvider.JudgedSolutionQueue.put(solution);
+            System.out.println(info + " - send to finished queue success!");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
