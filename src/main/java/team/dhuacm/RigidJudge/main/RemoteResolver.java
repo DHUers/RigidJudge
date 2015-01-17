@@ -21,26 +21,26 @@ import java.io.UnsupportedEncodingException;
 /**
  * Created by wujy on 15-1-8.
  */
-public class RemoteResolver implements Runnable {
+public class RemoteResolver {
 
     private Solution solution;
+    private OJ oj;
+    private OJProperty ojProperty;
+    private OJAccount ojAccount;
+    private CloseableHttpClient client = HttpClientUtil.get(DataProvider.Remote_RetryTimes, DataProvider.Remote_SocketTimeout, DataProvider.Remote_ConnectionTimeout);
+    private String info = Thread.currentThread().getName();
 
-    public RemoteResolver(Solution solution) {
+    public RemoteResolver(Solution solution) throws InterruptedException {
         this.solution = solution;
+        oj = ((RemoteProblem)solution.getProblem()).getOj();
+        System.out.println(info + " - " + oj.toString() + " " + ((RemoteProblem)solution.getProblem()).getOjIndex() + " - solution id: " + solution.getId());
+        ojProperty = DataProvider.OJs.get(oj);
+        ojAccount = DataProvider.Remote_OJAccounts.get(oj).take();
+        System.out.println(info + " - " + ojAccount.getUsername());
     }
 
-    @Override
-    public void run() {
-        OJ oj = ((RemoteProblem)solution.getProblem()).getOj();
-        OJProperty ojProperty = DataProvider.OJs.get(oj);
-        OJAccount ojAccount = null;
-        CloseableHttpClient client = null;
-        String info = Thread.currentThread().getName();
-        System.out.println(info + " - " + oj.toString() + " " + ((RemoteProblem)solution.getProblem()).getOjIndex() + " - solution id: " + solution.getId());
+    public void handle () {
         try {
-            ojAccount = DataProvider.Remote_OJAccounts.get(oj).take();
-            System.out.println(info + " - " + ojAccount.getUsername());
-            client = HttpClientUtil.get(DataProvider.Remote_RetryTimes, DataProvider.Remote_SocketTimeout, DataProvider.Remote_ConnectionTimeout);
             if (Login.doLogin(client, ojProperty, ojAccount)) {
                 System.out.println(info + " - Login success!");
                 if (Submit.doSubmit(client, ojProperty, ojAccount, solution)) {
@@ -51,14 +51,11 @@ public class RemoteResolver implements Runnable {
                     System.out.println(info + " - Submit Fail! Complie_Error!");
                     solution.setResult(Result.Compile_Error);
                 }
-
             } else {
                 // 登录失败，可能是用户名密码错误，Judge Error
                 System.out.println(info + " - Login Fail! Juege_Error!");
                 solution.setResult(Result.Judge_Error);
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } catch (JudgeException e) {
             solution.setResult(Result.Judge_Error);
         } catch (NetworkException e) {
@@ -77,15 +74,6 @@ public class RemoteResolver implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        System.out.println(info + " - result is " + solution.getResult());
-
-        try {
-            DataProvider.JudgedSolutionQueue.put(solution);
-            System.out.println(info + " - send to finished queue success!");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }

@@ -13,7 +13,7 @@ public class RigidJudge {
     private static ConnectionFactory factory;
     private static Connection connection;
 
-    private static void initialization() throws IOException {
+    private static void initialize() throws IOException {
         factory = new ConnectionFactory();
         factory.setHost(DataProvider.RabbitMQ_Host);
         factory.setPort(DataProvider.RabbitMQ_Port);
@@ -22,7 +22,7 @@ public class RigidJudge {
     }
 
     public static void main(String[] args) throws IOException {
-        initialization();
+        initialize();
         new Thread(new LocalController(connection)).start();
         new Thread(new RemoteController(connection)).start();
         new Thread(new Sender(connection)).start();

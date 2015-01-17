@@ -24,14 +24,34 @@ public class RemoteController implements Runnable {
     private static final String QUEUE_NAME = "judger_proxy_queue";
     private static Channel channel;
     private static QueueingConsumer consumer;
+    private static ObjectMapper objectMapper = new ObjectMapper();
 
     public RemoteController(Connection connection) throws IOException {
         channel = connection.createChannel();
         channel.queueDeclare(QUEUE_NAME, true, false, false, null);
-        channel.basicQos(3);
+        channel.basicQos(DataProvider.Remote_Concurrency);
         consumer = new QueueingConsumer(channel);
         channel.basicConsume(QUEUE_NAME, false, consumer);
         System.out.println("INFO: [Remote] Connected to the remote channel, waiting for solutions ...");
+    }
+
+    private Solution deserialize(String message) throws IOException {
+        Map<String, Map<String, Object>> maps = objectMapper.readValue(message, Map.class);
+        Map<String, Object> mapSolution = maps.get("solution");
+        List<LinkedHashMap<String, Object>> listProblems = (List<LinkedHashMap<String, Object>>) maps.get("problems");
+
+        Map<String, Object> judge_data = (Map<String, Object>) listProblems.get(0).get("judge_data");
+        String[] vendor = ((String) judge_data.get("vendor")).split(",");
+        String source = (String) mapSolution.get("source");
+        String platform = (String) mapSolution.get("platform");
+        if (platform.equals("c++")) {
+            platform = "cpp";
+        }
+        int solutionId = (Integer) mapSolution.get("id");
+        int problemId = (Integer) mapSolution.get("problem_id");
+
+        Problem problem = new RemoteProblem(problemId, OJ.valueOf(vendor[0].toUpperCase()), vendor[1]);
+        return new Solution(solutionId, problem, source, Language.valueOf(platform.toUpperCase()));
     }
 
     @Override
@@ -47,37 +67,13 @@ public class RemoteController implements Runnable {
                     public void run() {
                         String info = Thread.currentThread().getName();
                         try {
-                            // RemoteResolver;
-                            ObjectMapper objectMapper = new ObjectMapper();
-                            Map<String, Map<String, Object>> maps = objectMapper.readValue(message, Map.class);
-                            Map<String, Object> mapSolution = maps.get("solution");
-                            List<LinkedHashMap<String, Object>> listProblems = (List<LinkedHashMap<String, Object>>) maps.get("problems");
+                            Solution solution = deserialize(message);
 
-                            Map<String, Object> judge_data = (Map<String, Object>) listProblems.get(0).get("judge_data");
-                            String[] vendor = ((String) judge_data.get("vendor")).split(",");
-                            String source = (String) mapSolution.get("source");
-                            String platform = (String) mapSolution.get("platform");
-                            if (platform.equals("c++")) {
-                                platform = "cpp";
-                            }
-                            int solutionId = (Integer) mapSolution.get("id");
-                            int problemId = (Integer) mapSolution.get("problem_id");
+                            new RemoteResolver(solution).handle();
+                            System.out.println(info + " - result is " + solution.getResult());
 
-                            Problem problem = new RemoteProblem(problemId, OJ.valueOf(vendor[0].toUpperCase()), vendor[1]);
-                            Solution solution = new Solution(solutionId, problem, source, Language.valueOf(platform.toUpperCase()));
-
-                            new Thread(new RemoteResolver(solution)).run();  // TODO: change to Coroutines later
-                            /*
-                            Scheduler scheduler = new Scheduler();
-                            DailiTask task = new DailiTask(scheduler) {
-                                @Override
-                                public void execute() throws Pausable, Exception {
-
-                                }
-                            };
-                            scheduler.callSoon(task);
-                            scheduler.loop();
-                            */
+                            DataProvider.JudgedSolutionQueue.put(solution);
+                            System.out.println(info + " - send to finished queue success!");
 
                             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                         } catch (JsonMappingException e) {
@@ -85,6 +81,8 @@ public class RemoteController implements Runnable {
                         } catch (JsonParseException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }

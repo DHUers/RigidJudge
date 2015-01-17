@@ -25,6 +25,7 @@ public class DataProvider {
 
     // Remote judge configurations
     public final static List<Integer> Remote_QueryInterval = new ArrayList<Integer>();
+    public static int Remote_Concurrency = 0;
     public static int Remote_RetryTimes = 0;
     public static int Remote_SocketTimeout = 0;
     public static int Remote_ConnectionTimeout = 0;
@@ -37,21 +38,21 @@ public class DataProvider {
         Properties p = new Properties();
         try {
             p.load(new FileInputStream("configs/Config.properties"));
-        } catch (FileNotFoundException e1) {
-            System.out.println();
+        } catch (FileNotFoundException e) {
+            System.out.println("Fatal Error: Cannot find the file: configs/Config.properties");
             System.exit(1);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        RabbitMQ_Host = p.getProperty("RabbitMQ_Host");
-        RabbitMQ_Port = Integer.parseInt(p.getProperty("RabbitMQ_Port"));
+        RabbitMQ_Host = p.getProperty("RabbitMQ_Host", "127.0.0.1");
+        RabbitMQ_Port = Integer.parseInt(p.getProperty("RabbitMQ_Port", "5672"));
 
         // TODO: load local judge configurations
-
-        Remote_RetryTimes = Integer.parseInt(p.getProperty("Remote_RetryTimes"));
-        Remote_SocketTimeout = Integer.parseInt(p.getProperty("Remote_SocketTimeout"));
-        Remote_ConnectionTimeout = Integer.parseInt(p.getProperty("Remote_ConnectionTimeout"));
+        Remote_Concurrency = Integer.parseInt(p.getProperty("Remote_Concurrency", "10"));
+        Remote_RetryTimes = Integer.parseInt(p.getProperty("Remote_RetryTimes", "3"));
+        Remote_SocketTimeout = Integer.parseInt(p.getProperty("Remote_SocketTimeout", "30"));
+        Remote_ConnectionTimeout = Integer.parseInt(p.getProperty("Remote_ConnectionTimeout", "30"));
         for (String str : p.getProperty("Remote_QueryInterval").split(",")) {
             Remote_QueryInterval.add(Integer.parseInt(str));
         }
@@ -83,7 +84,7 @@ public class DataProvider {
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Fatal Error: Cannot find remote/OJAccounts.properties File!");
+            System.out.println("Fatal Error: Cannot find the file: remote/OJAccounts.properties");
             System.exit(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
