@@ -15,6 +15,7 @@ import team.dhuacm.RigidJudge.model.Solution;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Created by wujy on 15-1-8.
@@ -39,54 +40,65 @@ public class RemoteController implements Runnable {
         try {
             while (true) {
                 // Fetch solution;
-                QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-                String message = new String(delivery.getBody());
+                final QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+                final String message = new String(delivery.getBody());
 
                 System.out.println(" [Remote] Received '" + message + "'");
+                new Thread() {
+                    public void run() {
+                        String info = Thread.currentThread().getName();
+                        try {
+                            // RemoteResolver;
+                            ObjectMapper objectMapper = new ObjectMapper();
+                            Map<String, Map<String, Object>> maps = objectMapper.readValue(message, Map.class);
+                            Map<String, Object> mapSolution = maps.get("solution");
+                            List<LinkedHashMap<String, Object>> listProblems = (List<LinkedHashMap<String, Object>>) maps.get("problems");
 
-                // RemoteResolver;
-                ObjectMapper objectMapper = new ObjectMapper();
-                Map<String, Map<String, Object>> maps = objectMapper.readValue(message, Map.class);
-                Map<String, Object> mapSolution = maps.get("solution");
-                List<LinkedHashMap<String, Object>> listProblems = (List<LinkedHashMap<String, Object>>) maps.get("problems");
+                            Map<String, Object> judge_data = (Map<String, Object>) listProblems.get(0).get("judge_data");
+                            String[] vendor = ((String) judge_data.get("vendor")).split(",");
+                            String source = (String) mapSolution.get("source");
+                            String platform = (String) mapSolution.get("platform");
+                            if (platform.equals("c++")) {
+                                platform = "cpp";
+                            }
+                            int solutionId = (Integer) mapSolution.get("id");
+                            int problemId = (Integer) mapSolution.get("problem_id");
 
-                Map<String, Object> judge_data = (Map<String, Object>) listProblems.get(0).get("judge_data");
-                String[] vendor = ((String) judge_data.get("vendor")).split(",");
-                String source = (String) mapSolution.get("source");
-                String platform = (String) mapSolution.get("platform");
-                if (platform.equals("c++")) {
-                    platform = "cpp";
-                }
-                int solutionId = (Integer) mapSolution.get("id");
-                int problemId = (Integer) mapSolution.get("problem_id");
+                            Problem problem = new RemoteProblem(problemId, OJ.valueOf(vendor[0].toUpperCase()), vendor[1]);
+                            Solution solution = new Solution(solutionId, problem, source, Language.valueOf(platform.toUpperCase()));
 
-                Problem problem = new RemoteProblem(problemId, OJ.valueOf(vendor[0].toUpperCase()), vendor[1]);
-                Solution solution = new Solution(solutionId, problem, source, Language.valueOf(platform.toUpperCase()));
+                            new Thread(new RemoteResolver(solution)).run();  // TODO: change to Coroutines later
+                            /*
+                            Scheduler scheduler = new Scheduler();
+                            DailiTask task = new DailiTask(scheduler) {
+                                @Override
+                                public void execute() throws Pausable, Exception {
 
-                new Thread(new RemoteResolver(solution)).start();  // TODO: change to Coroutines later
-                /*
-                Scheduler scheduler = new Scheduler();
-                DailiTask task = new DailiTask(scheduler) {
-                    @Override
-                    public void execute() throws Pausable, Exception {
+                                }
+                            };
+                            scheduler.callSoon(task);
+                            scheduler.loop();
+                            */
 
+                            System.out.println(info + " - result is " + solution.getResult());
+
+                            DataProvider.JudgedSolutionQueue.put(solution);
+                            System.out.println(info + " - send to finished queue success!");
+
+                            channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+                        } catch (JsonMappingException e) {
+                            e.printStackTrace();
+                        } catch (JsonParseException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-                };
-                scheduler.callSoon(task);
-                scheduler.loop();
-                */
-
-                //System.out.println(" [x] Done");
-
-                channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+                }.start();
             }
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             if (null != channel) {
