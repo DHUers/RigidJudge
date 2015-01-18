@@ -9,10 +9,13 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.OJAccount;
 import team.dhuacm.RigidJudge.config.OJProperty;
 import team.dhuacm.RigidJudge.exception.JudgeException;
 import team.dhuacm.RigidJudge.exception.NetworkException;
+import team.dhuacm.RigidJudge.main.RemoteResolver;
 import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
@@ -24,6 +27,8 @@ import java.util.List;
  * Created by wujy on 15-1-10.
  */
 public class Submit {
+
+    private final static Logger logger = LoggerFactory.getLogger(RemoteResolver.class.getSimpleName());
 
     public static boolean doSubmit(CloseableHttpClient httpClient, OJProperty ojProperty, OJAccount ojAccount, Solution solution) throws JudgeException, NetworkException {
 
@@ -64,7 +69,7 @@ public class Submit {
                 if (null != response)
                     response.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(null, e);
             }
             post.releaseConnection();
         }

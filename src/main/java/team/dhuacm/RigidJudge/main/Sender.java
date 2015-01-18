@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
 import team.dhuacm.RigidJudge.model.Solution;
 
@@ -19,6 +21,7 @@ public class Sender implements Runnable {
     private static final String QUEUE_NAME = "result_queue";
     private static Channel channel;
     private static ObjectMapper objectMapper = new ObjectMapper();
+    private final static Logger logger = LoggerFactory.getLogger(Sender.class.getSimpleName());
 
     public Sender(Connection connection) throws IOException {
         channel = connection.createChannel();
@@ -64,19 +67,19 @@ public class Sender implements Runnable {
                     String message = serialize(solution);
 
                     channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
-                    System.out.println(" [Sender] Sent '" + message + "'");
+                    logger.info("Send '{}'.", message);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(null, e);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error(null, e);
         } finally {
             if (null != channel) {
                 try {
                     channel.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(null, e);
                 }
             }
         }

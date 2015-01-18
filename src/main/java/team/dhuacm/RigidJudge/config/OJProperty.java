@@ -41,9 +41,6 @@ public class OJProperty {
     private int queryRuntimeColumn;
     private String queryRuntimeUnit;
 
-    public OJProperty() {
-    }
-
     public OJProperty(File file) {
         Properties p = new Properties();
         try {

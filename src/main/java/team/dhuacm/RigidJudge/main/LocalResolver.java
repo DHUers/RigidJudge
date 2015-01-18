@@ -5,7 +5,7 @@ import team.dhuacm.RigidJudge.model.Solution;
 /**
  * Created by wujy on 15-1-8.
  */
-public class LocalResolver implements Runnable {
+public class LocalResolver {
 
     private Solution solution;
 
@@ -13,8 +13,22 @@ public class LocalResolver implements Runnable {
         this.solution = solution;
     }
 
-    @Override
-    public void run() {
+    public void handle() {
+        if (compile()) {
+            run();
+            check();
+        }
+    }
+
+    private boolean compile() {
+        return true;
+    }
+
+    private void run() {
+
+    }
+
+    private void check() {
 
     }
 

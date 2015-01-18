@@ -16,10 +16,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.OJAccount;
 import team.dhuacm.RigidJudge.config.OJProperty;
 import team.dhuacm.RigidJudge.exception.JudgeException;
 import team.dhuacm.RigidJudge.exception.NetworkException;
+import team.dhuacm.RigidJudge.main.RemoteResolver;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -31,6 +34,8 @@ import java.util.List;
  * Created by wujy on 15-1-10.
  */
 public class Login {
+
+    private final static Logger logger = LoggerFactory.getLogger(RemoteResolver.class.getSimpleName());
 
     public static boolean doLogin(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount) throws JudgeException, NetworkException, UnsupportedEncodingException {
 
@@ -106,7 +111,7 @@ public class Login {
                 if (null != response)
                     response.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(null, e);
             }
             post.releaseConnection();
         }

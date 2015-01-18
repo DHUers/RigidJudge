@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.QueueingConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
 import team.dhuacm.RigidJudge.config.Language;
 import team.dhuacm.RigidJudge.config.OJ;
@@ -25,6 +27,7 @@ public class RemoteController implements Runnable {
     private static Channel channel;
     private static QueueingConsumer consumer;
     private static ObjectMapper objectMapper = new ObjectMapper();
+    private final static Logger logger = LoggerFactory.getLogger(RemoteController.class.getSimpleName());
 
     public RemoteController(Connection connection) throws IOException {
         channel = connection.createChannel();
@@ -32,7 +35,7 @@ public class RemoteController implements Runnable {
         channel.basicQos(DataProvider.Remote_Concurrency);
         consumer = new QueueingConsumer(channel);
         channel.basicConsume(QUEUE_NAME, false, consumer);
-        System.out.println("INFO: [Remote] Connected to the remote channel, waiting for solutions ...");
+        logger.info("Connected to the remote channel, waiting for solutions ...");
     }
 
     private Solution deserialize(String message) throws IOException {
@@ -62,40 +65,40 @@ public class RemoteController implements Runnable {
                 final QueueingConsumer.Delivery delivery = consumer.nextDelivery();
                 final String message = new String(delivery.getBody());
 
-                System.out.println(" [Remote] Received '" + message + "'");
+                logger.info("Received '{}'.", message);
+
                 new Thread() {
                     public void run() {
-                        String info = Thread.currentThread().getName();
                         try {
                             Solution solution = deserialize(message);
 
                             new RemoteResolver(solution).handle();
-                            System.out.println(info + " - result is " + solution.getResult());
+                            logger.info("Result is '{}'.", solution.getResult());
 
                             DataProvider.JudgedSolutionQueue.put(solution);
-                            System.out.println(info + " - send to finished queue success!");
+                            logger.info("Send to finished queue successfully!");
 
                             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                         } catch (JsonMappingException e) {
-                            e.printStackTrace();
+                            logger.error(null, e);
                         } catch (JsonParseException e) {
-                            e.printStackTrace();
+                            logger.error(null, e);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            logger.error(null, e);
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            logger.error(null, e);
                         }
                     }
                 }.start();
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error(null, e);
         } finally {
             if (null != channel) {
                 try {
                     channel.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(null, e);
                 }
             }
         }

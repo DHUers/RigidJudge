@@ -16,9 +16,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.*;
 import team.dhuacm.RigidJudge.exception.JudgeException;
 import team.dhuacm.RigidJudge.exception.NetworkException;
+import team.dhuacm.RigidJudge.main.RemoteResolver;
 import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
@@ -26,6 +29,8 @@ import team.dhuacm.RigidJudge.model.Solution;
  * Created by wujy on 15-1-10.
  */
 public class Query {
+
+    private final static Logger logger = LoggerFactory.getLogger(RemoteResolver.class.getSimpleName());
 
     public static void doQuery(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount, Solution solution) throws JudgeException, NetworkException {
 
@@ -36,7 +41,8 @@ public class Query {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println(Thread.currentThread().getName() + " - try " + i + " times!");
+            //System.out.println(Thread.currentThread().getName() + " - try " + i + " times!");
+            logger.info("Tried {} times!", i);
 
             getResult(client, ojProperty, ojAccount, solution);
 
@@ -59,7 +65,7 @@ public class Query {
             try {
                 uri = new URIBuilder(uri).addParameter(queryUsername, ojAccount.getUsername()).build();
             } catch (URISyntaxException e) {
-                e.printStackTrace();
+                logger.error(null, e);
             }
         }
         //System.out.println(uri);
@@ -132,15 +138,15 @@ public class Query {
                 }
             }
         } catch (ClientProtocolException e) {
-            e.printStackTrace();
+            logger.error(null, e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(null, e);
         } finally {
             try {
                 if (null != response)
                     response.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(null, e);
             }
             get.releaseConnection();
         }

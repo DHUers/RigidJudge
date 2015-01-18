@@ -1,5 +1,7 @@
 package team.dhuacm.RigidJudge.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.model.Solution;
 
 import java.io.File;
@@ -14,6 +16,8 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by wujy on 15-1-7.
  */
 public class DataProvider {
+
+    private final static Logger logger = LoggerFactory.getLogger(DataProvider.class.getSimpleName());
 
     // Common configurations
     public static String RabbitMQ_Host;
@@ -39,10 +43,10 @@ public class DataProvider {
         try {
             p.load(new FileInputStream("configs/Config.properties"));
         } catch (FileNotFoundException e) {
-            System.out.println("Fatal Error: Cannot find the file: configs/Config.properties");
+            logger.error("Fatal Error: Cannot find the file: configs/Config.properties", e);
             System.exit(1);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(null, e);
         }
 
         RabbitMQ_Host = p.getProperty("RabbitMQ_Host", "127.0.0.1");
@@ -57,10 +61,10 @@ public class DataProvider {
             Remote_QueryInterval.add(Integer.parseInt(str));
         }
 
-        System.out.printf("INFO: RabbitMQ Server: %s\n", RabbitMQ_Host);
-        System.out.printf("INFO: [Local]\n");
-        System.out.printf("INFO: [Remote] Retry Num: %s, Socket Timeout: %s, Connection Timeout: %s\n", Remote_RetryTimes, Remote_SocketTimeout, Remote_ConnectionTimeout);
-        System.out.printf("INFO:          Query Time: %s\n", Remote_QueryInterval);
+        logger.info("RabbitMQ Server: {}:{}", RabbitMQ_Host, RabbitMQ_Port);
+        logger.info("[Local]");
+        logger.info("[Remote] Retry Num: {}, Socket Timeout: {}, Connection Timeout: {}", Remote_RetryTimes, Remote_SocketTimeout, Remote_ConnectionTimeout);
+        logger.info("         Query Time: {}", Remote_QueryInterval);
 
         // Remote OJ Accounts
         Scanner scanner = null;
@@ -84,16 +88,18 @@ public class DataProvider {
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Fatal Error: Cannot find the file: remote/OJAccounts.properties");
+            logger.error("Fatal Error: Cannot find the file: remote/OJAccounts.properties", e);
             System.exit(1);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error(null, e);
         } finally {
-            scanner.close();
+            if (scanner != null) {
+                scanner.close();
+            }
         }
-        System.out.println("INFO: Init remote/OJAccounts.properties Config OK!");
+        logger.info("Init remote/OJAccounts.properties Config OK!");
         for (OJ oj : Remote_OJAccounts.keySet()) {
-            System.out.println(oj + "\t" + Remote_OJAccounts.get(oj).size());
+            logger.info("{} - {}", oj, Remote_OJAccounts.get(oj).size());
         }
 
         // OJs
@@ -106,6 +112,6 @@ public class DataProvider {
                 }
             }
         }
-        System.out.println("INFO: Init remote/OJProperty Config OK!");
+        logger.info("Init remote/OJProperty Config OK!");
     }
 }
