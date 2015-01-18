@@ -24,7 +24,7 @@ public class LocalResolver {
                 logger.info("Compile success!");
                 if (Run.doRun(solution)) {
                     logger.info("Run success!");
-                    //CheckAnswer.doCheckAnswer(solution);
+                    CheckAnswer.doCheckAnswer(solution);
                 } else {
                     logger.info("Run failed! {}", solution.getResult());
                 }
@@ -33,7 +33,7 @@ public class LocalResolver {
                 solution.setResult(Result.Compile_Error);
             }
         } else {
-            logger.info("Fetch problem data failed!");
+            logger.error("Fetch problem data failed!");
             solution.setResult(Result.Judge_Error);
         }
     }

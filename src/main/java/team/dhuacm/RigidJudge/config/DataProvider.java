@@ -1,5 +1,6 @@
 package team.dhuacm.RigidJudge.config;
 
+import org.apache.commons.codec.language.bm.Lang;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.model.Solution;
@@ -25,9 +26,10 @@ public class DataProvider {
     public final static HashMap<OJ, OJProperty> OJs = new HashMap<OJ, OJProperty>();
 
     // Local judge configurations
-    // TODO
     public static int Local_CompileTimeLimit = 0;
+    public static int Local_OutputLengthLimit = 0;
     public final static Map<Language, String> Local_CompileCommand = new HashMap<Language, String>();
+    public final static Map<Language, String> Local_RunCommand = new HashMap<Language, String>();
 
     // Remote judge configurations
     public final static List<Integer> Remote_QueryInterval = new ArrayList<Integer>();
@@ -54,8 +56,8 @@ public class DataProvider {
         RabbitMQ_Host = p.getProperty("RabbitMQ_Host", "127.0.0.1");
         RabbitMQ_Port = Integer.parseInt(p.getProperty("RabbitMQ_Port", "5672"));
 
-        // TODO: load local judge configurations
         Local_CompileTimeLimit = Integer.parseInt(p.getProperty("Local_CompileTimeLimit", "1"));
+        Local_OutputLengthLimit = Integer.parseInt(p.getProperty("Local_OutputLengthLimit", "5242880"));
 
         Remote_Concurrency = Integer.parseInt(p.getProperty("Remote_Concurrency", "10"));
         Remote_RetryTimes = Integer.parseInt(p.getProperty("Remote_RetryTimes", "3"));
@@ -65,13 +67,15 @@ public class DataProvider {
             Remote_QueryInterval.add(Integer.parseInt(str));
         }
 
+
         logger.info("RabbitMQ Server: {}:{}", RabbitMQ_Host, RabbitMQ_Port);
         logger.info("[Local] Compile Time Limit: {}", Local_CompileTimeLimit);
+
 
         try {
             p.load(new FileInputStream("configs/local/compile.properties"));
         } catch (FileNotFoundException e) {
-            logger.error("Fatal Error: Cannot find the file: configs/Config.properties", e);
+            logger.error("Fatal Error: Cannot find the file: configs/local/compile.properties", e);
             System.exit(1);
         } catch (IOException e) {
             logger.error(null, e);
@@ -82,6 +86,22 @@ public class DataProvider {
             logger.info("        {} - '{}'", l.name(), command);
         }
         logger.info("Init local/compile.properties Config OK!");
+
+        try {
+            p.load(new FileInputStream("configs/local/run.properties"));
+        } catch (FileNotFoundException e) {
+            logger.error("Fatal Error: Cannot find the file: configs/local/run.properties", e);
+            System.exit(1);
+        } catch (IOException e) {
+            logger.error(null, e);
+        }
+        for (Language l : Language.values()) {
+            String command = p.getProperty(l.name().toLowerCase());
+            Local_RunCommand.put(l, command);
+            logger.info("        {} - '{}'", l.name(), command);
+        }
+        logger.info("Init local/run.properties Config OK!");
+
 
         logger.info("[Remote] Retry Num: {}, Socket Timeout: {}, Connection Timeout: {}", Remote_RetryTimes, Remote_SocketTimeout, Remote_ConnectionTimeout);
         logger.info("         Query Time: {}", Remote_QueryInterval);

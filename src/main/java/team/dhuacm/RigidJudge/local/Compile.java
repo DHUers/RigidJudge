@@ -36,10 +36,10 @@ public class Compile {
             writer.write(solution.getCode());
             writer.close();
 
-            String commandline = DataProvider.Local_CompileCommand.get(solution.getLanguage());
-            logger.info("cmd: '{}'", commandline);
+            String commandLine = DataProvider.Local_CompileCommand.get(solution.getLanguage());
+            logger.info("cmd: '{}'", commandLine);
 
-            CommandLine cmdLine = CommandLine.parse(commandline);
+            CommandLine cmdLine = CommandLine.parse(commandLine);
             DefaultExecutor executor = new DefaultExecutor();
             watchdog = new ExecuteWatchdog(DataProvider.Local_CompileTimeLimit * 1000);
             executor.setWatchdog(watchdog);

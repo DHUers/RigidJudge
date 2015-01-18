@@ -14,11 +14,14 @@ public class Solution {
 
     private Result result;
     private String compileInfo;
-    private int time;
+    private long time;
     private int memory;
+    private String output;
+
+    private long timeLimit;
+    private int memoryLimit;
     private String input;
     private String stdAns;
-    private String output;
 
     public Solution() {
 
@@ -80,11 +83,11 @@ public class Solution {
         this.compileInfo = compileInfo;
     }
 
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -94,6 +97,30 @@ public class Solution {
 
     public void setMemory(int memory) {
         this.memory = memory;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
+    }
+
+    public long getTimeLimit() {
+        return timeLimit;
+    }
+
+    public void setTimeLimit(long timeLimit) {
+        this.timeLimit = timeLimit;
+    }
+
+    public int getMemoryLimit() {
+        return memoryLimit;
+    }
+
+    public void setMemoryLimit(int memoryLimit) {
+        this.memoryLimit = memoryLimit;
     }
 
     public String getInput() {
@@ -110,13 +137,5 @@ public class Solution {
 
     public void setStdAns(String stdAns) {
         this.stdAns = stdAns;
-    }
-
-    public String getOutput() {
-        return output;
-    }
-
-    public void setOutput(String output) {
-        this.output = output;
     }
 }

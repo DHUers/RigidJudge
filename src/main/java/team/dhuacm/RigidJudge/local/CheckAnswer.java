@@ -31,6 +31,8 @@ public class CheckAnswer {
             if (problem instanceof LocalSpecialProblem) {
                 // TODO: Special Judge
             } else {
+                //logger.info("'{}'", solution.getStdAns());
+                //logger.info("'{}'", solution.getOutput());
                 if (solution.getStdAns().equals(solution.getOutput())) {
                     solution.setResult(Result.Accept);
                 } else {

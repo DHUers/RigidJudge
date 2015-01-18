@@ -22,6 +22,10 @@ public class Prepare {
         LocalProblem problem = (LocalProblem) solution.getProblem();
         solution.setInput(getFileContent(new File(problem.getInputFileName())));
         solution.setStdAns(getFileContent(new File(problem.getOutputFileName())));
+        solution.setTimeLimit(problem.getTimeLimit().get(solution.getLanguage()));
+        solution.setMemoryLimit(problem.getMemoryLimit().get(solution.getLanguage()));
+        //System.out.println(solution.getInput());
+        //System.out.println(solution.getStdAns());
 
         // pre-compile special judge code
         if (problem instanceof LocalSpecialProblem) {
@@ -40,6 +44,9 @@ public class Prepare {
             raf.read(fileBytes);
             fileContent = new String(fileBytes);
             fileContent = fileContent.replace("\r\n", "\n");
+            if (fileContent.endsWith("\n")) {
+                fileContent = fileContent.substring(0, fileContent.length()-1);
+            }
             raf.close();
         } catch (IOException e) {
             logger.error(null, e);
