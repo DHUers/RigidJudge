@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class Submit {
 
-    private final static Logger logger = LoggerFactory.getLogger(RemoteResolver.class.getSimpleName());
+    private final static Logger logger = LoggerFactory.getLogger(Submit.class.getSimpleName());
 
     public static boolean doSubmit(CloseableHttpClient httpClient, OJProperty ojProperty, OJAccount ojAccount, Solution solution) throws JudgeException, NetworkException {
 

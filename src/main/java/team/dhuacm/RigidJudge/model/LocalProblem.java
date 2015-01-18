@@ -10,7 +10,9 @@ import java.util.Map;
  */
 public class LocalProblem extends Problem {
     protected String inputFileName;
+    protected String input;
     protected String outputFileName;
+    protected String output;
     protected Map<Language, Integer> timeLimit = new HashMap<Language, Integer>();
     protected Map<Language, Integer> memoryLimit = new HashMap<Language, Integer>();
 

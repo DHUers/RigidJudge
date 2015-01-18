@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class Login {
 
-    private final static Logger logger = LoggerFactory.getLogger(RemoteResolver.class.getSimpleName());
+    private final static Logger logger = LoggerFactory.getLogger(Login.class.getSimpleName());
 
     public static boolean doLogin(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount) throws JudgeException, NetworkException, UnsupportedEncodingException {
 

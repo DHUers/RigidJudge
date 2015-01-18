@@ -2,6 +2,7 @@ package team.dhuacm.RigidJudge.local;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import team.dhuacm.RigidJudge.config.Result;
 import team.dhuacm.RigidJudge.model.Solution;
 
 /**
@@ -17,10 +18,18 @@ public class LocalResolver {
     }
 
     public void handle() {
-        if (Compile.doCompile()) {
-            if (Run.doRun()) {
-                CheckAnswer.doCheckAnswer();
+        if (Compile.doCompile(solution)) {
+            logger.info("Compile success!");
+            if (Run.doRun(solution)) {
+                logger.info("Run success!");
+                //CheckAnswer.doCheckAnswer(solution);
+            } else {
+                //logger.info("Run failed! Runtime_Error!");
+                //solution.setResult(Result.Runtime_Error);
             }
+        } else {
+            logger.info("Compile failed!");
+            solution.setResult(Result.Compile_Error);
         }
     }
 

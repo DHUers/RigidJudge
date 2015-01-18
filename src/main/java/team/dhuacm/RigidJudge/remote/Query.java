@@ -1,13 +1,7 @@
 package team.dhuacm.RigidJudge.remote;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.Source;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -24,12 +18,17 @@ import team.dhuacm.RigidJudge.exception.NetworkException;
 import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+
 /**
  * Created by wujy on 15-1-10.
  */
 public class Query {
 
-    private final static Logger logger = LoggerFactory.getLogger(RemoteResolver.class.getSimpleName());
+    private final static Logger logger = LoggerFactory.getLogger(Query.class.getSimpleName());
 
     public static void doQuery(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount, Solution solution) throws JudgeException, NetworkException {
 

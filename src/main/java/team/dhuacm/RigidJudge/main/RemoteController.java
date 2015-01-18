@@ -17,7 +17,9 @@ import team.dhuacm.RigidJudge.model.Solution;
 import team.dhuacm.RigidJudge.remote.RemoteResolver;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wujy on 15-1-8.

@@ -26,6 +26,8 @@ public class DataProvider {
 
     // Local judge configurations
     // TODO
+    public static int Local_CompileTimeLimit = 0;
+    public final static Map<Language, String> Local_CompileCommand = new HashMap<Language, String>();
 
     // Remote judge configurations
     public final static List<Integer> Remote_QueryInterval = new ArrayList<Integer>();
@@ -53,6 +55,8 @@ public class DataProvider {
         RabbitMQ_Port = Integer.parseInt(p.getProperty("RabbitMQ_Port", "5672"));
 
         // TODO: load local judge configurations
+        Local_CompileTimeLimit = Integer.parseInt(p.getProperty("Local_CompileTimeLimit", "1"));
+
         Remote_Concurrency = Integer.parseInt(p.getProperty("Remote_Concurrency", "10"));
         Remote_RetryTimes = Integer.parseInt(p.getProperty("Remote_RetryTimes", "3"));
         Remote_SocketTimeout = Integer.parseInt(p.getProperty("Remote_SocketTimeout", "30"));
@@ -62,7 +66,23 @@ public class DataProvider {
         }
 
         logger.info("RabbitMQ Server: {}:{}", RabbitMQ_Host, RabbitMQ_Port);
-        logger.info("[Local]");
+        logger.info("[Local] Compile Time Limit: {}", Local_CompileTimeLimit);
+
+        try {
+            p.load(new FileInputStream("configs/local/compile.properties"));
+        } catch (FileNotFoundException e) {
+            logger.error("Fatal Error: Cannot find the file: configs/Config.properties", e);
+            System.exit(1);
+        } catch (IOException e) {
+            logger.error(null, e);
+        }
+        for (Language l : Language.values()) {
+            String command = p.getProperty(l.name().toLowerCase());
+            Local_CompileCommand.put(l, command);
+            logger.info("        {} - '{}'", l.name(), command);
+        }
+        logger.info("Init local/compile.properties Config OK!");
+
         logger.info("[Remote] Retry Num: {}, Socket Timeout: {}, Connection Timeout: {}", Remote_RetryTimes, Remote_SocketTimeout, Remote_ConnectionTimeout);
         logger.info("         Query Time: {}", Remote_QueryInterval);
 
@@ -72,9 +92,7 @@ public class DataProvider {
             scanner = new Scanner(new File("configs/remote/OJAccounts.properties"));
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
-                if (line.isEmpty() || line.startsWith("#"))
-                    continue;
-                else {
+                if (!line.isEmpty() && !line.startsWith("#")) {
                     String[] strs = line.split(",");
                     String ojName = strs[0].trim().toUpperCase();
                     OJ oj = OJ.valueOf(ojName);
@@ -97,10 +115,11 @@ public class DataProvider {
                 scanner.close();
             }
         }
-        logger.info("Init remote/OJAccounts.properties Config OK!");
+
         for (OJ oj : Remote_OJAccounts.keySet()) {
-            logger.info("{} - {}", oj, Remote_OJAccounts.get(oj).size());
+            logger.info("         {} - {}", oj, Remote_OJAccounts.get(oj).size());
         }
+        logger.info("Init remote/OJAccounts.properties Config OK!");
 
         // OJs
         File file = new File("configs/remote/OJProperty");
