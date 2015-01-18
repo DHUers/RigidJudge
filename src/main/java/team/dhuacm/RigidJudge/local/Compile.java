@@ -30,6 +30,7 @@ public class Compile {
 
         ByteArrayOutputStream errorStream = null;
         ByteArrayOutputStream outputStream = null;
+        ExecuteWatchdog watchdog = null;
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             writer.write(solution.getCode());
@@ -40,7 +41,7 @@ public class Compile {
 
             CommandLine cmdLine = CommandLine.parse(commandline);
             DefaultExecutor executor = new DefaultExecutor();
-            ExecuteWatchdog watchdog = new ExecuteWatchdog(DataProvider.Local_CompileTimeLimit * 1000);
+            watchdog = new ExecuteWatchdog(DataProvider.Local_CompileTimeLimit * 1000);
             executor.setWatchdog(watchdog);
             outputStream = new ByteArrayOutputStream();
             errorStream = new ByteArrayOutputStream();
@@ -55,6 +56,9 @@ public class Compile {
             String info = null;
             if (errorStream != null) {
                 info = errorStream.toString() + outputStream.toString();
+            }
+            if (watchdog != null && watchdog.killedProcess()) {
+                info = "Compile time limit exceeded!";
             }
             if (info != null && info.equals("")) {
                 info = "Compile no exitValue!";

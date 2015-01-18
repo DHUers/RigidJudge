@@ -41,12 +41,10 @@ public class RemoteResolver {
                     logger.info("Submit success!");
                     Query.doQuery(client, ojProperty, ojAccount, solution);
                 } else {
-                    // 提交失败，代码长度不符合规定， Compile Error
                     logger.info("Submit failed! Compile_Error!");
                     solution.setResult(Result.Compile_Error);
                 }
             } else {
-                // 登录失败，可能是用户名密码错误，Judge Error
                 logger.info("Login failed! Judge_Error");
                 solution.setResult(Result.Judge_Error);
             }
@@ -58,7 +56,7 @@ public class RemoteResolver {
             solution.setResult(Result.Network_Error);
         } catch (UnsupportedEncodingException e) {
             logger.error("Unsupported Encoding!", e);
-            solution.setResult(Result.Judge_Error);
+            solution.setResult(Result.Other_Error);
         } finally {
             try {
                 if (null != ojAccount) {

@@ -15,41 +15,27 @@ public class LocalResolver {
 
     public LocalResolver(Solution solution) {
         this.solution = solution;
+        logger.info("{} - solution id: {}", solution.getProblem().getId(), solution.getId());
     }
 
     public void handle() {
-        if (Compile.doCompile(solution)) {
-            logger.info("Compile success!");
-            if (Run.doRun(solution)) {
-                logger.info("Run success!");
-                //CheckAnswer.doCheckAnswer(solution);
+        if (Prepare.doPrepare(solution)) {
+            if (Compile.doCompile(solution)) {
+                logger.info("Compile success!");
+                if (Run.doRun(solution)) {
+                    logger.info("Run success!");
+                    //CheckAnswer.doCheckAnswer(solution);
+                } else {
+                    logger.info("Run failed! {}", solution.getResult());
+                }
             } else {
-                //logger.info("Run failed! Runtime_Error!");
-                //solution.setResult(Result.Runtime_Error);
+                logger.info("Compile failed!");
+                solution.setResult(Result.Compile_Error);
             }
         } else {
-            logger.info("Compile failed!");
-            solution.setResult(Result.Compile_Error);
+            logger.info("Fetch problem data failed!");
+            solution.setResult(Result.Judge_Error);
         }
     }
 
-    private boolean prepare() {
-        // TODO
-        // download
-
-        // check
-
-        // pre-compile special judge code
-
-        // store
-
-        return true;
-    }
-
-    private boolean load() {
-        // TODO
-        prepare();
-
-        return true;
-    }
 }

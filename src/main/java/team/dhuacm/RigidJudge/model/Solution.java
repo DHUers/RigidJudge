@@ -16,6 +16,7 @@ public class Solution {
     private String compileInfo;
     private int time;
     private int memory;
+    private String input;
     private String stdAns;
     private String output;
 
@@ -93,6 +94,14 @@ public class Solution {
 
     public void setMemory(int memory) {
         this.memory = memory;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
     }
 
     public String getStdAns() {
