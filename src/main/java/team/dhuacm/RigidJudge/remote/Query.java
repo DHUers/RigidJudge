@@ -1,4 +1,4 @@
-package team.dhuacm.RigidJudge.util;
+package team.dhuacm.RigidJudge.remote;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.*;
 import team.dhuacm.RigidJudge.exception.JudgeException;
 import team.dhuacm.RigidJudge.exception.NetworkException;
-import team.dhuacm.RigidJudge.main.RemoteResolver;
 import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 

@@ -1,4 +1,4 @@
-package team.dhuacm.RigidJudge.util;
+package team.dhuacm.RigidJudge.remote;
 
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;

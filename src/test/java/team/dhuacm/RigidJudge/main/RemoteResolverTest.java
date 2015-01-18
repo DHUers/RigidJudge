@@ -8,6 +8,7 @@ import team.dhuacm.RigidJudge.config.OJ;
 import team.dhuacm.RigidJudge.config.Result;
 import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
+import team.dhuacm.RigidJudge.remote.RemoteResolver;
 
 import static org.junit.Assert.*;
 

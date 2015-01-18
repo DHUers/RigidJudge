@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
 import team.dhuacm.RigidJudge.config.Language;
-import team.dhuacm.RigidJudge.config.OJ;
+import team.dhuacm.RigidJudge.local.LocalResolver;
 import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.Problem;
 import team.dhuacm.RigidJudge.model.Solution;
@@ -75,7 +75,7 @@ public class LocalController implements Runnable {
                             logger.info("Result is '{}'.", solution.getResult());
 
                             DataProvider.JudgedSolutionQueue.put(solution);
-                            logger.info("Send to finished queue successfully!");
+                            logger.info("Sent to finished queue successfully!");
 
                             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                         } catch (InterruptedException e) {

@@ -1,4 +1,4 @@
-package team.dhuacm.RigidJudge.util;
+package team.dhuacm.RigidJudge.remote;
 
 import org.apache.http.Consts;
 import org.apache.http.HttpStatus;
@@ -15,7 +15,6 @@ import team.dhuacm.RigidJudge.config.OJAccount;
 import team.dhuacm.RigidJudge.config.OJProperty;
 import team.dhuacm.RigidJudge.exception.JudgeException;
 import team.dhuacm.RigidJudge.exception.NetworkException;
-import team.dhuacm.RigidJudge.main.RemoteResolver;
 import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 

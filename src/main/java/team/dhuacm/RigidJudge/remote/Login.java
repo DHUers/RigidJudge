@@ -1,4 +1,4 @@
-package team.dhuacm.RigidJudge.util;
+package team.dhuacm.RigidJudge.remote;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.FormControlType;
@@ -22,7 +22,6 @@ import team.dhuacm.RigidJudge.config.OJAccount;
 import team.dhuacm.RigidJudge.config.OJProperty;
 import team.dhuacm.RigidJudge.exception.JudgeException;
 import team.dhuacm.RigidJudge.exception.NetworkException;
-import team.dhuacm.RigidJudge.main.RemoteResolver;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

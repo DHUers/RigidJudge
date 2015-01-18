@@ -1,4 +1,4 @@
-package team.dhuacm.RigidJudge.main;
+package team.dhuacm.RigidJudge.remote;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
@@ -12,10 +12,6 @@ import team.dhuacm.RigidJudge.exception.JudgeException;
 import team.dhuacm.RigidJudge.exception.NetworkException;
 import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
-import team.dhuacm.RigidJudge.util.HttpClientUtil;
-import team.dhuacm.RigidJudge.util.Login;
-import team.dhuacm.RigidJudge.util.Query;
-import team.dhuacm.RigidJudge.util.Submit;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

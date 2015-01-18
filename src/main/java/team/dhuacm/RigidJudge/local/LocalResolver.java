@@ -1,5 +1,7 @@
-package team.dhuacm.RigidJudge.main;
+package team.dhuacm.RigidJudge.local;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.model.Solution;
 
 /**
@@ -8,28 +10,18 @@ import team.dhuacm.RigidJudge.model.Solution;
 public class LocalResolver {
 
     private Solution solution;
+    private final static Logger logger = LoggerFactory.getLogger(LocalResolver.class.getSimpleName());
 
     public LocalResolver(Solution solution) {
         this.solution = solution;
     }
 
     public void handle() {
-        if (compile()) {
-            run();
-            check();
+        if (Compile.doCompile()) {
+            if (Run.doRun()) {
+                CheckAnswer.doCheckAnswer();
+            }
         }
-    }
-
-    private boolean compile() {
-        return true;
-    }
-
-    private void run() {
-
-    }
-
-    private void check() {
-
     }
 
     private boolean prepare() {

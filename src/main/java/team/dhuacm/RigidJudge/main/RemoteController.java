@@ -14,6 +14,7 @@ import team.dhuacm.RigidJudge.config.OJ;
 import team.dhuacm.RigidJudge.model.Problem;
 import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
+import team.dhuacm.RigidJudge.remote.RemoteResolver;
 
 import java.io.IOException;
 import java.util.*;
@@ -76,7 +77,7 @@ public class RemoteController implements Runnable {
                             logger.info("Result is '{}'.", solution.getResult());
 
                             DataProvider.JudgedSolutionQueue.put(solution);
-                            logger.info("Send to finished queue successfully!");
+                            logger.info("Sent to finished queue successfully!");
 
                             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                         } catch (JsonMappingException e) {

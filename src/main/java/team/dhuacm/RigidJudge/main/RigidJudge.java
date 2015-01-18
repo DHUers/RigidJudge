@@ -25,8 +25,8 @@ public class RigidJudge {
 
     public static void main(String[] args) throws IOException {
         initialize();
-        new Thread(new LocalController(connection)).start();
-        new Thread(new RemoteController(connection)).start();
-        new Thread(new Sender(connection)).start();
+        new Thread(new LocalController(connection), "Local").start();
+        new Thread(new RemoteController(connection), "Remote").start();
+        new Thread(new Sender(connection), "Sender").start();
     }
 }
