@@ -61,7 +61,22 @@ public class LocalResolverTest {
             "int a, b;\n" +
             "int main() {\n" +
             "   while (cin >> a >> b) {\n" +
-            "       cout << a - b << \" \" << endl;\n" +
+            "       cout << a - b << endl;\n" +
+            "   }\n" +
+            "   return 0;\n" +
+            "}";
+    public static String cppCode_MLE = "#include <iostream>\n" +
+            "#include <cstring>\n" +
+            "using namespace std;\n" +
+            "int a, b;\n" +
+            "int main() {\n" +
+            "   int c[1000000];\n" +
+            "   memset(c, 0, sizeof(c));\n" +
+            "   for (int i = 0; i < 1000000; i++) {\n" +
+            "       c[i] = i;\n" +
+            "   }\n" +
+            "   while (cin >> a >> b) {\n" +
+            "       cout << a + b << endl;\n" +
             "   }\n" +
             "   return 0;\n" +
             "}";
@@ -133,14 +148,20 @@ public class LocalResolverTest {
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Compile_Error);
 
+        // C++ Memory_Limit_Exceeded
+        solution = new Solution(7, problem, cppCode_MLE, Language.CPP);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Accept);  // TODO
+
         // C Accept
-        solution = new Solution(7, problem, cCode, Language.C);
+        solution = new Solution(8, problem, cCode, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept);
 
         // C Compile_Error
-        solution = new Solution(8, problem, cCode.substring(0, 30), Language.C);
+        solution = new Solution(9, problem, cCode.substring(0, 30), Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Compile_Error);

@@ -15,11 +15,11 @@ public class Solution {
     private Result result;
     private String compileInfo;
     private long time;
-    private int memory;
+    private long memory;
     private String output;
 
     private long timeLimit;
-    private int memoryLimit;
+    private long memoryLimit;
     private String input;
     private String stdAns;
 
@@ -91,11 +91,11 @@ public class Solution {
         this.time = time;
     }
 
-    public int getMemory() {
+    public long getMemory() {
         return memory;
     }
 
-    public void setMemory(int memory) {
+    public void setMemory(long memory) {
         this.memory = memory;
     }
 
@@ -115,11 +115,11 @@ public class Solution {
         this.timeLimit = timeLimit;
     }
 
-    public int getMemoryLimit() {
+    public long getMemoryLimit() {
         return memoryLimit;
     }
 
-    public void setMemoryLimit(int memoryLimit) {
+    public void setMemoryLimit(long memoryLimit) {
         this.memoryLimit = memoryLimit;
     }
 

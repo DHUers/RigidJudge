@@ -56,7 +56,7 @@ public class DataProvider {
         RabbitMQ_Host = p.getProperty("RabbitMQ_Host", "127.0.0.1");
         RabbitMQ_Port = Integer.parseInt(p.getProperty("RabbitMQ_Port", "5672"));
 
-        Local_CompileTimeLimit = Integer.parseInt(p.getProperty("Local_CompileTimeLimit", "1"));
+        Local_CompileTimeLimit = Integer.parseInt(p.getProperty("Local_CompileTimeLimit", "5"));
         Local_OutputLengthLimit = Integer.parseInt(p.getProperty("Local_OutputLengthLimit", "5242880"));
 
         Remote_Concurrency = Integer.parseInt(p.getProperty("Remote_Concurrency", "10"));
