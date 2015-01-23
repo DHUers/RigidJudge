@@ -41,7 +41,7 @@
 #endif /* PROG_NAME */
 
 #include <assert.h>
-#include <sandbox.h>
+#include "sandbox.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <sysexits.h>

@@ -35,7 +35,7 @@
 #ifndef __OJS_INTERNAL_H__
 #define __OJS_INTERNAL_H__
 
-#include <sandbox.h>
+#include "sandbox.h"
 
 #include <assert.h>             /* assert() */
 #include <errno.h>              /* errno, strerror() */
