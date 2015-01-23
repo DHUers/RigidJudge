@@ -25,6 +25,7 @@ public class DataProvider {
     public final static HashMap<OJ, OJProperty> OJs = new HashMap<OJ, OJProperty>();
 
     // Local judge configurations
+    public static boolean Local_RunInSandbox = true;
     public static int Local_CompileTimeLimit = 0;
     public static int Local_OutputLengthLimit = 0;
     public final static Map<Language, String> Local_CompileCommand = new HashMap<Language, String>();
@@ -55,6 +56,7 @@ public class DataProvider {
         RabbitMQ_Host = p.getProperty("RabbitMQ_Host", "127.0.0.1");
         RabbitMQ_Port = Integer.parseInt(p.getProperty("RabbitMQ_Port", "5672"));
 
+        Local_RunInSandbox = Boolean.parseBoolean(p.getProperty("Local_RunInSandbox", "true"));
         Local_CompileTimeLimit = Integer.parseInt(p.getProperty("Local_CompileTimeLimit", "5"));
         Local_OutputLengthLimit = Integer.parseInt(p.getProperty("Local_OutputLengthLimit", "5242880"));
 

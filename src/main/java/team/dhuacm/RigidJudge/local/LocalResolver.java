@@ -2,6 +2,7 @@ package team.dhuacm.RigidJudge.local;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import team.dhuacm.RigidJudge.config.DataProvider;
 import team.dhuacm.RigidJudge.config.Result;
 import team.dhuacm.RigidJudge.model.Solution;
 
@@ -22,7 +23,8 @@ public class LocalResolver {
         if (Prepare.doPrepare(solution)) {
             if (Compile.doCompile(solution)) {
                 logger.info("Compile success!");
-                if (Run.doRun(solution)) {
+                boolean runSuccess = DataProvider.Local_RunInSandbox ? RunInSandbox.doRun(solution) : Run.doRun(solution);
+                if (runSuccess) {
                     logger.info("Run success!");
                     CheckAnswer.doCheckAnswer(solution);
                 } else {
