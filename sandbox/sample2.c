@@ -37,17 +37,16 @@
 #endif /**/
 
 #ifndef PROG_NAME
-#define PROG_NAME "sample2"
+#define PROG_NAME "sandbox"
 #endif /* PROG_NAME */
 
-#define NDEBUG
-
 #include <assert.h>
-#include "sandbox.h"
+#include <sandbox.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <sysexits.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #ifndef INT16_MAX
 #define INT16_MAX (32767)
@@ -82,7 +81,7 @@ int main(int argc, const char* argv[])
 {
     if (argc < 2)
     {
-        fprintf(stderr, "synopsis: " PROG_NAME " foo/bar.exe\n");
+        fprintf(stderr, "Usage: " PROG_NAME " PROGRAM [TIME_LIMIT] [MEMORY_LIMIT] [OPTION]\n");
         return EX_USAGE;
     }
     /* create and configure a sandbox instance */
@@ -97,9 +96,16 @@ int main(int argc, const char* argv[])
     msb.sbox.task.ofd = STDOUT_FILENO; /* output from targeted program */
     msb.sbox.task.efd = STDERR_FILENO; /* error from targeted program */
     msb.sbox.task.quota[S_QUOTA_WALLCLOCK] = 30000; /* 30 sec */
-    msb.sbox.task.quota[S_QUOTA_CPU] = 2000;        /*  2 sec */
-    msb.sbox.task.quota[S_QUOTA_MEMORY] = 8388608;  /*  8 MB  */
+    msb.sbox.task.quota[S_QUOTA_CPU] = 1000;        /*  1 sec */
+    msb.sbox.task.quota[S_QUOTA_MEMORY] = 67108864; /*  64 MB  */
     msb.sbox.task.quota[S_QUOTA_DISK] = 1048576;    /*  1 MB  */
+    if (argc > 2) {
+        msb.sbox.task.quota[S_QUOTA_CPU] = atoi(argv[2]);
+    }
+    if (argc > 3) {
+        msb.sbox.task.quota[S_QUOTA_MEMORY] = atoi(argv[3]) * 1024;
+    }
+
     /* execute till end */
     if (!sandbox_check(&msb.sbox))
     {
@@ -142,7 +148,7 @@ res_t probe(const sandbox_t* psbox, probe_t key)
 int16_t sc2idx(syscall_t scinfo)
 {
 #ifdef __x86_64__
-    assert((scinfo.scno >= 0) && (scinfo.scno < 1024) && 
+    assert((scinfo.scno >= 0) && (scinfo.scno < 1024) &&
         (scinfo.mode >= 0) && (scinfo.mode < 32));
     return (int16_t)(scinfo.scno | (scinfo.mode << 10));
 #else /* __i386__ */
@@ -172,11 +178,11 @@ void policy_setup(minisbox_t* pmsb)
     /* white list of essential linux syscalls for statically-linked C programs */
     const int16_t sc_safe[] =
     {
-        abi32(0), abi32(3), abi32(4), abi32(19), abi32(45), abi32(54), 
+        abi32(0), abi32(3), abi32(4), abi32(19), abi32(45), abi32(54),
         abi32(90), abi32(91), abi32(122), abi32(125), abi32(140), abi32(163),
-        abi32(192), abi32(197), abi32(224), abi32(243), abi32(252), 
+        abi32(192), abi32(197), abi32(224), abi32(243), abi32(252),
 #ifdef __x86_64__
-        0, 1, 5, 8, 9, 10, 11, 12, 16, 21, 25, 63, 89, 158, 219, 231, 
+        0, 1, 5, 8, 9, 10, 11, 12, 16, 21, 25, 63, 89, 158, 219, 231,
 #endif /* __x86_64__ */
         -1, /* sentinel */
     };
@@ -223,4 +229,3 @@ action_t* _KILL_RF(const sandbox_t* psbox, const event_t* pe, action_t* pa)
     *pa = (action_t){S_ACTION_KILL, {{S_RESULT_RF}}}; /* restricted func. */
     return pa;
 }
-
