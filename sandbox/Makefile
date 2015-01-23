@@ -1,7 +1,7 @@
 all: sandbox
 
 sandbox: sample2.c sandbox.o platform.o internal.o
-	clang -pthread -lm sample2.c sandbox.o platform.o internal.o -o sandbox
+	clang -pthread -lm -lrt sample2.c sandbox.o platform.o internal.o -o sandbox -O2
 
 sandbox.o: sandbox.c sandbox.h
 	clang -c sandbox.c sandbox.h
