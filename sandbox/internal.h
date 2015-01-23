@@ -28,8 +28,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *
  * POSSIBILITY OF SUCH DAMAGE.                                                 *
  ******************************************************************************/
-/** 
- * @file internal.h 
+/**
+ * @file internal.h
  * @brief Routines for manipulating sandbox internals.
  */
 #ifndef __OJS_INTERNAL_H__
@@ -177,7 +177,7 @@ extern "C"
             ((plock)->rdcount), (((plock)->wrlock) ? 1 : 0)); \
         pthread_cond_wait(&((plock)->rdc), &((plock)->mutex)); \
     } \
-}}} 
+}}}
 #endif /* __RWLOCK_READER_WAIT */
 
 #ifndef __RWLOCK_WRITER_WAIT
@@ -375,25 +375,25 @@ extern "C"
 
 /**
  * @param[in] type any of the constant values defined in \c event_type_t
- * @return a statically allocated string name for the specified event type. 
+ * @return a statically allocated string name for the specified event type.
  */
 const char * s_event_type_name(int type);
 
 /**
  * @param[in] type any of the constant values defined in \c action_type_t
- * @return a statically allocated string name for the specified action type. 
+ * @return a statically allocated string name for the specified action type.
  */
 const char * s_action_type_name(int type);
 
 /**
  * @param[in] status any of the constant values defined in \c status_t
- * @return a statically allocated string name for the specified status. 
+ * @return a statically allocated string name for the specified status.
  */
 const char * s_status_name(int status);
 
 /**
  * @param[in] result any of the constant values defined in \c result_t
- * @return a statically allocated string name for the specified result. 
+ * @return a statically allocated string name for the specified result.
  */
 const char * s_result_name(int result);
 

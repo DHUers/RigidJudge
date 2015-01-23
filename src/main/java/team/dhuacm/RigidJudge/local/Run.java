@@ -43,7 +43,6 @@ public class Run {
 
             runtime = Runtime.getRuntime();
             memoryBegin = runtime.totalMemory() - runtime.freeMemory();
-            new Thread(new MemoryDetect()).start();
             timeBegin = System.currentTimeMillis();
 
             executor.execute(cmdLine);

@@ -16,7 +16,7 @@ import java.io.ByteArrayOutputStream;
 public class RunInSandbox {
 
     private final static Logger logger = LoggerFactory.getLogger(RunInSandbox.class.getSimpleName());
-    public static long timeBegin = 0, timeEnd = 0, memoryBegin = 0, memoryEnd = 0;
+    public static long time_usage = 0, memory_usage = 0;
 
     public static boolean doRun(Solution solution) {
         boolean runResult = false;
@@ -25,15 +25,14 @@ public class RunInSandbox {
         ByteArrayOutputStream outputStream = null;
         ByteArrayInputStream inputStream = null;
         ExecuteWatchdog watchdog = null;
-        Runtime runtime = null;
 
         try {
-            String commandLine = DataProvider.Local_RunCommand.get(solution.getLanguage());
+            String commandLine = "./sandbox/sandbox ./test " + solution.getTimeLimit() + " " + solution.getMemoryLimit();  // TODO
             logger.info("cmd: {}", commandLine);
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
             DefaultExecutor executor = new DefaultExecutor();
-            watchdog = new ExecuteWatchdog(solution.getTimeLimit());
+            watchdog = new ExecuteWatchdog(solution.getTimeLimit() + 100);  // TODO
             executor.setWatchdog(watchdog);
             outputStream = new ByteArrayOutputStream();
             errorStream = new ByteArrayOutputStream();
@@ -41,34 +40,20 @@ public class RunInSandbox {
             PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream, inputStream);
             executor.setStreamHandler(streamHandler);
 
-            runtime = Runtime.getRuntime();
-            memoryBegin = runtime.totalMemory() - runtime.freeMemory();
-            new Thread(new MemoryDetect()).start();
-            timeBegin = System.currentTimeMillis();
-
             executor.execute(cmdLine);
 
-            timeEnd = System.currentTimeMillis();
+            System.out.println(errorStream.toString());
 
-            if (timeEnd - timeBegin >= solution.getTimeLimit()) {
-                solution.setResult(Result.Time_Limit_Exceeded);
+            solution.setOutput(outputStream.toString());
+            if (outputStream.toString().length() >= DataProvider.Local_OutputLengthLimit) {
+                solution.setResult(Result.Output_Limit_Exceeded);
                 runResult = false;
-            } else if (memoryEnd - memoryBegin >= solution.getMemoryLimit() * 1024) {
-                solution.setResult(Result.Memory_Limit_Exceeded);
-                runResult = false;
-            } else{
-                solution.setOutput(outputStream.toString());
-                if (outputStream.toString().length() >= DataProvider.Local_OutputLengthLimit) {
-                    solution.setResult(Result.Output_Limit_Exceeded);
-                    runResult = false;
-                } else {
-                    runResult = true;
-                }
+            } else {
+                runResult = true;
             }
 
             logger.info("Run done!");
         } catch (ExecuteException e) {
-            timeEnd = System.currentTimeMillis();
             if (watchdog.killedProcess()) {
                 solution.setResult(Result.Time_Limit_Exceeded);
             } else {
@@ -77,13 +62,12 @@ public class RunInSandbox {
             logger.error("Error!\n{}", errorStream.toString());
             runResult = false;
         } catch (Exception e) {
-            timeEnd = System.currentTimeMillis();
-            solution.setResult(Result.Runtime_Error);
+
             logger.error(null, e);
             runResult = false;
         } finally {
-            solution.setTime(timeEnd - timeBegin);
-            solution.setMemory((memoryEnd - memoryBegin) / 1024);
+            solution.setTime(time_usage);
+            solution.setMemory(memory_usage);
             logger.info("Runtime: {} ms, Memory: {} KB", solution.getTime(), solution.getMemory());
         }
 
