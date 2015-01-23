@@ -41,7 +41,7 @@ public class LocalResolverTest {
             "using namespace std;\n" +
             "int a, b, c[1];\n" +
             "int main() {\n" +
-            "   c[-1000] = 1;\n" +
+            "   c[-1000] = 1/0;\n" +
             "   while (cin >> a >> b) {\n" +
             "       cout << a + b << endl;\n" +
             "   }\n" +
@@ -69,9 +69,11 @@ public class LocalResolverTest {
             "#include <cstring>\n" +
             "using namespace std;\n" +
             "int a, b;\n" +
+            "long long c[3110000], d[2560000], e[2500000];\n" +
             "int main() {\n" +
-            "   int c[1000000];\n" +
             "   memset(c, 0, sizeof(c));\n" +
+            "   memset(d, 0, sizeof(d));\n" +
+            "   memset(e, 0, sizeof(e));\n" +
             "   for (int i = 0; i < 1000000; i++) {\n" +
             "       c[i] = i;\n" +
             "   }\n" +
@@ -152,7 +154,7 @@ public class LocalResolverTest {
         solution = new Solution(7, problem, cppCode_MLE, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);  // TODO
+        assertEquals(solution.getResult(), Result.Memory_Limit_Exceeded);
 
         // C Accept
         solution = new Solution(8, problem, cCode, Language.C);
