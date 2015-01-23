@@ -70,8 +70,7 @@ public class DataProvider {
 
 
         logger.info("RabbitMQ Server: {}:{}", RabbitMQ_Host, RabbitMQ_Port);
-        logger.info("[Local] Compile Time Limit: {}", Local_CompileTimeLimit);
-
+        logger.info("[Local] Run in Sandbox: {}, Compile Time Limit: {}", Local_RunInSandbox, Local_CompileTimeLimit);
 
         try {
             p.load(new FileInputStream("configs/local/compile.properties"));

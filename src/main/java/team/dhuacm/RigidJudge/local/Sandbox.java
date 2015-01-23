@@ -5,7 +5,7 @@ package team.dhuacm.RigidJudge.local;
  */
 public class Sandbox {
     static {
-        System.loadLibrary("sandbox");
+        System.load("/home/wujy/RigidJudge/sandbox/sandbox.so");
     }
 
     private native void init();
