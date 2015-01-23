@@ -43,3 +43,16 @@ distTar {
         include 'sandbox/*'
     }
 }
+
+task generateSandbox {
+    doFirst {
+        def script = "make -C sandbox/ clean all".execute()
+        script.in.eachLine {line -> println line}
+        script.err.eachLine {line -> println "ERROR: " + line}
+        script.waitFor()
+    }
+}
+
+gradle.projectsEvaluated {
+    compileJava.dependsOn(generateSandbox)
+}
