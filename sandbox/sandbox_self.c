@@ -1,26 +1,35 @@
+#include <time.h>
 #include <stdio.h>
+#include <ctype.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
-#include <unistd.h>
-#include <time.h>
 #include <stdarg.h>
-#include <ctype.h>
-#include <sys/wait.h>
-#include <sys/ptrace.h>
-#include <sys/types.h>
-#include <sys/user.h>
-#include <sys/syscall.h>
-#include <sys/time.h>
-#include <sys/resource.h>
-#include <sys/signal.h>
-#include <sys/stat.h>
 #include <unistd.h>
-#include <errno.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/user.h>
+#include <sys/types.h>
+#include <sys/signal.h>
+#include <sys/ptrace.h>
+#include <sys/syscall.h>
+#include <sys/resource.h>
 
 #define KB 1024
 #define MB (KB*KB)
-#define MEM_LMT 32*MB
+#define BUFFER_SIZE 512
+
+/*
+* UN：初始值
+* RK：子进程运行时被cpu给kill了 ，原因TLE，MLE
+* OLE：发生ole时返回SIGFSZ 由父进程去kill子进程
+* RS：子进程运行顺利 OK
+* */
+enum {UN = 0, RS, RK, OK, RE, TLE, MLE, OLE, OTHER};
+
+int result = UN, time_limit = 1000, memory_limit = 65535*KB;
 
 void printSignal(int signo) {
     switch (signo) {
@@ -133,25 +142,11 @@ void printSignal(int signo) {
     }
 }
 
-/*
- * UN：初始值
- * RK：子进程运行时被cpu给kill了 ，原因TLE，MLE
- * OLE：发生ole时返回SIGFSZ 由父进程去kill子进程
- * RS：子进程运行顺利 AC PE WA
- * */
-enum {UN = 0, RS, RK, AC, PE, WA, RE, TLE, MLE, OLE, OTHER};
-
 void printResult(int result) {
     printf("result:");
     switch (result) {
-        case AC:
-            printf("AC\t");
-            break;
-        case WA:
-            printf("WA\t");
-            break;
-        case PE:
-            printf("PE\t");
+        case OK:
+            printf("OK\t");
             break;
         case RE:
             printf("RE\t");
@@ -175,60 +170,72 @@ inline void get_time_usage(int *p_time_used, struct rusage *pusage) {
     *p_time_used += (pusage->ru_stime.tv_sec * 1000 + pusage->ru_stime.tv_usec / 1000);
 }
 
-inline long get_mem_usage(int pid) {
-    char path[255];
-    FILE *fp;
-    long vsize = 0;
-    sprintf(path, "/proc/%d/statm", pid);
-    //puts(path);
-    fp = fopen(path, "r");
-    if (fp == NULL) {
-        perror("/proc/%d/statm");
-        return -1;
+inline int get_proc_status(int pid, const char *mark) {
+    char fn[BUFFER_SIZE], buf[BUFFER_SIZE];
+    int ret = 0;
+    sprintf(fn, "/proc/%d/status", pid);
+    FILE *pf = fopen(fn, "r");
+    int m = strlen(mark);
+    while (pf && fgets(buf, BUFFER_SIZE - 1, pf)) {
+        buf[strlen(buf) - 1] = 0;
+        if (strncmp(buf, mark, m) == 0) {
+            sscanf(buf + m + 1, "%d", &ret);
+        }
     }
-    fscanf(fp, "%ld*", &vsize);
-    fclose(fp);
-    return vsize;
+    if (pf) fclose(pf);
+    return ret;
 }
 
-int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        puts("arg err");
+inline int get_mem_usage(int pid) {
+    return get_proc_status(pid, "VmPeak:");
+}
+
+inline int compile(char *filename) {  // for Debug only
+    pid_t cpcld = fork();
+    if (cpcld == 0) {
+        execlp("g++", "g++", filename, (char*)NULL);
+        perror("excelp");
         return 0;
     }
-    pid_t cpcld;
-    int result = UN;
-    cpcld = fork();
-    if (cpcld == 0) {
-        execlp("gcc", "gcc", argv[1], (char*)NULL);
-        perror("excelp:");
-        exit(0);
-    }
     int stat;
-    pid_t w;
-    w = waitpid(cpcld, &stat, WUNTRACED);
+    pid_t w = waitpid(cpcld, &stat, WUNTRACED);
     if (w == -1) {
         perror("waitpid");
         return 0;
     }
     if (WIFEXITED(stat)) {
         switch (WEXITSTATUS(stat)) {
-        case EXIT_SUCCESS:
-            puts("compile success");
-            break;
-        case 1:
-            puts("compile error");
-            exit(0);
-        default:
-            puts("????");
-            exit(0);
+            case EXIT_SUCCESS:
+                puts("compile success");
+                return 1;
+            default:
+                puts("compile error");
+                return 0;
         }
     } else {
         puts("compile is not exit success");
-        exit(0);
+        return 0;
     }
-    pid_t runcld;
-    runcld = fork();
+}
+
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        puts("Usage: sandbox FILE [TIME_LIMIT] [MEMORY_LIMIT] [OPTION]");
+        return -1;
+    }
+    if (argc > 2) {
+        time_limit = atoi(argv[2]);
+    }
+    if (argc > 3) {
+        memory_limit = atoi(argv[3]);
+    }
+    printf("%d\t%d\n", time_limit, memory_limit);
+
+    if (!compile(argv[1])) {
+        return 1;
+    }
+
+    pid_t runcld = fork();
     if (runcld == 0) {
         struct rlimit rlmt;
         rlmt.rlim_cur = rlmt.rlim_max = 1;
@@ -236,7 +243,7 @@ int main(int argc, char *argv[]) {
             perror("setrlimit");
         }
 
-        rlmt.rlim_cur = rlmt.rlim_max = MEM_LMT;
+        rlmt.rlim_cur = rlmt.rlim_max = memory_limit;
         if (setrlimit(RLIMIT_AS, &rlmt) < 0) perror("setrlimit");
 
         rlmt.rlim_cur = rlmt.rlim_max = 6 * MB;
@@ -250,9 +257,9 @@ int main(int argc, char *argv[]) {
         execl("./a.out", "a.out", (char*)NULL);
     }
 
-    int t = 0;
-    int time_usage = 0;
-    long mem_usage = 0, now_mem;
+    //int t = 0;
+    int stat;
+    int time_usage = 0, mem_usage = 0, cur_mem = 0;
     struct rusage rused;
     int signo = -1;
     int pagesize = getpagesize();
@@ -322,28 +329,27 @@ int main(int argc, char *argv[]) {
             break;
         }
 
-        now_mem = get_mem_usage(runcld) * pagesize;
-        if (mem_usage < now_mem) mem_usage = now_mem;
-        if (mem_usage / MB + 3 > MEM_LMT / MB) {  //误差设置为3MB
+        cur_mem = get_mem_usage(runcld) * pagesize;
+        if (mem_usage < cur_mem) mem_usage = cur_mem;
+        if (mem_usage / MB + 3 > memory_limit / MB) {  //误差设置为3MB
             result = MLE;
             ptrace(PTRACE_KILL, runcld, NULL, NULL);
         }
     }
 
     if (result == RS) {
-
-        result = AC;
+        result = OK;
     } else if (result == RK) {
-        if (time_usage >= 990) {
-            time_usage = 1000;
+        if (time_usage >= time_limit - 100) {
+            time_usage = time_limit;
             result = TLE;
-        } else if (result = RK) {
-            mem_usage = MEM_LMT;
+        } else if (mem_usage >= memory_limit - 100) {
+            mem_usage = memory_limit;
             result = MLE;
         }
     }
 
     printResult(result);
-    printf("runtime: %dms\t mem_used: %ldKB\t\n", time_usage, mem_usage / KB + 1);
+    printf("time_usage: %dms\n mem_used: %dKB\n", time_usage, mem_usage / KB + 1);
     return result;
 }

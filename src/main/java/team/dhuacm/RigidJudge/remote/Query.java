@@ -110,28 +110,28 @@ public class Query {
                         if (null == result)
                             return;
                         solution.setResult(result);
-                        if (result == Result.Accept) {
-                            if (ojProperty.getQueryMemoryColumn() != 0) {
-                                Element memoryTdElement = tdElements.get(ojProperty.getQueryMemoryColumn() - 1);
-                                String memoryStr = memoryTdElement.getTextExtractor().toString();
-                                memoryStr = memoryStr.replace(ojProperty.getQueryMemoryUnit(), "");
-                                int memory = Integer.parseInt(memoryStr.trim());
-                                solution.setMemory(memory);
-                            }
-                            if (ojProperty.getQueryRuntimeColumn() != 0) {
-                                Element runtimeTdElement = tdElements.get(ojProperty.getQueryRuntimeColumn() - 1);
-                                String runtimeStr = runtimeTdElement.getTextExtractor().toString();
-                                runtimeStr = runtimeStr.replace(ojProperty.getQueryRuntimeUnit(), "");
-                                //System.out.println(runtimeStr);
-                                int runtime = 0;
-                                if (ojProperty.getQueryRuntimeUnit().equalsIgnoreCase("S")) {
-                                    runtime = (int) (Double.parseDouble(runtimeStr.trim()) * 1000);
-                                } else {
-                                    runtime = Integer.parseInt(runtimeStr.trim());
-                                }
-                                solution.setTime(runtime);
-                            }
+                        //if (result == Result.Accept) {
+                        if (ojProperty.getQueryMemoryColumn() != 0) {
+                            Element memoryTdElement = tdElements.get(ojProperty.getQueryMemoryColumn() - 1);
+                            String memoryStr = memoryTdElement.getTextExtractor().toString();
+                            memoryStr = memoryStr.replace(ojProperty.getQueryMemoryUnit(), "");
+                            int memory = Integer.parseInt(memoryStr.trim());
+                            solution.setMemory(memory);
                         }
+                        if (ojProperty.getQueryRuntimeColumn() != 0) {
+                            Element runtimeTdElement = tdElements.get(ojProperty.getQueryRuntimeColumn() - 1);
+                            String runtimeStr = runtimeTdElement.getTextExtractor().toString();
+                            runtimeStr = runtimeStr.replace(ojProperty.getQueryRuntimeUnit(), "");
+                            //System.out.println(runtimeStr);
+                            int runtime = 0;
+                            if (ojProperty.getQueryRuntimeUnit().equalsIgnoreCase("S")) {
+                                runtime = (int) (Double.parseDouble(runtimeStr.trim()) * 1000);
+                            } else {
+                                runtime = Integer.parseInt(runtimeStr.trim());
+                            }
+                            solution.setTime(runtime);
+                        }
+                        //}
                     }
                 }
             }

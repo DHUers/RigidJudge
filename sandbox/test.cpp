@@ -1,7 +1,9 @@
 #include <iostream>
 using namespace std;
-
+int a, b;
 int main() {
-   cout << 1 << 2 << endl;
-   return 0;
+    while (cin >> a >> b) {
+        cout << a + b << endl;
+    }
+    return 0;
 }
