@@ -28,6 +28,7 @@ public class DataProvider {
     public static boolean Local_RunInSandbox = true;
     public static int Local_CompileTimeLimit = 0;
     public static int Local_OutputLengthLimit = 0;
+    public static int Local_SpecialJudgeTimeLimit = 0;
     public final static Map<Language, String> Local_CompileCommand = new HashMap<Language, String>();
     public final static Map<Language, String> Local_RunCommand = new HashMap<Language, String>();
 
@@ -59,6 +60,7 @@ public class DataProvider {
         Local_RunInSandbox = Boolean.parseBoolean(p.getProperty("Local_RunInSandbox", "true"));
         Local_CompileTimeLimit = Integer.parseInt(p.getProperty("Local_CompileTimeLimit", "5"));
         Local_OutputLengthLimit = Integer.parseInt(p.getProperty("Local_OutputLengthLimit", "5242880"));
+        Local_SpecialJudgeTimeLimit = Integer.parseInt(p.getProperty("Local_SpecialJudgeTimeLimit", "5"));
 
         Remote_Concurrency = Integer.parseInt(p.getProperty("Remote_Concurrency", "10"));
         Remote_RetryTimes = Integer.parseInt(p.getProperty("Remote_RetryTimes", "3"));
@@ -71,6 +73,7 @@ public class DataProvider {
 
         logger.info("RabbitMQ Server: {}:{}", RabbitMQ_Host, RabbitMQ_Port);
         logger.info("[Local] Run in Sandbox: {}, Compile Time Limit: {}", Local_RunInSandbox, Local_CompileTimeLimit);
+        logger.info("        Output Length Limit: {}, Special Judge Time Limit: {}", Local_OutputLengthLimit, Local_SpecialJudgeTimeLimit);
 
         try {
             p.load(new FileInputStream("configs/local/compile.properties"));
