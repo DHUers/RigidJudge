@@ -26,7 +26,8 @@ public class RunInSandbox {
         ByteArrayOutputStream outputStream;
         ByteArrayInputStream inputStream;
         ExecuteWatchdog watchdog = null;
-
+        //Sandbox sandbox = new Sandbox();
+        System.out.println(Sandbox.init());
         try {
             String commandLine = "./sandbox/sandbox ./test " + solution.getTimeLimit() + " " + solution.getMemoryLimit();
             logger.info("cmd: {}", commandLine);
