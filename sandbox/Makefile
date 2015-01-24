@@ -21,7 +21,7 @@ libsandbox.so: team_dhuacm_RigidJudge_local_Sandbox.o
 	cp libsandbox.so ../
 
 team_dhuacm_RigidJudge_local_Sandbox.o: team_dhuacm_RigidJudge_local_Sandbox.c team_dhuacm_RigidJudge_local_Sandbox.h
-	clang -c team_dhuacm_RigidJudge_local_Sandbox.c -I$(JAVA_HOME)/include -fPIC
+	clang -c team_dhuacm_RigidJudge_local_Sandbox.c -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux -fPIC
 
 team_dhuacm_RigidJudge_local_Sandbox.h: $(CLASS_PATH)/team/dhuacm/RigidJudge/local/Sandbox.class
 	javah -classpath $(CLASS_PATH) team.dhuacm.RigidJudge.local.Sandbox
