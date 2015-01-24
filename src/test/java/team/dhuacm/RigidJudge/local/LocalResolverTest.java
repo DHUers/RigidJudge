@@ -69,7 +69,7 @@ public class LocalResolverTest {
             "#include <cstring>\n" +
             "using namespace std;\n" +
             "int a, b;\n" +
-            "long long c[3110000], d[2560000], e[2500000];\n" +
+            "long long c[3110000], d[2660000], e[2500000];\n" +
             "int main() {\n" +
             "   memset(c, 0, sizeof(c));\n" +
             "   memset(d, 0, sizeof(d));\n" +
