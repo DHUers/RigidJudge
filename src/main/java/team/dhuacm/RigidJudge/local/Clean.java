@@ -13,24 +13,11 @@ public class Clean {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static boolean doClean() {
-        if (deleteDir(new File("tmp"))) {
+        if (FileUtils.deleteDir(new File("tmp"))) {
             logger.info("Success.");
         } else {
-            logger.error("fail.");
+            logger.error("Fail.");
         }
         return true;
-    }
-
-    private static boolean deleteDir(File dir) {
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (String child : children) {
-                boolean success = deleteDir(new File(dir, child));
-                if (!success) {
-                    return false;
-                }
-            }
-        }
-        return dir.delete();
     }
 }

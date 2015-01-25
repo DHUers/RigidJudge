@@ -6,6 +6,7 @@ import org.junit.Test;
 import team.dhuacm.RigidJudge.config.Language;
 import team.dhuacm.RigidJudge.config.Result;
 import team.dhuacm.RigidJudge.model.LocalProblem;
+import team.dhuacm.RigidJudge.model.LocalSpecialProblem;
 import team.dhuacm.RigidJudge.model.Problem;
 import team.dhuacm.RigidJudge.model.Solution;
 
@@ -91,6 +92,7 @@ public class LocalResolverTest {
                                 "   return 0;\n" +
                                 "}";
     public static String javaCode = "";
+    public static String cppCode_SPJ_1 = "";
 
     @Before
     public void setUp() throws Exception {
@@ -113,6 +115,13 @@ public class LocalResolverTest {
         memoryLimit.put(Language.CPP, 65535);
         memoryLimit.put(Language.JAVA, 65535);
         Problem problem = new LocalProblem(1, "full_text", "test.in", "test.out", timeLimit, memoryLimit);
+        Problem problem_spj = new LocalSpecialProblem(2, "special_judge", "test.in", "test.out", timeLimit, memoryLimit, cppCode_SPJ_1, Language.CPP);
+
+        // C++ SPJ(C++) Accept
+        solution = new Solution(2, problem_spj, cppCode, Language.CPP);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Accept);
 
         // C++ Accept
         solution = new Solution(1, problem, cppCode, Language.CPP);

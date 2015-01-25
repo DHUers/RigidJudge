@@ -8,21 +8,21 @@ import java.util.Map;
  * Created by wujy on 15-1-8.
  */
 public class LocalSpecialProblem extends LocalProblem {
-    private String judgerProgramName;
+    private String judgerProgramCode;
     private Language judgerProgramLanguage;
 
-    public LocalSpecialProblem(int id, String judgeType, String inputFileName, String outputFileName, Map<Language, Integer> timeLimit, Map<Language, Integer> memoryLimit, String judgerProgramName, Language judgerProgramLanguage) {
+    public LocalSpecialProblem(int id, String judgeType, String inputFileName, String outputFileName, Map<Language, Integer> timeLimit, Map<Language, Integer> memoryLimit, String judgerProgramCode, Language judgerProgramLanguage) {
         super(id, judgeType, inputFileName, outputFileName, timeLimit, memoryLimit);
-        this.judgerProgramName = judgerProgramName;
+        this.judgerProgramCode = judgerProgramCode;
         this.judgerProgramLanguage = judgerProgramLanguage;
     }
 
-    public String getJudgerProgramName() {
-        return judgerProgramName;
+    public String getJudgerProgramCode() {
+        return judgerProgramCode;
     }
 
-    public void setJudgerProgramName(String judgerProgramName) {
-        this.judgerProgramName = judgerProgramName;
+    public void setJudgerProgramCode(String judgerProgramCode) {
+        this.judgerProgramCode = judgerProgramCode;
     }
 
     public Language getJudgerProgramLanguage() {

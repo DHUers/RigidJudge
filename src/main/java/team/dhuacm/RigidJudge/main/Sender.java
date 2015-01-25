@@ -55,6 +55,7 @@ public class Sender implements Runnable {
         return objectMapper.writeValueAsString(mapSolution);
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run() {
         try {

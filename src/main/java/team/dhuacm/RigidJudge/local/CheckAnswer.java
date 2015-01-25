@@ -9,7 +9,6 @@ import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.LocalSpecialProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
-import javax.xml.crypto.Data;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
@@ -79,7 +78,7 @@ public class CheckAnswer {
         LocalProblem problem = (LocalProblem) solution.getProblem();
         if (problem != null) {
             if (problem instanceof LocalSpecialProblem) {
-                switch (executeSpecialJudge(((LocalSpecialProblem) problem).getJudgerProgramName())) {
+                switch (executeSpecialJudge(((LocalSpecialProblem) problem).getJudgerProgramCode())) {
                     case 0:
                         solution.setResult(Result.Accept);
                         break;

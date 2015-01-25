@@ -41,6 +41,7 @@ public class RemoteController implements Runnable {
         logger.info("Connected to the remote channel, waiting for solutions ...");
     }
 
+    @SuppressWarnings("unchecked")
     private Solution deserialize(String message) throws IOException {
         Map<String, Map<String, Object>> maps = objectMapper.readValue(message, Map.class);
         Map<String, Object> mapSolution = maps.get("solution");
@@ -60,6 +61,7 @@ public class RemoteController implements Runnable {
         return new Solution(solutionId, problem, source, Language.valueOf(platform.toUpperCase()));
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run() {
         try {

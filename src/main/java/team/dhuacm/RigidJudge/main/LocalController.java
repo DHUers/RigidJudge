@@ -38,6 +38,7 @@ public class LocalController implements Runnable {
         logger.info("Connected to the local channel, waiting for solutions ...");
     }
 
+    @SuppressWarnings("unchecked")
     private Solution deserialize(String message) throws IOException {  // TODO
         Map<String, Map<String, Object>> maps = objectMapper.readValue(message, Map.class);
         Map<String, Object> mapSolution = maps.get("solution");
@@ -56,6 +57,7 @@ public class LocalController implements Runnable {
         return new Solution(solutionId, problem, source, Language.valueOf(platform.toUpperCase()));
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run() {
         try {
