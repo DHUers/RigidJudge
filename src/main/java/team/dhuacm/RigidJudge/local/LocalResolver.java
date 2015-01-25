@@ -23,7 +23,7 @@ public class LocalResolver {
 
     public void handle() throws IOException {
         if (Prepare.doPrepare(solution)) {
-            if (Compile.doCompile(solution.getLanguage(), "test", "test")) {
+            if (Compile.doCompile(solution.getLanguage(), "tmp/test", "tmp/test")) {
                 solution.setCompileInfo(Compile.compileInfo);
                 logger.info("Compile success!");
                 boolean runSuccess = DataProvider.Local_RunInSandbox ? RunInSandbox.doRun(solution) : Run.doRun(solution);
@@ -42,6 +42,7 @@ public class LocalResolver {
             logger.error("Fetch problem data failed!");
             solution.setResult(Result.Judge_Error);
         }
+        Clean.doClean();
     }
 
 }

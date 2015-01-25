@@ -26,10 +26,10 @@ public class RunInSandbox {
         ByteArrayOutputStream outputStream;
         ByteArrayInputStream inputStream;
         ExecuteWatchdog watchdog = null;
-        //Sandbox sandbox = new Sandbox();
-        System.out.println(Sandbox.init());
+        //Sandbox sandbox = new Sandbox();  // TODO: Change to JNI
+        //System.out.println(Sandbox.init());
         try {
-            String commandLine = "./sandbox/sandbox ./test " + solution.getTimeLimit() + " " + solution.getMemoryLimit();
+            String commandLine = "./sandbox/sandbox ./tmp/test " + solution.getTimeLimit() + " " + solution.getMemoryLimit();
             logger.info("cmd: {}", commandLine);
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
