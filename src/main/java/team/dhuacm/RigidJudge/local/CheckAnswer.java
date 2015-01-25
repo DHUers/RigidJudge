@@ -9,8 +9,7 @@ import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.LocalSpecialProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.*;
 
 /**
  * Created by wujy on 15-1-18.
@@ -35,29 +34,26 @@ public class CheckAnswer {
 
         ByteArrayOutputStream errorStream = null;
         ByteArrayOutputStream outputStream;
-        ByteArrayInputStream inputStream;
         ExecuteWatchdog watchdog = null;
 
         try {
-            String commandLine = "./spj/" + filename;
+            String commandLine = "./" + filename + " test.in test.out test.user";
             logger.info("cmd: {}", commandLine);
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
             DefaultExecutor executor = new DefaultExecutor();
-            watchdog = new ExecuteWatchdog(DataProvider.Local_SpecialJudgeTimeLimit);
+            watchdog = new ExecuteWatchdog(DataProvider.Local_SpecialJudgeTimeLimit * 1000);
             executor.setWatchdog(watchdog);
+            executor.setWorkingDirectory(new File("tmp"));
             executor.setExitValues(new int[]{0, 1, 2});
             outputStream = new ByteArrayOutputStream();
             errorStream = new ByteArrayOutputStream();
-            inputStream = new ByteArrayInputStream("".getBytes());  // TODO
-            PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream, inputStream);
+            PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
             executor.setStreamHandler(streamHandler);
 
             returnValue = executor.execute(cmdLine);
 
-            System.out.println(errorStream.toString());
-
-            logger.info("Run done!");
+            logger.info("Run done!\n{}", outputStream.toString());
         } catch (ExecuteException e) {
             if (watchdog.killedProcess()) {
                 logger.error("SPJ TimeLimitExceeded!\n");
@@ -74,11 +70,15 @@ public class CheckAnswer {
         return returnValue;
     }
 
-    public static void doCheckAnswer(Solution solution) {
+    public static void doCheckAnswer(Solution solution) throws IOException {
         LocalProblem problem = (LocalProblem) solution.getProblem();
         if (problem != null) {
             if (problem instanceof LocalSpecialProblem) {
-                switch (executeSpecialJudge(((LocalSpecialProblem) problem).getJudgerProgramCode())) {
+                Writer writer = new BufferedWriter(new FileWriter(new File("tmp/test.user")));
+                writer.write(solution.getOutput());
+                writer.close();
+
+                switch (executeSpecialJudge("spj")) {
                     case 0:
                         solution.setResult(Result.Accept);
                         break;

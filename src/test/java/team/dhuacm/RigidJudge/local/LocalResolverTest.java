@@ -92,7 +92,26 @@ public class LocalResolverTest {
                                 "   return 0;\n" +
                                 "}";
     public static String javaCode = "";
-    public static String cppCode_SPJ_1 = "";
+    public static String cCode_SPJ_1 = "#include <stdio.h>\n" +
+                                    "int main(int argc,char *args[]) {\n" +
+                                    "   FILE *f_in = fopen(args[1], \"r\");\n" +
+                                    "   FILE *f_out = fopen(args[2], \"r\");\n" +
+                                    "   FILE *f_user = fopen(args[3], \"r\");\n" +
+                                    "   int ret = 0;  // 0-AC, 1-WA, 2-PE, -1-JE\n" +
+                                    "   int a, b, c;\n" +
+                                    "   while (fscanf(f_in, \"%d %d\", &a, &b) != EOF) {\n" +
+                                    "       fscanf(f_user, \"%d\", &c);\n" +
+                                    "       if (a + b != c) {\n" +
+                                    "           printf(\"%d %d %d\\n\", a, b, c);\n" +
+                                    "           ret = 1;\n" +
+                                    "           break;\n" +
+                                    "       }\n" +
+                                    "   }\n" +
+                                    "   fclose(f_in);\n" +
+                                    "   fclose(f_out);\n" +
+                                    "   fclose(f_user);\n" +
+                                    "   return ret;\n" +
+                                    "}";
 
     @Before
     public void setUp() throws Exception {
@@ -115,13 +134,19 @@ public class LocalResolverTest {
         memoryLimit.put(Language.CPP, 65535);
         memoryLimit.put(Language.JAVA, 65535);
         Problem problem = new LocalProblem(1, "full_text", "test.in", "test.out", timeLimit, memoryLimit);
-        Problem problem_spj = new LocalSpecialProblem(2, "special_judge", "test.in", "test.out", timeLimit, memoryLimit, cppCode_SPJ_1, Language.CPP);
+        Problem problem_spj = new LocalSpecialProblem(2, "special_judge", "test.in", "test.out", timeLimit, memoryLimit, cCode_SPJ_1, Language.C);
 
-        // C++ SPJ(C++) Accept
-        solution = new Solution(2, problem_spj, cppCode, Language.CPP);
+        // C++ SPJ(C) Accept
+        solution = new Solution(1, problem_spj, cppCode, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept);
+
+        // C++ SPJ(C) Wrong_Answer
+        solution = new Solution(2, problem_spj, cppCode_WA, Language.CPP);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Wrong_Answer);
 
         // C++ Accept
         solution = new Solution(1, problem, cppCode, Language.CPP);
