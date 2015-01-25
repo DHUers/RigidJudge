@@ -9,9 +9,9 @@ import java.nio.channels.FileChannel;
 /**
  * Created by wujy on 15-1-25.
  */
-public class FileUtils {
+class FileUtils {
 
-    private final static Logger logger = LoggerFactory.getLogger(Compile.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(Compile.class.getSimpleName());
 
     public static String getFileContent(File file) {
         String fileContent = "";
@@ -22,7 +22,7 @@ public class FileUtils {
             fileContent = new String(fileBytes);
             fileContent = fileContent.replace("\r\n", "\n");
             if (fileContent.endsWith("\n")) {
-                fileContent = fileContent.substring(0, fileContent.length()-1);
+                fileContent = fileContent.substring(0, fileContent.length() - 1);
             }
             raf.close();
         } catch (IOException e) {

@@ -13,8 +13,8 @@ import java.io.IOException;
  */
 public class LocalResolver {
 
-    private Solution solution;
-    private final static Logger logger = LoggerFactory.getLogger(LocalResolver.class.getSimpleName());
+    private final Solution solution;
+    private static final Logger logger = LoggerFactory.getLogger(LocalResolver.class.getSimpleName());
 
     public LocalResolver(Solution solution) {
         this.solution = solution;

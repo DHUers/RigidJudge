@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.QueueingConsumer;
+import com.rabbitmq.client.QueueingConsumer.Delivery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
@@ -24,13 +25,13 @@ import java.util.Map;
 /**
  * Created by wujy on 15-1-8.
  */
-public class RemoteController implements Runnable {
+class RemoteController implements Runnable {
 
     private static final String QUEUE_NAME = "judger_proxy_queue";
     private static Channel channel;
     private static QueueingConsumer consumer;
-    private static ObjectMapper objectMapper = new ObjectMapper();
-    private final static Logger logger = LoggerFactory.getLogger(RemoteController.class.getSimpleName());
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Logger logger = LoggerFactory.getLogger(RemoteController.class.getSimpleName());
 
     public RemoteController(Connection connection) throws IOException {
         channel = connection.createChannel();
@@ -67,7 +68,7 @@ public class RemoteController implements Runnable {
         try {
             while (true) {
                 // Fetch solution;
-                final QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+                final Delivery delivery = consumer.nextDelivery();
                 final String message = new String(delivery.getBody());
 
                 logger.info("Received '{}'.", message);

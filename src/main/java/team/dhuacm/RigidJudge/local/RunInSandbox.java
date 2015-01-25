@@ -13,11 +13,11 @@ import java.io.ByteArrayOutputStream;
 /**
  * Created by wujy on 15-1-18.
  */
-public class RunInSandbox {
+class RunInSandbox {
 
-    private final static Logger logger = LoggerFactory.getLogger(RunInSandbox.class.getSimpleName());
-    public static long time_usage = 0, memory_usage = 0;
-    public static String result;
+    private static final Logger logger = LoggerFactory.getLogger(RunInSandbox.class.getSimpleName());
+    private static long time_usage;
+    private static long memory_usage;
 
     public static boolean doRun(Solution solution) {
         boolean runResult = false;
@@ -44,9 +44,9 @@ public class RunInSandbox {
 
             executor.execute(cmdLine);
 
-            System.out.println(errorStream.toString());
+            System.out.println(errorStream);
             String[] sandboxReply = errorStream.toString().split("\n");
-            result = sandboxReply[0].split(": ")[1];
+            String result = sandboxReply[0].split(": ")[1];
             time_usage = Long.parseLong(sandboxReply[1].split(": ")[1].replace("ms", ""));
             memory_usage = Long.parseLong(sandboxReply[2].split(": ")[1].replace("kB", ""));
             // "PD", "OK", "RF", "ML", "OL", "TL", "RT", "AT", "IE", "BP", NULL,
@@ -77,7 +77,7 @@ public class RunInSandbox {
                 solution.setResult(Result.Time_Limit_Exceeded);
                 time_usage = solution.getTimeLimit();
             }
-            logger.error("Error!\n{}", errorStream.toString());
+            logger.error("Error!\n{}", errorStream);
             runResult = false;
         } catch (Exception e) {
             logger.error(null, e);

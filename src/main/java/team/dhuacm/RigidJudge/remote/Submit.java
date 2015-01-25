@@ -25,9 +25,9 @@ import java.util.List;
 /**
  * Created by wujy on 15-1-10.
  */
-public class Submit {
+class Submit {
 
-    private final static Logger logger = LoggerFactory.getLogger(Submit.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(Submit.class.getSimpleName());
 
     public static boolean doSubmit(CloseableHttpClient httpClient, OJProperty ojProperty, OJAccount ojAccount, Solution solution) throws JudgeException, NetworkException {
 
@@ -35,7 +35,7 @@ public class Submit {
 
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 
-        NameValuePair problemNvp = new BasicNameValuePair(ojProperty.getSubmitProblem(), ((RemoteProblem)solution.getProblem()).getOjIndex() + "");
+        NameValuePair problemNvp = new BasicNameValuePair(ojProperty.getSubmitProblem(), ((RemoteProblem) solution.getProblem()).getOjIndex() + "");
         NameValuePair languageNVP = new BasicNameValuePair(ojProperty.getSubmitLanguage(), ojProperty.getOjLanguages()[(solution.getLanguage().ordinal())]);
         NameValuePair codeNVP = new BasicNameValuePair(ojProperty.getSubmitCode(), solution.getCode());
         nvps.add(problemNvp);
@@ -55,10 +55,7 @@ public class Submit {
             if (HttpStatus.SC_MOVED_PERMANENTLY == statusCode || HttpStatus.SC_MOVED_TEMPORARILY == statusCode)
                 return true;
             //code is too long or too short, so compile error should be return.
-            if (HttpStatus.SC_OK == statusCode && !ojProperty.getOjName().equals("zoj") && !ojProperty.getOjName().equals("sgu"))
-                return false;
-            else
-                return true;
+            return !(HttpStatus.SC_OK == statusCode && !ojProperty.getOjName().equals("zoj") && !ojProperty.getOjName().equals("sgu"));
         } catch (ClientProtocolException e) {
             throw new JudgeException(e.getMessage(), e.getCause());
         } catch (IOException e) {

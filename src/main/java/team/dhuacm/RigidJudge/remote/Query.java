@@ -26,9 +26,9 @@ import java.util.List;
 /**
  * Created by wujy on 15-1-10.
  */
-public class Query {
+class Query {
 
-    private final static Logger logger = LoggerFactory.getLogger(Query.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(Query.class.getSimpleName());
 
     public static void doQuery(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount, Solution solution) throws JudgeException, NetworkException {
 
@@ -45,7 +45,7 @@ public class Query {
             getResult(client, ojProperty, ojAccount, solution);
 
             if (Result.Queue == solution.getResult()) {
-                if ((i + 1) == DataProvider.Remote_QueryInterval.size()) {
+                if (i + 1 == DataProvider.Remote_QueryInterval.size()) {
                     solution.setResult(Result.Other_Error);
                 }
             } else {
@@ -55,7 +55,7 @@ public class Query {
     }
 
     //get result and other info form query page
-    public static void getResult(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount, Solution solution) throws JudgeException, NetworkException {
+    private static void getResult(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount, Solution solution) {
 
         URI uri = URI.create(ojProperty.getQueryUrl());
         String queryUsername = ojProperty.getQueryUsername();
@@ -82,7 +82,7 @@ public class Query {
             }
             String html = EntityUtils.toString(entity, ojProperty.getOjCharset());
             Source source = new Source(html);
-            if (((RemoteProblem)solution.getProblem()).getOj() == OJ.UVALIVE) {
+            if (((RemoteProblem) solution.getProblem()).getOj() == OJ.UVALIVE) {
                 source = new Source(source.getAllElementsByClass("maincontent").toString());
             }
             source.setLogger(null);
@@ -123,7 +123,7 @@ public class Query {
                             String runtimeStr = runtimeTdElement.getTextExtractor().toString();
                             runtimeStr = runtimeStr.replace(ojProperty.getQueryRuntimeUnit(), "");
                             //System.out.println(runtimeStr);
-                            int runtime = 0;
+                            int runtime;
                             if (ojProperty.getQueryRuntimeUnit().equalsIgnoreCase("S")) {
                                 runtime = (int) (Double.parseDouble(runtimeStr.trim()) * 1000);
                             } else {

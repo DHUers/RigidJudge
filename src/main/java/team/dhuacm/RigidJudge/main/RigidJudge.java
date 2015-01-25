@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class RigidJudge {
     private static Connection connection;
-    private final static Logger logger = LoggerFactory.getLogger(RigidJudge.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(RigidJudge.class.getSimpleName());
 
     private static void initialize() throws IOException {
         ConnectionFactory factory = new ConnectionFactory();

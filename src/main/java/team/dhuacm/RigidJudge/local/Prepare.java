@@ -8,14 +8,17 @@ import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.LocalSpecialProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Created by wujy on 15-1-18.
  */
-public class Prepare {
+class Prepare {
 
-    private final static Logger logger = LoggerFactory.getLogger(Prepare.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(Prepare.class.getSimpleName());
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static boolean doPrepare(Solution solution) throws IOException {

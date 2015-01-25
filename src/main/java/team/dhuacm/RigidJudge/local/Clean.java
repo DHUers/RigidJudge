@@ -8,16 +8,15 @@ import java.io.File;
 /**
  * Created by wujy on 15-1-25.
  */
-public class Clean {
-    private final static Logger logger = LoggerFactory.getLogger(Clean.class.getSimpleName());
+class Clean {
+    private static final Logger logger = LoggerFactory.getLogger(Clean.class.getSimpleName());
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static boolean doClean() {
+    public static void doClean() {
         if (FileUtils.deleteDir(new File("tmp"))) {
             logger.info("Success.");
         } else {
             logger.error("Fail.");
         }
-        return true;
     }
 }

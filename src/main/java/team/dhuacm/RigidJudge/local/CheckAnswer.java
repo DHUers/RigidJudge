@@ -14,12 +14,12 @@ import java.io.*;
 /**
  * Created by wujy on 15-1-18.
  */
-public class CheckAnswer {
+class CheckAnswer {
 
-    private final static Logger logger = LoggerFactory.getLogger(CheckAnswer.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(CheckAnswer.class.getSimpleName());
 
     private static String removeSpace(String s) {
-        StringBuffer temp = new StringBuffer();
+        StringBuilder temp = new StringBuilder();
         int len = s.length();
         for (int i = 0; i < len; i++) {
             if (s.charAt(i) != ' ' && s.charAt(i) != '\n' && s.charAt(i) != '\t') {
@@ -29,7 +29,7 @@ public class CheckAnswer {
         return temp.toString();
     }
 
-    public static int executeSpecialJudge(String filename) {
+    private static int executeSpecialJudge(String filename) {
         int returnValue = -1;
 
         ByteArrayOutputStream errorStream = null;

@@ -3,7 +3,7 @@ package team.dhuacm.RigidJudge.exception;
 /**
  * Created by wujy on 15-1-11.
  */
-public class JudgeException extends Exception{
+public class JudgeException extends Exception {
 
     private static final long serialVersionUID = -1946027510506589673L;
 

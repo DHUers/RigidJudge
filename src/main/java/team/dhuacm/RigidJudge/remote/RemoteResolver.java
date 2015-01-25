@@ -17,17 +17,17 @@ import java.io.UnsupportedEncodingException;
  */
 public class RemoteResolver {
 
-    private Solution solution;
-    private OJ oj;
-    private OJProperty ojProperty;
+    private final Solution solution;
+    private final OJ oj;
+    private final OJProperty ojProperty;
     private OJAccount ojAccount;
-    private CloseableHttpClient client = HttpClientUtil.get(DataProvider.Remote_RetryTimes, DataProvider.Remote_SocketTimeout, DataProvider.Remote_ConnectionTimeout);
-    private final static Logger logger = LoggerFactory.getLogger(RemoteResolver.class.getSimpleName());
+    private final CloseableHttpClient client = HttpClientUtil.get(DataProvider.Remote_RetryTimes, DataProvider.Remote_SocketTimeout, DataProvider.Remote_ConnectionTimeout);
+    private static final Logger logger = LoggerFactory.getLogger(RemoteResolver.class.getSimpleName());
 
     public RemoteResolver(Solution solution) throws InterruptedException {
         this.solution = solution;
-        oj = ((RemoteProblem)solution.getProblem()).getOj();
-        logger.info("{} {} - solution id: {}", oj.toString(), ((RemoteProblem)solution.getProblem()).getOjIndex(), solution.getId());
+        oj = ((RemoteProblem) solution.getProblem()).getOj();
+        logger.info("{} {} - solution id: {}", oj, ((RemoteProblem) solution.getProblem()).getOjIndex(), solution.getId());
         ojProperty = DataProvider.OJs.get(oj);
         ojAccount = DataProvider.Remote_OJAccounts.get(oj).take();
         logger.info("Account: {}", ojAccount.getUsername());
@@ -54,8 +54,8 @@ public class RemoteResolver {
         } catch (NetworkException e) {
             logger.error("Network_Error!");
             solution.setResult(Result.Network_Error);
-        } catch (UnsupportedEncodingException e) {
-            logger.error("Unsupported Encoding!", e);
+        } catch (Exception e) {
+            logger.error("Other_Error!", e);
             solution.setResult(Result.Other_Error);
         } finally {
             try {

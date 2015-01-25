@@ -8,7 +8,6 @@ import team.dhuacm.RigidJudge.config.OJ;
 public class RemoteProblem extends Problem {
     private OJ oj;
     private String ojIndex;
-    //private String sourceUrl;
 
     public RemoteProblem(int id, OJ oj, String ojIndex) {
         super(id, "remote_proxy");

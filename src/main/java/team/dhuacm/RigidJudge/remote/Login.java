@@ -24,19 +24,17 @@ import team.dhuacm.RigidJudge.exception.JudgeException;
 import team.dhuacm.RigidJudge.exception.NetworkException;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by wujy on 15-1-10.
  */
-public class Login {
+class Login {
 
-    private final static Logger logger = LoggerFactory.getLogger(Login.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(Login.class.getSimpleName());
 
-    public static boolean doLogin(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount) throws JudgeException, NetworkException, UnsupportedEncodingException {
+    public static boolean doLogin(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount) throws JudgeException, NetworkException {
 
         //name value pair
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
@@ -57,9 +55,7 @@ public class Login {
                 //System.out.println("INFO: html form size: " + formElements.size());
                 for (Element element : formElements) {
                     if (element.getAttributeValue("action").contains("login")) {
-                        Iterator<FormField> iterator = element.getFormFields().iterator();
-                        while (iterator.hasNext()) {
-                            FormField field = iterator.next();
+                        for (FormField field : element.getFormFields()) {
                             if (field.getFormControl().getFormControlType() == FormControlType.HIDDEN) {
                                 NameValuePair nvp = new BasicNameValuePair(field.getName(), field.getValues().get(0));
                                 nvps.add(nvp);

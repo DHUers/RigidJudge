@@ -13,19 +13,22 @@ import java.io.ByteArrayOutputStream;
 /**
  * Created by wujy on 15-1-18.
  */
-public class Run {
+class Run {
 
-    private final static Logger logger = LoggerFactory.getLogger(Run.class.getSimpleName());
-    public static long timeBegin = 0, timeEnd = 0, memoryBegin = 0, memoryEnd = 0;
+    private static final Logger logger = LoggerFactory.getLogger(Run.class.getSimpleName());
+    private static long timeBegin = 0;
+    private static long timeEnd = 0;
+    private static long memoryBegin = 0;
+    private static final long memoryEnd = 0;
 
     public static boolean doRun(Solution solution) {
         boolean runResult = false;
 
         ByteArrayOutputStream errorStream = null;
-        ByteArrayOutputStream outputStream = null;
-        ByteArrayInputStream inputStream = null;
+        ByteArrayOutputStream outputStream;
+        ByteArrayInputStream inputStream;
         ExecuteWatchdog watchdog = null;
-        Runtime runtime = null;
+        Runtime runtime;
 
         try {
             String commandLine = DataProvider.Local_RunCommand.get(solution.getLanguage());
@@ -55,7 +58,7 @@ public class Run {
             } else if (memoryEnd - memoryBegin >= solution.getMemoryLimit() * 1024) {
                 solution.setResult(Result.Memory_Limit_Exceeded);
                 runResult = false;
-            } else{
+            } else {
                 solution.setOutput(outputStream.toString());
                 if (outputStream.toString().length() >= DataProvider.Local_OutputLengthLimit) {
                     solution.setResult(Result.Output_Limit_Exceeded);

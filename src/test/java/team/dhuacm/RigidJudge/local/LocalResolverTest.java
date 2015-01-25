@@ -17,9 +17,9 @@ import static org.junit.Assert.assertEquals;
 
 public class LocalResolverTest {
 
-    public static LocalResolver localResolver;
-    public static Solution solution;
-    public static String cppCode = "#include <iostream>\n" +
+    private static LocalResolver localResolver;
+    private static Solution solution;
+    private static final String cppCode = "#include <iostream>\n" +
                                 "using namespace std;\n" +
                                 "int a, b;\n" +
                                 "int main() {\n" +
@@ -28,7 +28,7 @@ public class LocalResolverTest {
                                 "   }\n" +
                                 "   return 0;\n" +
                                 "}";
-    public static String cppCode_TLE = "#include <iostream>\n" +
+    private static final String cppCode_TLE = "#include <iostream>\n" +
             "using namespace std;\n" +
             "int a, b;\n" +
             "int main() {\n" +
@@ -38,7 +38,7 @@ public class LocalResolverTest {
             "   }\n" +
             "   return 0;\n" +
             "}";
-    public static String cppCode_RE = "#include <iostream>\n" +
+    private static final String cppCode_RE = "#include <iostream>\n" +
             "using namespace std;\n" +
             "int a, b, c[1];\n" +
             "int main() {\n" +
@@ -48,7 +48,7 @@ public class LocalResolverTest {
             "   }\n" +
             "   return 0;\n" +
             "}";
-    public static String cppCode_PE = "#include <iostream>\n" +
+    private static final String cppCode_PE = "#include <iostream>\n" +
             "using namespace std;\n" +
             "int a, b;\n" +
             "int main() {\n" +
@@ -57,7 +57,7 @@ public class LocalResolverTest {
             "   }\n" +
             "   return 0;\n" +
             "}";
-    public static String cppCode_WA = "#include <iostream>\n" +
+    private static final String cppCode_WA = "#include <iostream>\n" +
             "using namespace std;\n" +
             "int a, b;\n" +
             "int main() {\n" +
@@ -66,7 +66,7 @@ public class LocalResolverTest {
             "   }\n" +
             "   return 0;\n" +
             "}";
-    public static String cppCode_MLE = "#include <iostream>\n" +
+    private static final String cppCode_MLE = "#include <iostream>\n" +
             "#include <cstring>\n" +
             "using namespace std;\n" +
             "int a, b;\n" +
@@ -83,7 +83,7 @@ public class LocalResolverTest {
             "   }\n" +
             "   return 0;\n" +
             "}";
-    public static String cCode = "#include <stdio.h>\n" +
+    private static final String cCode = "#include <stdio.h>\n" +
                                 "int a, b;\n" +
                                 "int main() {\n" +
                                 "   while(~scanf(\"%d%d\", &a, &b)) {\n" +
@@ -91,8 +91,7 @@ public class LocalResolverTest {
                                 "   }\n" +
                                 "   return 0;\n" +
                                 "}";
-    public static String javaCode = "";
-    public static String cCode_SPJ_1 = "#include <stdio.h>\n" +
+    private static final String cCode_SPJ_1 = "#include <stdio.h>\n" +
                                     "int main(int argc,char *args[]) {\n" +
                                     "   FILE *f_in = fopen(args[1], \"r\");\n" +
                                     "   FILE *f_out = fopen(args[2], \"r\");\n" +
@@ -113,16 +112,6 @@ public class LocalResolverTest {
                                     "   return ret;\n" +
                                     "}";
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
     public void testRun() throws Exception {
         Map<Language, Integer> timeLimit = new HashMap<Language, Integer>();
@@ -134,72 +123,72 @@ public class LocalResolverTest {
         memoryLimit.put(Language.CPP, 65535);
         memoryLimit.put(Language.JAVA, 65535);
         Problem problem = new LocalProblem(1, "full_text", "test.in", "test.out", timeLimit, memoryLimit);
-        Problem problem_spj = new LocalSpecialProblem(2, "special_judge", "test.in", "test.out", timeLimit, memoryLimit, cCode_SPJ_1, Language.C);
+        Problem problem_spj = new LocalSpecialProblem(2, "special_judge", "test.in", "test.out", timeLimit, memoryLimit, LocalResolverTest.cCode_SPJ_1, Language.C);
 
         // C++ SPJ(C) Accept
-        solution = new Solution(1, problem_spj, cppCode, Language.CPP);
-        localResolver = new LocalResolver(solution);
-        localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);
+        LocalResolverTest.solution = new Solution(1, problem_spj, LocalResolverTest.cppCode, Language.CPP);
+        LocalResolverTest.localResolver = new LocalResolver(LocalResolverTest.solution);
+        LocalResolverTest.localResolver.handle();
+        assertEquals(LocalResolverTest.solution.getResult(), Result.Accept);
 
         // C++ SPJ(C) Wrong_Answer
-        solution = new Solution(2, problem_spj, cppCode_WA, Language.CPP);
-        localResolver = new LocalResolver(solution);
-        localResolver.handle();
-        assertEquals(solution.getResult(), Result.Wrong_Answer);
+        LocalResolverTest.solution = new Solution(2, problem_spj, LocalResolverTest.cppCode_WA, Language.CPP);
+        LocalResolverTest.localResolver = new LocalResolver(LocalResolverTest.solution);
+        LocalResolverTest.localResolver.handle();
+        assertEquals(LocalResolverTest.solution.getResult(), Result.Wrong_Answer);
 
         // C++ Accept
-        solution = new Solution(1, problem, cppCode, Language.CPP);
-        localResolver = new LocalResolver(solution);
-        localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);
+        LocalResolverTest.solution = new Solution(1, problem, LocalResolverTest.cppCode, Language.CPP);
+        LocalResolverTest.localResolver = new LocalResolver(LocalResolverTest.solution);
+        LocalResolverTest.localResolver.handle();
+        assertEquals(LocalResolverTest.solution.getResult(), Result.Accept);
 
         // C++ Time_Limit_Exceeded
-        solution = new Solution(2, problem, cppCode_TLE, Language.CPP);
-        localResolver = new LocalResolver(solution);
-        localResolver.handle();
-        assertEquals(solution.getResult(), Result.Time_Limit_Exceeded);
+        LocalResolverTest.solution = new Solution(2, problem, LocalResolverTest.cppCode_TLE, Language.CPP);
+        LocalResolverTest.localResolver = new LocalResolver(LocalResolverTest.solution);
+        LocalResolverTest.localResolver.handle();
+        assertEquals(LocalResolverTest.solution.getResult(), Result.Time_Limit_Exceeded);
 
         // C++ Runtime_Error
-        solution = new Solution(3, problem, cppCode_RE, Language.CPP);
-        localResolver = new LocalResolver(solution);
-        localResolver.handle();
-        assertEquals(solution.getResult(), Result.Runtime_Error);
+        LocalResolverTest.solution = new Solution(3, problem, LocalResolverTest.cppCode_RE, Language.CPP);
+        LocalResolverTest.localResolver = new LocalResolver(LocalResolverTest.solution);
+        LocalResolverTest.localResolver.handle();
+        assertEquals(LocalResolverTest.solution.getResult(), Result.Runtime_Error);
 
         // C++ Presentation_Error
-        solution = new Solution(4, problem, cppCode_PE, Language.CPP);
-        localResolver = new LocalResolver(solution);
-        localResolver.handle();
-        assertEquals(solution.getResult(), Result.Presentation_Error);
+        LocalResolverTest.solution = new Solution(4, problem, LocalResolverTest.cppCode_PE, Language.CPP);
+        LocalResolverTest.localResolver = new LocalResolver(LocalResolverTest.solution);
+        LocalResolverTest.localResolver.handle();
+        assertEquals(LocalResolverTest.solution.getResult(), Result.Presentation_Error);
 
         // C++ Wrong_Answer
-        solution = new Solution(5, problem, cppCode_WA, Language.CPP);
-        localResolver = new LocalResolver(solution);
-        localResolver.handle();
-        assertEquals(solution.getResult(), Result.Wrong_Answer);
+        LocalResolverTest.solution = new Solution(5, problem, LocalResolverTest.cppCode_WA, Language.CPP);
+        LocalResolverTest.localResolver = new LocalResolver(LocalResolverTest.solution);
+        LocalResolverTest.localResolver.handle();
+        assertEquals(LocalResolverTest.solution.getResult(), Result.Wrong_Answer);
 
         // C++ Compile_Error
-        solution = new Solution(6, problem, cppCode.substring(0, 30), Language.CPP);
-        localResolver = new LocalResolver(solution);
-        localResolver.handle();
-        assertEquals(solution.getResult(), Result.Compile_Error);
+        LocalResolverTest.solution = new Solution(6, problem, LocalResolverTest.cppCode.substring(0, 30), Language.CPP);
+        LocalResolverTest.localResolver = new LocalResolver(LocalResolverTest.solution);
+        LocalResolverTest.localResolver.handle();
+        assertEquals(LocalResolverTest.solution.getResult(), Result.Compile_Error);
 
         // C++ Memory_Limit_Exceeded
-        solution = new Solution(7, problem, cppCode_MLE, Language.CPP);
-        localResolver = new LocalResolver(solution);
-        localResolver.handle();
-        assertEquals(solution.getResult(), Result.Memory_Limit_Exceeded);
+        LocalResolverTest.solution = new Solution(7, problem, LocalResolverTest.cppCode_MLE, Language.CPP);
+        LocalResolverTest.localResolver = new LocalResolver(LocalResolverTest.solution);
+        LocalResolverTest.localResolver.handle();
+        assertEquals(LocalResolverTest.solution.getResult(), Result.Memory_Limit_Exceeded);
 
         // C Accept
-        solution = new Solution(8, problem, cCode, Language.C);
-        localResolver = new LocalResolver(solution);
-        localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);
+        LocalResolverTest.solution = new Solution(8, problem, LocalResolverTest.cCode, Language.C);
+        LocalResolverTest.localResolver = new LocalResolver(LocalResolverTest.solution);
+        LocalResolverTest.localResolver.handle();
+        assertEquals(LocalResolverTest.solution.getResult(), Result.Accept);
 
         // C Compile_Error
-        solution = new Solution(9, problem, cCode.substring(0, 30), Language.C);
-        localResolver = new LocalResolver(solution);
-        localResolver.handle();
-        assertEquals(solution.getResult(), Result.Compile_Error);
+        LocalResolverTest.solution = new Solution(9, problem, LocalResolverTest.cCode.substring(0, 30), Language.C);
+        LocalResolverTest.localResolver = new LocalResolver(LocalResolverTest.solution);
+        LocalResolverTest.localResolver.handle();
+        assertEquals(LocalResolverTest.solution.getResult(), Result.Compile_Error);
     }
 }

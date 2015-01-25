@@ -17,31 +17,31 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class DataProvider {
 
-    private final static Logger logger = LoggerFactory.getLogger(DataProvider.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(DataProvider.class.getSimpleName());
 
     // Common configurations
     public static String RabbitMQ_Host;
     public static int RabbitMQ_Port;
-    public final static HashMap<OJ, OJProperty> OJs = new HashMap<OJ, OJProperty>();
+    public static final HashMap<OJ, OJProperty> OJs = new HashMap<OJ, OJProperty>();
 
     // Local judge configurations
     public static boolean Local_RunInSandbox = true;
     public static int Local_CompileTimeLimit = 0;
     public static int Local_OutputLengthLimit = 0;
     public static int Local_SpecialJudgeTimeLimit = 0;
-    public final static Map<Language, String> Local_CompileCommand = new HashMap<Language, String>();
-    public final static Map<Language, String> Local_RunCommand = new HashMap<Language, String>();
+    public static final Map<Language, String> Local_CompileCommand = new HashMap<Language, String>();
+    public static final Map<Language, String> Local_RunCommand = new HashMap<Language, String>();
 
     // Remote judge configurations
-    public final static List<Integer> Remote_QueryInterval = new ArrayList<Integer>();
+    public static final List<Integer> Remote_QueryInterval = new ArrayList<Integer>();
     public static int Remote_Concurrency = 0;
     public static int Remote_RetryTimes = 0;
     public static int Remote_SocketTimeout = 0;
     public static int Remote_ConnectionTimeout = 0;
-    public final static HashMap<OJ, BlockingQueue<OJAccount>> Remote_OJAccounts = new HashMap<OJ, BlockingQueue<OJAccount>>();
+    public static final HashMap<OJ, BlockingQueue<OJAccount>> Remote_OJAccounts = new HashMap<OJ, BlockingQueue<OJAccount>>();
 
     // Common data structure
-    public final static LinkedBlockingQueue<Solution> JudgedSolutionQueue = new LinkedBlockingQueue<Solution>();
+    public static final LinkedBlockingQueue<Solution> JudgedSolutionQueue = new LinkedBlockingQueue<Solution>();
 
     static {
         Properties p = new Properties();

@@ -9,12 +9,12 @@ import java.util.Map;
  * Created by wujy on 15-1-8.
  */
 public class LocalProblem extends Problem {
-    protected String inputFileName;
+    private String inputFileName;
     protected String input;
-    protected String outputFileName;
+    private String outputFileName;
     protected String output;
-    protected Map<Language, Integer> timeLimit = new HashMap<Language, Integer>();
-    protected Map<Language, Integer> memoryLimit = new HashMap<Language, Integer>();
+    private Map<Language, Integer> timeLimit = new HashMap<Language, Integer>();
+    private Map<Language, Integer> memoryLimit = new HashMap<Language, Integer>();
 
     public LocalProblem(int id, String judgeType, String inputFileName, String outputFileName, Map<Language, Integer> timeLimit, Map<Language, Integer> memoryLimit) {
         super(id, judgeType);

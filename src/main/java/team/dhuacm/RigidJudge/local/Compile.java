@@ -12,9 +12,9 @@ import java.io.IOException;
 /**
  * Created by wujy on 15-1-18.
  */
-public class Compile {
+class Compile {
 
-    private final static Logger logger = LoggerFactory.getLogger(Compile.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(Compile.class.getSimpleName());
     public static String compileInfo;
 
     public static boolean doCompile(Language language, String source, String target) {

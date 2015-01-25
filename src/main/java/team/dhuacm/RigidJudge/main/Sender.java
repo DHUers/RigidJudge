@@ -16,12 +16,12 @@ import java.util.Map;
 /**
  * Created by wujy on 15-1-9.
  */
-public class Sender implements Runnable {
+class Sender implements Runnable {
 
     private static final String QUEUE_NAME = "result_queue";
     private static Channel channel;
-    private static ObjectMapper objectMapper = new ObjectMapper();
-    private final static Logger logger = LoggerFactory.getLogger(Sender.class.getSimpleName());
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Logger logger = LoggerFactory.getLogger(Sender.class.getSimpleName());
 
     public Sender(Connection connection) throws IOException {
         channel = connection.createChannel();

@@ -4,10 +4,10 @@ package team.dhuacm.RigidJudge.model;
  * Created by wujy on 15-1-7.
  */
 public class Problem {
-    protected int id;
-    protected String judgeType;
+    private int id;
+    private String judgeType;
 
-    public Problem(int id, String judgeType) {
+    Problem(int id, String judgeType) {
         this.id = id;
         this.judgeType = judgeType;
     }
