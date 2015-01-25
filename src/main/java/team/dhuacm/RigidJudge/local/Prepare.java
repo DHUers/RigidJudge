@@ -2,13 +2,12 @@ package team.dhuacm.RigidJudge.local;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import team.dhuacm.RigidJudge.config.Language;
 import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.LocalSpecialProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 
 /**
  * Created by wujy on 15-1-18.
@@ -17,7 +16,7 @@ public class Prepare {
 
     private final static Logger logger = LoggerFactory.getLogger(Prepare.class.getSimpleName());
 
-    public static boolean doPrepare(Solution solution) {
+    public static boolean doPrepare(Solution solution) throws IOException {
         // download  // TODO
         LocalProblem problem = (LocalProblem) solution.getProblem();
         solution.setInput(getFileContent(new File(problem.getInputFileName())));
@@ -26,6 +25,17 @@ public class Prepare {
         solution.setMemoryLimit(problem.getMemoryLimit().get(solution.getLanguage()));
         //System.out.println(solution.getInput());
         //System.out.println(solution.getStdAns());
+        File file;
+        if (solution.getLanguage().equals(Language.C)) {  // Temporarily, will change to DataProvider
+            file = new File("test.c");
+        } else if (solution.getLanguage().equals(Language.CPP)) {
+            file = new File("test.cpp");
+        } else {
+            file = new File("test.java");
+        }
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        writer.write(solution.getCode());
+        writer.close();
 
         // pre-compile special judge code
         if (problem instanceof LocalSpecialProblem) {

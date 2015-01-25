@@ -5,9 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
 import team.dhuacm.RigidJudge.config.Language;
-import team.dhuacm.RigidJudge.model.Solution;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * Created by wujy on 15-1-18.
@@ -15,28 +15,18 @@ import java.io.*;
 public class Compile {
 
     private final static Logger logger = LoggerFactory.getLogger(Compile.class.getSimpleName());
+    public static String compileInfo;
 
-    public static boolean doCompile(Solution solution) {
-        boolean compileResult = false;
-
-        File file;
-        if (solution.getLanguage().equals(Language.C)) {  // Temporarily, will change to DataProvider
-            file = new File("test.c");
-        } else if (solution.getLanguage().equals(Language.CPP)) {
-            file = new File("test.cpp");
-        } else {
-            file = new File("test.java");
-        }
+    public static boolean doCompile(Language language, String source, String target) {
+        boolean compileResult;
 
         ByteArrayOutputStream errorStream = null;
         ByteArrayOutputStream outputStream = null;
         ExecuteWatchdog watchdog = null;
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.write(solution.getCode());
-            writer.close();
 
-            String commandLine = DataProvider.Local_CompileCommand.get(solution.getLanguage());
+        try {
+            String commandLine = DataProvider.Local_CompileCommand.get(language);
+            commandLine = commandLine.replace("{source}", source).replace("{target}", target);
             logger.info("cmd: '{}'", commandLine);
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
@@ -49,29 +39,25 @@ public class Compile {
             executor.setStreamHandler(streamHandler);
             executor.execute(cmdLine);
 
-            solution.setCompileInfo("Compile successfully!");
+            compileInfo = "Compile successfully!";
             compileResult = true;
 
         } catch (ExecuteException e) {
-            String info = null;
-            if (errorStream != null) {
-                info = errorStream.toString() + outputStream.toString();
-            }
-            if (watchdog != null && watchdog.killedProcess()) {
+            String info;
+            info = errorStream.toString() + outputStream.toString();
+            if (watchdog.killedProcess()) {
                 info = "Compile time limit exceeded!";
             }
-            if (info != null && info.equals("")) {
+            if (info.equals("")) {
                 info = "Compile no exitValue!";
             }
             logger.error("Compile Error!\n{}", info);
             compileResult = false;
-            solution.setCompileInfo(info);
+            compileInfo = info;
         } catch (IOException e) {
             logger.error("IO Error!", e);
             compileResult = false;
-            solution.setCompileInfo("Compile Error!");
-        } finally {
-            file.delete();
+            compileInfo = "Compile Error!";
         }
 
         return compileResult;
