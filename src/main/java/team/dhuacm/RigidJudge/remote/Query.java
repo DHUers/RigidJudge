@@ -39,7 +39,6 @@ class Query {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //System.out.println(Thread.currentThread().getName() + " - try " + i + " times!");
             logger.info("Tried {} times!", i);
 
             getResult(client, ojProperty, ojAccount, solution);
@@ -57,7 +56,7 @@ class Query {
     //get result and other info form query page
     private static void getResult(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount, Solution solution) {
 
-        URI uri = URI.create(ojProperty.getQueryUrl());
+        URI uri = URI.create(ojProperty.getQueryUrl().replace("{username}", ojAccount.getUsername()));
         String queryUsername = ojProperty.getQueryUsername();
         if (null != queryUsername && !"".equals(queryUsername)) {
             try {
@@ -82,18 +81,38 @@ class Query {
             }
             String html = EntityUtils.toString(entity, ojProperty.getOjCharset());
             Source source = new Source(html);
-            if (((RemoteProblem) solution.getProblem()).getOj() == OJ.UVALIVE) {
+            if (ojProperty.getOjName().equals("uvalive")) {  // TODO: move specific requirements to OJProperty
                 source = new Source(source.getAllElementsByClass("maincontent").toString());
             }
             source.setLogger(null);
             List<Element> tableElements = source.getAllElements("table");
-            if (((RemoteProblem) solution.getProblem()).getOj() == OJ.SGU) {
+            if (ojProperty.getOjName().equals("sgu")) {  // TODO: move specific requirements to OJProperty
                 tableElements = source.getAllElements("cellspacing", "3", true);
             }
             for (Element tableElement : tableElements) {
                 List<Element> trElements = tableElement.getAllElements("tr");
                 if (trElements.size() >= 2) {
                     List<Element> tdElements = trElements.get(1).getAllElements("td");
+
+                    if (ojProperty.getOjName().equals("ural")) {  // TODO: move specific requirements to OJProperty
+                        if (trElements.size() >= 3) {
+                            tdElements = trElements.get(2).getAllElements("td");
+                        }
+                    }
+                    if (ojProperty.getOjName().equals("aizu")) {  // TODO: move specific requirements to OJProperty
+                        boolean flag = false;
+                        for (int i = 1; i < trElements.size(); i++) {
+                            tdElements = trElements.get(i).getAllElements("td");
+                            if (tdElements.size() == ojProperty.getQueryTableColumns()) {
+                                if (tdElements.get(1).getTextExtractor().toString().equals(ojAccount.getUsername())) {
+                                    flag = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!flag) continue;
+                    }
+
                     if (tdElements.size() == ojProperty.getQueryTableColumns()) {
                         Element tdElement = tdElements.get(ojProperty.getQueryResultColumn() - 1);
                         String resultStr = tdElement.getTextExtractor().toString();
@@ -115,7 +134,19 @@ class Query {
                             Element memoryTdElement = tdElements.get(ojProperty.getQueryMemoryColumn() - 1);
                             String memoryStr = memoryTdElement.getTextExtractor().toString();
                             memoryStr = memoryStr.replace(ojProperty.getQueryMemoryUnit(), "");
-                            int memory = Integer.parseInt(memoryStr.trim());
+
+                            if (ojProperty.getOjName().equals("spoj") && memoryStr.contains("k")) {  // TODO: move specific requirements to OJProperty
+                                memoryStr = memoryStr.replace("k", "");
+                                memoryStr = String.valueOf(Double.parseDouble(memoryStr) / 1024);
+                            }
+
+                            //System.out.println(memoryStr);
+                            int memory;
+                            if (ojProperty.getQueryMemoryUnit().contains("M")) {
+                                memory = (int) (Double.parseDouble(memoryStr.trim()) * 1024);
+                            } else {
+                                memory = Integer.parseInt(memoryStr.trim());
+                            }
                             solution.setMemory(memory);
                         }
                         if (ojProperty.getQueryRuntimeColumn() != 0) {

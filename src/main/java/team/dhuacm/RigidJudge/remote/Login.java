@@ -36,6 +36,10 @@ class Login {
 
     public static boolean doLogin(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount) throws JudgeException, NetworkException {
 
+        if (ojProperty.getLoginUrl().isEmpty()) {
+            return true;
+        }
+
         //name value pair
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 
@@ -86,6 +90,12 @@ class Login {
         NameValuePair passwordNameValue = new BasicNameValuePair(ojProperty.getLoginPassword(), ojAccount.getPassword());
         nvps.add(userNameValue);
         nvps.add(passwordNameValue);
+        if (ojProperty.getOjName().equals("codeforces")) {  // TODO: move additional form values to OJProperty
+            nvps.add(new BasicNameValuePair("action", "enter"));
+        }
+        if (ojProperty.getOjName().equals("aizu")) {
+            nvps.add(new BasicNameValuePair("submit", "Sign in"));
+        }
         //System.out.println("INFO: name value pair size: " + nvps.size());
         post.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
 
@@ -95,8 +105,13 @@ class Login {
             //登录成功 301 或者 302
             int statusCode = response.getStatusLine().getStatusCode();
             //System.out.println("INFO: content length: " + response.getEntity().getContentLength());
-            if (HttpStatus.SC_MOVED_PERMANENTLY == statusCode || HttpStatus.SC_MOVED_TEMPORARILY == statusCode)
+            if (HttpStatus.SC_MOVED_PERMANENTLY == statusCode || HttpStatus.SC_MOVED_TEMPORARILY == statusCode) {
                 return true;
+            }
+            // aizu 200
+            if (HttpStatus.SC_OK == statusCode && ojProperty.getOjName().equals("aizu")) {  // TODO: move specific requirements to OJProperty
+                return true;
+            }
         } catch (ClientProtocolException e) {
             throw new JudgeException(e.getMessage(), e.getCause());
         } catch (IOException e) {

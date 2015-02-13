@@ -41,9 +41,21 @@ class Submit {
         nvps.add(problemNvp);
         nvps.add(languageNVP);
         nvps.add(codeNVP);
-        if (ojProperty.getOjName().equals("sgu")) {
+        if (ojProperty.getOjName().equals("sgu")) {  // TODO: move additional form values to OJProperty
             nvps.add(new BasicNameValuePair("id", ojAccount.getUsername()));
             nvps.add(new BasicNameValuePair("pass", ojAccount.getPassword()));
+        }
+        if (ojProperty.getOjName().equals("ural")) {  // TODO: move additional form values to OJProperty
+            nvps.add(new BasicNameValuePair("JudgeID", ojAccount.getPassword()));
+            nvps.add(new BasicNameValuePair("Action", "submit"));
+            nvps.add(new BasicNameValuePair("SpaceID", "1"));
+        }
+        if (ojProperty.getOjName().equals("codeforces")) {  // TODO: move additional form values to OJProperty
+            nvps.add(new BasicNameValuePair("action", "submitSolutionFormSubmitted"));
+        }
+        if (ojProperty.getOjName().equals("aizu")) {  // TODO: move additional form values to OJProperty
+            nvps.add(new BasicNameValuePair("userID", ojAccount.getUsername()));
+            nvps.add(new BasicNameValuePair("password", ojAccount.getPassword()));
         }
         post.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
 
@@ -54,8 +66,8 @@ class Submit {
             //System.out.println("INFO: status code is: " + statusCode);
             if (HttpStatus.SC_MOVED_PERMANENTLY == statusCode || HttpStatus.SC_MOVED_TEMPORARILY == statusCode)
                 return true;
-            //code is too long or too short, so compile error should be return.
-            return !(HttpStatus.SC_OK == statusCode && !ojProperty.getOjName().equals("zoj") && !ojProperty.getOjName().equals("sgu"));
+            //code is too long or too short, so compile error should be return.  // TODO: move specific requirements to OJProperty
+            return !((HttpStatus.SC_OK == statusCode) && !ojProperty.getOjName().equals("zoj") && !ojProperty.getOjName().equals("sgu") && !ojProperty.getOjName().equals("spoj") && !ojProperty.getOjName().equals("ural") && !ojProperty.getOjName().equals("aizu"));
         } catch (ClientProtocolException e) {
             throw new JudgeException(e.getMessage(), e.getCause());
         } catch (IOException e) {
@@ -69,6 +81,5 @@ class Submit {
             }
             post.releaseConnection();
         }
-        //return false;
     }
 }

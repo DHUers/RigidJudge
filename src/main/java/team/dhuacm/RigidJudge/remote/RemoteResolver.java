@@ -26,8 +26,12 @@ public class RemoteResolver {
 
     public RemoteResolver(Solution solution) throws InterruptedException {
         this.solution = solution;
-        oj = ((RemoteProblem) solution.getProblem()).getOj();
-        logger.info("{} {} - solution id: {}", oj, ((RemoteProblem) solution.getProblem()).getOjIndex(), solution.getId());
+        OJ oj_external = ((RemoteProblem) solution.getProblem()).getOj();
+        logger.info("{} {} - solution id: {}", oj_external, ((RemoteProblem) solution.getProblem()).getOjIndex(), solution.getId());
+        if (oj_external.equals(OJ.CF_GYM)) {
+            oj_external = OJ.CODEFORCES;
+        }
+        oj = oj_external;
         ojProperty = DataProvider.OJs.get(oj);
         ojAccount = DataProvider.Remote_OJAccounts.get(oj).take();
         logger.info("Account: {}", ojAccount.getUsername());
@@ -49,10 +53,10 @@ public class RemoteResolver {
                 solution.setResult(Result.Judge_Error);
             }
         } catch (JudgeException e) {
-            logger.error("Judge_Error!");
+            logger.error("Judge_Error!", e);
             solution.setResult(Result.Judge_Error);
         } catch (NetworkException e) {
-            logger.error("Network_Error!");
+            logger.error("Network_Error!", e);
             solution.setResult(Result.Network_Error);
         } catch (Exception e) {
             logger.error("Other_Error!", e);

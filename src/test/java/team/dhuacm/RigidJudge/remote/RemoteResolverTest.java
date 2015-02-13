@@ -58,24 +58,35 @@ public class RemoteResolverTest {
         remoteResolver = new RemoteResolver(solution);
         remoteResolver.handle();
         assertEquals(solution.getResult(), Result.Accept);
-/*
-        // SPOJ C++
-        solution = new Solution(7, new RemoteProblem(1, OJ.SPOJ, "100"), cppCode, Language.CPP);
-        remoteResolver = new RemoteResolver(solution);
-        remoteResolver.handle();
-        assertEquals(solution.getResult(), Result.Wrong_Answer);
 
-        // CF C++
-        solution = new Solution(8, new RemoteProblem(1, OJ.CF, "100"), cppCode, Language.CPP);
+        // SPOJ C++
+        solution = new Solution(7, new RemoteProblem(1, OJ.SPOJ, "TEST"), cppCode, Language.CPP);
         remoteResolver = new RemoteResolver(solution);
         remoteResolver.handle();
         assertEquals(solution.getResult(), Result.Wrong_Answer);
 
         // AIZU C++
-        solution = new Solution(9, new RemoteProblem(1, OJ.AIZU, "100"), cppCode, Language.CPP);
+        solution = new Solution(8, new RemoteProblem(1, OJ.AIZU, "1000"), cppCode, Language.CPP);
+        remoteResolver = new RemoteResolver(solution);
+        remoteResolver.handle();
+        assertEquals(solution.getResult(), Result.Accept);
+
+        // Ural C++
+        solution = new Solution(9, new RemoteProblem(1, OJ.URAL, "1000"), cppCode, Language.CPP);
+        remoteResolver = new RemoteResolver(solution);
+        remoteResolver.handle();
+        assertEquals(solution.getResult(), Result.Accept);
+
+        // Codeforces C++
+        solution = new Solution(10, new RemoteProblem(1, OJ.CODEFORCES, "505A"), cppCode, Language.CPP);
         remoteResolver = new RemoteResolver(solution);
         remoteResolver.handle();
         assertEquals(solution.getResult(), Result.Wrong_Answer);
-*/
+
+        // CF::Gym C++
+        solution = new Solution(11, new RemoteProblem(1, OJ.CF_GYM, "100548A"), cppCode, Language.CPP);
+        remoteResolver = new RemoteResolver(solution);
+        remoteResolver.handle();
+        assertEquals(solution.getResult(), Result.Wrong_Answer);
     }
 }
