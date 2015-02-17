@@ -13,13 +13,15 @@ public class LocalProblem extends Problem {
     protected String input;
     private String outputFileName;
     protected String output;
+    private String limitType;
     private Map<Language, Integer> timeLimit = new HashMap<Language, Integer>();
     private Map<Language, Integer> memoryLimit = new HashMap<Language, Integer>();
 
-    public LocalProblem(int id, String judgeType, String inputFileName, String outputFileName, Map<Language, Integer> timeLimit, Map<Language, Integer> memoryLimit) {
+    public LocalProblem(int id, String judgeType, String inputFileName, String outputFileName, String limitType, Map<Language, Integer> timeLimit, Map<Language, Integer> memoryLimit) {
         super(id, judgeType);
         this.inputFileName = inputFileName;
         this.outputFileName = outputFileName;
+        this.limitType = limitType;
         this.timeLimit = timeLimit;
         this.memoryLimit = memoryLimit;
     }
@@ -38,6 +40,14 @@ public class LocalProblem extends Problem {
 
     public void setOutputFileName(String outputFileName) {
         this.outputFileName = outputFileName;
+    }
+
+    public String getLimitType() {
+        return limitType;
+    }
+
+    public void setLimitType(String limitType) {
+        this.limitType = limitType;
     }
 
     public Map<Language, Integer> getTimeLimit() {

@@ -118,8 +118,8 @@ public class LocalResolverTest {
         memoryLimit.put(Language.C, 65535);
         memoryLimit.put(Language.CPP, 65535);
         memoryLimit.put(Language.JAVA, 65535);
-        Problem problem = new LocalProblem(1, "full_text", "test.in", "test.out", timeLimit, memoryLimit);
-        Problem problem_spj = new LocalSpecialProblem(2, "special_judge", "test.in", "test.out", timeLimit, memoryLimit, cCode_SPJ_1, Language.C);
+        Problem problem = new LocalProblem(1, "full_text", "test.in", "test.out", "all", timeLimit, memoryLimit);
+        Problem problem_spj = new LocalSpecialProblem(2, "special_judge", "test.in", "test.out", "all", timeLimit, memoryLimit, cCode_SPJ_1, Language.C);
 
         // C++ SPJ(C) Accept
         Solution solution = new Solution(1, problem_spj, cppCode, Language.CPP);

@@ -11,10 +11,12 @@ import team.dhuacm.RigidJudge.config.DataProvider;
 import team.dhuacm.RigidJudge.config.Language;
 import team.dhuacm.RigidJudge.local.LocalResolver;
 import team.dhuacm.RigidJudge.model.LocalProblem;
+import team.dhuacm.RigidJudge.model.LocalSpecialProblem;
 import team.dhuacm.RigidJudge.model.Problem;
 import team.dhuacm.RigidJudge.model.Solution;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +42,10 @@ class LocalController implements Runnable {
     }
 
     @SuppressWarnings("unchecked")
-    private Solution deserialize(String message) throws IOException {  // TODO
+    private Solution deserialize(String message) throws IOException {
         Map<String, Map<String, Object>> maps = objectMapper.readValue(message, Map.class);
-        Map<String, Object> mapSolution = maps.get("solution");
-        List<LinkedHashMap<String, Object>> listProblems = (List<LinkedHashMap<String, Object>>) maps.get("problems");
 
-        Map<String, Object> judge_data = (Map<String, Object>) listProblems.get(0).get("judge_data");
+        Map<String, Object> mapSolution = maps.get("solution");
         String source = (String) mapSolution.get("source");
         String platform = (String) mapSolution.get("platform");
         if (platform.equals("c++")) {
@@ -54,7 +54,23 @@ class LocalController implements Runnable {
         int solutionId = (Integer) mapSolution.get("id");
         int problemId = (Integer) mapSolution.get("problem_id");
 
-        Problem problem = new LocalProblem(problemId, "full_text", null, null, null, null);
+        List<LinkedHashMap<String, Object>> listProblems = (List<LinkedHashMap<String, Object>>) maps.get("problems");
+        String judgeType = (String) listProblems.get(0).get("judge_type");
+        Map<String, Object> judgeData = (Map<String, Object>) listProblems.get(0).get("judge_data");
+        String inputFileUrl = (String) judgeData.get("input_file_url");
+        String outputFileUrl = (String) judgeData.get("output_file_url");
+        String limitType = (String) judgeData.get("limit_type");
+        Map<Language, Integer> timeLimit = (Map<Language, Integer>) judgeData.get("time_limit");  // TODO: default & require test
+        Map<Language, Integer> memoryLimit = (Map<Language, Integer>) judgeData.get("memory_limit");  // TODO: default & require test
+
+        Problem problem = null;
+        if (judgeType.equals("full_text")) {
+            problem = new LocalProblem(problemId, "full_text", inputFileUrl, outputFileUrl, limitType, timeLimit, memoryLimit);
+        } else if (judgeType.equals("program_comparasion")) {
+            String judgerProgramCode = (String) judgeData.get("judger_program_source");
+            String judgerProgramLanguage = (String) judgeData.get("judger_program_platform");
+            problem = new LocalSpecialProblem(problemId, "program_comparasion", inputFileUrl, outputFileUrl, limitType, timeLimit, memoryLimit, judgerProgramCode, Language.valueOf(judgerProgramLanguage.toUpperCase()));
+        }
         return new Solution(solutionId, problem, source, Language.valueOf(platform.toUpperCase()));
     }
 

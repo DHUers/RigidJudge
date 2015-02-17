@@ -45,11 +45,8 @@ class RemoteController implements Runnable {
     @SuppressWarnings("unchecked")
     private Solution deserialize(String message) throws IOException {
         Map<String, Map<String, Object>> maps = objectMapper.readValue(message, Map.class);
-        Map<String, Object> mapSolution = maps.get("solution");
-        List<LinkedHashMap<String, Object>> listProblems = (List<LinkedHashMap<String, Object>>) maps.get("problems");
 
-        Map<String, Object> judge_data = (Map<String, Object>) listProblems.get(0).get("judge_data");
-        String[] vendor = ((String) judge_data.get("vendor")).split(",");
+        Map<String, Object> mapSolution = maps.get("solution");
         String source = (String) mapSolution.get("source");
         String platform = (String) mapSolution.get("platform");
         if (platform.equals("c++")) {
@@ -57,6 +54,10 @@ class RemoteController implements Runnable {
         }
         int solutionId = (Integer) mapSolution.get("id");
         int problemId = (Integer) mapSolution.get("problem_id");
+
+        List<LinkedHashMap<String, Object>> listProblems = (List<LinkedHashMap<String, Object>>) maps.get("problems");
+        Map<String, Object> judgeData = (Map<String, Object>) listProblems.get(0).get("judge_data");
+        String[] vendor = ((String) judgeData.get("vendor")).split(",");
 
         Problem problem = new RemoteProblem(problemId, OJ.valueOf(vendor[0].toUpperCase()), vendor[1]);
         return new Solution(solutionId, problem, source, Language.valueOf(platform.toUpperCase()));
