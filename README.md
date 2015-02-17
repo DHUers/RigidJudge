@@ -1,12 +1,15 @@
-[![Build Status](https://travis-ci.org/wujysh/RigidJudge.svg?branch=master)](https://travis-ci.org/wujysh/RigidJudge)
+[![Build Status](https://travis-ci.org/DHUers/RigidJudge.svg?branch=master)](https://travis-ci.org/DHUers/RigidJudge)
 
 # RigidJudge
 Judge of RigidOJ
 
 ## Features
-- Proxy to remote Onlinejudge. (UVa POJ HDU ZOJ UVaLive SGU ...)
-- Local judge
-- Special judge
+### Local Judge
+* Sandbox protection
+* Special judge
+
+### Remote Judge
+* Proxy to remote Onlinejudge. (UVa POJ HDU ZOJ UVaLive SGU SPOJ AIZU Ural Codeforces Codeforces::Gym ...)
 
 ## Requirements
 - JRE 7
@@ -17,4 +20,4 @@ Judge of RigidOJ
 Visit the [GitHub Issues][1].
 
 
-[1]: https://github.com/wujysh/RigidJudge/issues
+[1]: https://github.com/DHUers/RigidJudge/issues
