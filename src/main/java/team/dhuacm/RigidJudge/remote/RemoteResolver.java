@@ -52,15 +52,12 @@ public class RemoteResolver {
                 logger.info("Login failed! Judge_Error");
                 solution.setResult(Result.Judge_Error);
             }
-        } catch (JudgeException e) {
-            logger.error("Judge_Error!", e);
-            solution.setResult(Result.Judge_Error);
         } catch (NetworkException e) {
             logger.error("Network_Error!", e);
             solution.setResult(Result.Network_Error);
         } catch (Exception e) {
-            logger.error("Other_Error!", e);
-            solution.setResult(Result.Other_Error);
+            logger.error("Judge_Error!", e);
+            solution.setResult(Result.Judge_Error);
         } finally {
             try {
                 if (null != ojAccount) {

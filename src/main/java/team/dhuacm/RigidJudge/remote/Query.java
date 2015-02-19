@@ -45,7 +45,7 @@ class Query {
 
             if (Result.Queue == solution.getResult()) {
                 if (i + 1 == DataProvider.Remote_QueryInterval.size()) {
-                    solution.setResult(Result.Other_Error);
+                    solution.setResult(Result.Network_Error);
                 }
             } else {
                 break;
@@ -54,7 +54,7 @@ class Query {
     }
 
     //get result and other info form query page
-    private static void getResult(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount, Solution solution) {
+    private static void getResult(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount, Solution solution) throws JudgeException, NetworkException {
 
         URI uri = URI.create(ojProperty.getQueryUrl().replace("{username}", ojAccount.getUsername()));
         String queryUsername = ojProperty.getQueryUsername();
@@ -72,7 +72,6 @@ class Query {
         try {
             response = client.execute(get);
             if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
-                solution.setResult(Result.Other_Error);
                 return;
             }
             HttpEntity entity = response.getEntity();
@@ -167,9 +166,9 @@ class Query {
                 }
             }
         } catch (ClientProtocolException e) {
-            logger.error(null, e);
+            throw new JudgeException(e.getMessage(), e.getCause());
         } catch (IOException e) {
-            logger.error(null, e);
+            throw new NetworkException(e.getMessage(), e.getCause());
         } finally {
             try {
                 if (null != response)

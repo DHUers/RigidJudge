@@ -92,7 +92,7 @@ class CheckAnswer {
                         solution.setResult(Result.Judge_Error);
                         break;
                     default:
-                        solution.setResult(Result.Other_Error);
+                        solution.setResult(Result.Judge_Error);
                 }
             } else {
                 //logger.info("'{}'", solution.getStdAns());

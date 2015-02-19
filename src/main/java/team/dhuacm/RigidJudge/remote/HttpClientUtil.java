@@ -21,7 +21,7 @@ class HttpClientUtil {
 
     public static CloseableHttpClient get(final int retryCount, int socketTimeout, int connectionTimeout) {
 
-        System.setProperty("jsse.enableSNIExtension", "false");
+        System.setProperty("jsse.enableSNIExtension", "false");  // Resolve https issues
 
         HttpRequestRetryHandler myRetryHandler = new HttpRequestRetryHandler() {
             public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
