@@ -68,7 +68,7 @@ class Sender implements Runnable {
                     String message = serialize(solution);
 
                     channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
-                    logger.info("Send '{}'.", message);
+                    logger.info("Sent '{}'.", message);
                 }
             }
         } catch (IOException e) {

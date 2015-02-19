@@ -17,8 +17,8 @@ public class LocalProblem extends Problem {
     private Map<Language, Integer> timeLimit = new HashMap<Language, Integer>();
     private Map<Language, Integer> memoryLimit = new HashMap<Language, Integer>();
 
-    public LocalProblem(int id, String judgeType, String inputFileName, String outputFileName, String limitType, Map<Language, Integer> timeLimit, Map<Language, Integer> memoryLimit) {
-        super(id, judgeType);
+    public LocalProblem(int id, String inputFileName, String outputFileName, String limitType, Map<Language, Integer> timeLimit, Map<Language, Integer> memoryLimit) {
+        super(id);
         this.inputFileName = inputFileName;
         this.outputFileName = outputFileName;
         this.limitType = limitType;

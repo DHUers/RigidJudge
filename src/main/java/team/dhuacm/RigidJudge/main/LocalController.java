@@ -65,11 +65,11 @@ class LocalController implements Runnable {
 
         Problem problem = null;
         if (judgeType.equals("full_text")) {
-            problem = new LocalProblem(problemId, "full_text", inputFileUrl, outputFileUrl, limitType, timeLimit, memoryLimit);
-        } else if (judgeType.equals("program_comparasion")) {
+            problem = new LocalProblem(problemId, inputFileUrl, outputFileUrl, limitType, timeLimit, memoryLimit);
+        } else if (judgeType.equals("program_comparison")) {
             String judgerProgramCode = (String) judgeData.get("judger_program_source");
             String judgerProgramLanguage = (String) judgeData.get("judger_program_platform");
-            problem = new LocalSpecialProblem(problemId, "program_comparasion", inputFileUrl, outputFileUrl, limitType, timeLimit, memoryLimit, judgerProgramCode, Language.valueOf(judgerProgramLanguage.toUpperCase()));
+            problem = new LocalSpecialProblem(problemId, inputFileUrl, outputFileUrl, limitType, timeLimit, memoryLimit, judgerProgramCode, Language.valueOf(judgerProgramLanguage.toUpperCase()));
         }
         return new Solution(solutionId, problem, source, Language.valueOf(platform.toUpperCase()));
     }

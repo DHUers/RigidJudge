@@ -10,7 +10,7 @@ public class RemoteProblem extends Problem {
     private String ojIndex;
 
     public RemoteProblem(int id, OJ oj, String ojIndex) {
-        super(id, "remote_proxy");
+        super(id);
         this.oj = oj;
         this.ojIndex = ojIndex;
     }
