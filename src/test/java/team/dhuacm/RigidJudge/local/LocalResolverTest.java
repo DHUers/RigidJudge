@@ -112,12 +112,9 @@ public class LocalResolverTest {
     public void testRun() throws Exception {
         Map<Language, Integer> timeLimit = new HashMap<Language, Integer>();
         Map<Language, Integer> memoryLimit = new HashMap<Language, Integer>();
-        timeLimit.put(Language.C, 1000);
-        timeLimit.put(Language.CPP, 1000);
+        timeLimit.put(Language.DEFAULT, 1000);
         timeLimit.put(Language.JAVA, 3000);
-        memoryLimit.put(Language.C, 65535);
-        memoryLimit.put(Language.CPP, 65535);
-        memoryLimit.put(Language.JAVA, 65535);
+        memoryLimit.put(Language.DEFAULT, 65535);
         Problem problem = new LocalProblem(1, "test.in", "test.out", "all", timeLimit, memoryLimit);
         Problem problem_spj = new LocalSpecialProblem(2, "test.in", "test.out", "all", timeLimit, memoryLimit, cCode_SPJ_1, Language.C);
 

@@ -30,10 +30,18 @@ class Prepare {
         }
 
         LocalProblem problem = (LocalProblem) solution.getProblem();
-        solution.setInput(FileUtils.getFileContent(new File("data/" + problem.getInputFileName())));
+        solution.setInput(FileUtils.getFileContent(new File("data/" + problem.getInputFileName())));  // TODO
         solution.setStdAns(FileUtils.getFileContent(new File("data/" + problem.getOutputFileName())));
-        solution.setTimeLimit(problem.getTimeLimit().get(solution.getLanguage()));
-        solution.setMemoryLimit(problem.getMemoryLimit().get(solution.getLanguage()));
+        if (problem.getTimeLimit().containsKey(solution.getLanguage())) {
+            solution.setTimeLimit(problem.getTimeLimit().get(solution.getLanguage()));
+        } else {
+            solution.setTimeLimit(problem.getTimeLimit().get(Language.DEFAULT));
+        }
+        if (problem.getMemoryLimit().containsKey(solution.getLanguage())) {
+            solution.setMemoryLimit(problem.getMemoryLimit().get(solution.getLanguage()));
+        } else {
+            solution.setMemoryLimit(problem.getMemoryLimit().get(Language.DEFAULT));
+        }
         //System.out.println(solution.getInput());
         //System.out.println(solution.getStdAns());
 

@@ -56,19 +56,27 @@ class LocalController implements Runnable {
 
         List<LinkedHashMap<String, Object>> listProblems = (List<LinkedHashMap<String, Object>>) maps.get("problems");
         String judgeType = (String) listProblems.get(0).get("judge_type");
-        Map<String, Object> judgeData = (Map<String, Object>) listProblems.get(0).get("judge_data");
-        String inputFileUrl = (String) judgeData.get("input_file_url");
-        String outputFileUrl = (String) judgeData.get("output_file_url");
-        String limitType = (String) judgeData.get("limit_type");
-        Map<Language, Integer> timeLimit = (Map<Language, Integer>) judgeData.get("time_limit");  // TODO: default & require test
-        Map<Language, Integer> memoryLimit = (Map<Language, Integer>) judgeData.get("memory_limit");  // TODO: default & require test
+        Map<String, Object> mapJudgeData = (Map<String, Object>) listProblems.get(0).get("judge_data");
+        String inputFileUrl = (String) mapJudgeData.get("input_file_url");
+        String outputFileUrl = (String) mapJudgeData.get("output_file_url");
+        String limitType = (Boolean) mapJudgeData.get("per_case_limit") ? "per" : "all";
+
+        Map<String, Object> mapJudgeLimits = (Map<String, Object>) mapJudgeData.get("judge_limits");  // TODO: test
+        Map<Language, Integer> timeLimit = new HashMap<Language, Integer>();
+        Map<Language, Integer> memoryLimit = new HashMap<Language, Integer>();
+        for (Map.Entry<String, Object> entry : mapJudgeLimits.entrySet()) {
+            Language language = Language.valueOf(entry.getKey());
+            Map<String, Object> limits = (Map<String, Object>) entry.getValue();
+            timeLimit.put(language, (Integer) limits.get("time"));
+            memoryLimit.put(language, (Integer) limits.get("memory"));
+        }
 
         Problem problem = null;
         if (judgeType.equals("full_text")) {
             problem = new LocalProblem(problemId, inputFileUrl, outputFileUrl, limitType, timeLimit, memoryLimit);
         } else if (judgeType.equals("program_comparison")) {
-            String judgerProgramCode = (String) judgeData.get("judger_program_source");
-            String judgerProgramLanguage = (String) judgeData.get("judger_program_platform");
+            String judgerProgramCode = (String) mapJudgeData.get("judger_program_source");
+            String judgerProgramLanguage = (String) mapJudgeData.get("judger_program_platform");
             problem = new LocalSpecialProblem(problemId, inputFileUrl, outputFileUrl, limitType, timeLimit, memoryLimit, judgerProgramCode, Language.valueOf(judgerProgramLanguage.toUpperCase()));
         }
         return new Solution(solutionId, problem, source, Language.valueOf(platform.toUpperCase()));
