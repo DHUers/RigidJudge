@@ -18,7 +18,7 @@ public class LocalResolver {
 
     public LocalResolver(Solution solution) {
         this.solution = solution;
-        logger.info("{} - solution id: {}", solution.getProblem().getId(), solution.getId());
+        logger.info("problem id: {} - solution id: {}", solution.getProblem().getId(), solution.getId());
     }
 
     public void handle() throws IOException {

@@ -1,5 +1,5 @@
 #include <stdio.h>
-int main(int argc,char *args[]) {
+int main(int argc, char *args[]) {
    FILE *f_in = fopen(args[1], "r");
    FILE *f_out = fopen(args[2], "r");
    FILE *f_user = fopen(args[3], "r");

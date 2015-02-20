@@ -25,6 +25,10 @@ public class DataProvider {
     public static final HashMap<OJ, OJProperty> OJs = new HashMap<OJ, OJProperty>();
 
     // Local judge configurations
+    public static String Local_DataServerHost;
+    public static int Local_DataServerPort;
+    public static String Local_DataServerUsername;
+    public static String Local_DataServerPassword;
     public static boolean Local_RunInSandbox = true;
     public static int Local_CompileTimeLimit = 0;
     public static int Local_OutputLengthLimit = 0;
@@ -57,6 +61,10 @@ public class DataProvider {
         RabbitMQ_Host = p.getProperty("RabbitMQ_Host", "127.0.0.1");
         RabbitMQ_Port = Integer.parseInt(p.getProperty("RabbitMQ_Port", "5672"));
 
+        Local_DataServerHost = p.getProperty("Local_DataServerHost", "127.0.0.1");
+        Local_DataServerPort = Integer.parseInt(p.getProperty("Local_DataServerPort", "80"));
+        Local_DataServerUsername = p.getProperty("Local_DataServerUsername", "");
+        Local_DataServerPassword = p.getProperty("Local_DataServerPassword", "");
         Local_RunInSandbox = Boolean.parseBoolean(p.getProperty("Local_RunInSandbox", "true"));
         Local_CompileTimeLimit = Integer.parseInt(p.getProperty("Local_CompileTimeLimit", "5"));
         Local_OutputLengthLimit = Integer.parseInt(p.getProperty("Local_OutputLengthLimit", "5242880"));
@@ -74,6 +82,7 @@ public class DataProvider {
         logger.info("RabbitMQ Server: {}:{}", RabbitMQ_Host, RabbitMQ_Port);
         logger.info("[Local] Run in Sandbox: {}, Compile Time Limit: {}", Local_RunInSandbox, Local_CompileTimeLimit);
         logger.info("        Output Length Limit: {}, Special Judge Time Limit: {}", Local_OutputLengthLimit, Local_SpecialJudgeTimeLimit);
+        logger.info("        Data Server: {}:{}, username: {}, password: {}", Local_DataServerHost, Local_DataServerPort, Local_DataServerUsername, Local_DataServerPassword);
 
         try {
             p.load(new FileInputStream("configs/local/compile.properties"));
@@ -84,6 +93,7 @@ public class DataProvider {
             logger.error(null, e);
         }
         for (Language l : Language.values()) {
+            if (l.equals(Language.DEFAULT)) continue;
             String command = p.getProperty(l.name().toLowerCase());
             Local_CompileCommand.put(l, command);
             logger.info("        {} - '{}'", l.name(), command);
@@ -99,6 +109,7 @@ public class DataProvider {
             logger.error(null, e);
         }
         for (Language l : Language.values()) {
+            if (l.equals(Language.DEFAULT)) continue;
             String command = p.getProperty(l.name().toLowerCase());
             Local_RunCommand.put(l, command);
             logger.info("        {} - '{}'", l.name(), command);
