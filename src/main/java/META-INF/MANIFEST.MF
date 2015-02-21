@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
-Class-Path: libs/ant-1.9.4.jar libs/httpmime-4.3.6.jar libs/httpclient-4.3.6.jar libs/jack
- son-core-2.5.0.jar libs/logback-classic-1.1.2.jar libs/amqp-client-3.4.2.jar libs/je
- richo-html-3.3.jar libs/commons-exec-1.3.jar libs/commons-logging-1.1.3.jar libs/slf
- 4j-api-1.7.10.jar libs/ant-launcher-1.9.4.jar libs/jackson-databind-2.5.0.jar libs/h
- ttpcore-4.3.3.jar libs/logback-core-1.1.2.jar libs/jackson-annotations-2.5.0.ja
- r libs/commons-codec-1.6.jar
+Class-Path: libs/httpmime-4.4.jar libs/httpclient-4.4.jar libs/jack
+ son-core-2.5.1.jar libs/logback-classic-1.1.2.jar libs/amqp-client-3.4.4.jar libs/je
+ richo-html-3.3.jar libs/commons-exec-1.3.jar libs/commons-logging-1.2.jar libs/slf
+ 4j-api-1.7.10.jar libs/jackson-databind-2.5.1.jar libs/h
+ ttpcore-4.4.jar libs/logback-core-1.1.2.jar libs/jackson-annotations-2.5.1.ja
+ r libs/commons-codec-1.9.jar
 Main-Class: team.dhuacm.RigidJudge.main.RigidJudge
 

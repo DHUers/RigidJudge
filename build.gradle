@@ -32,6 +32,9 @@ distZip {
     into(project.name) {
         from '.'
         include 'configs/*'
+        include 'configs/local/*'
+        include 'configs/remote/*'
+        include 'configs/remote/OJProperty/*'
         include 'sandbox/*'
     }
 }
@@ -40,6 +43,9 @@ distTar {
     into(project.name) {
         from '.'
         include 'configs/*'
+        include 'configs/local/*'
+        include 'configs/remote/*'
+        include 'configs/remote/OJProperty/*'
         include 'sandbox/*'
     }
 }
