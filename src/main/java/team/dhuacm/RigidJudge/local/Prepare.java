@@ -33,7 +33,7 @@ class Prepare {
     private static CloseableHttpClient httpClient = null;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static boolean doPrepare(Solution solution) throws IOException {
+    public static boolean doPrepare(Solution solution, String source) throws IOException {
 
         LocalProblem problem = (LocalProblem) solution.getProblem();
 
@@ -62,7 +62,7 @@ class Prepare {
             file.mkdir();
         }
 
-        file = new File("tmp/test." + DataProvider.Local_FileSuffix.get(solution.getLanguage()));
+        file = new File(source + DataProvider.Local_FileSuffix.get(solution.getLanguage()));
         if (!file.exists()) {
             file.createNewFile();
         }
@@ -77,7 +77,7 @@ class Prepare {
             FileUtils.fileTransferCopy(new File("data/" + specialProblem.getInputFileName().substring(specialProblem.getInputFileName().lastIndexOf("/") + 1)), new File("tmp/test.in"));
             FileUtils.fileTransferCopy(new File("data/" + specialProblem.getOutputFileName().substring(specialProblem.getOutputFileName().lastIndexOf("/") + 1)), new File("tmp/test.out"));
 
-            file = new File("tmp/spj." + DataProvider.Local_FileSuffix.get(specialProblem.getJudgerProgramLanguage()));
+            file = new File("tmp/spj" + DataProvider.Local_FileSuffix.get(specialProblem.getJudgerProgramLanguage()));
             if (!file.exists()) {
                 file.createNewFile();
             }

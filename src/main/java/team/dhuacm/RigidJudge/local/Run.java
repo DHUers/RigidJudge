@@ -21,7 +21,7 @@ class Run {
     private static long memoryBegin = 0;
     private static final long memoryEnd = 0;
 
-    public static boolean doRun(Solution solution) {
+    public static boolean doRun(Solution solution, String target) {
         boolean runResult = false;
 
         ByteArrayOutputStream errorStream = null;
@@ -31,7 +31,7 @@ class Run {
         Runtime runtime;
 
         try {
-            String commandLine = DataProvider.Local_RunCommand.get(solution.getLanguage());
+            String commandLine = DataProvider.Local_RunCommand.get(solution.getLanguage()).replace("{target}", "Main");
             logger.info("cmd: {}", commandLine);
 
             CommandLine cmdLine = CommandLine.parse(commandLine);

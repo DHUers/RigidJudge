@@ -3,6 +3,7 @@ package team.dhuacm.RigidJudge.local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
+import team.dhuacm.RigidJudge.config.Language;
 import team.dhuacm.RigidJudge.config.Result;
 import team.dhuacm.RigidJudge.model.Solution;
 
@@ -22,11 +23,12 @@ public class LocalResolver {
     }
 
     public void handle() throws IOException {
-        if (Prepare.doPrepare(solution)) {
-            if (Compile.doCompile(solution.getLanguage(), "tmp/test", "tmp/test")) {
+        String source = "tmp/Main", target = "tmp/Main";
+        if (Prepare.doPrepare(solution, source)) {
+            if (Compile.doCompile(solution.getLanguage(), source, target)) {
                 solution.setCompileInfo(Compile.compileInfo);
                 logger.info("Compile success!");
-                boolean runSuccess = DataProvider.Local_RunInSandbox ? RunInSandbox.doRun(solution) : Run.doRun(solution);
+                boolean runSuccess = (DataProvider.Local_RunInSandbox && !solution.getLanguage().equals(Language.JAVA)) ? RunInSandbox.doRun(solution, target) : Run.doRun(solution, target);
                 if (runSuccess) {
                     logger.info("Run success!");
                     CheckAnswer.doCheckAnswer(solution);

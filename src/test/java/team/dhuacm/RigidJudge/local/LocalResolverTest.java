@@ -107,6 +107,18 @@ public class LocalResolverTest {
                                     "   fclose(f_user);\n" +
                                     "   return ret;\n" +
                                     "}";
+    private static final String javaCode = "import java.util.Scanner;\n" +
+            "\n" +
+            "public class Main {\n" +
+            "   public static void main(String[] args) {\n" +
+            "      Scanner in = new Scanner(System.in);\n" +
+            "      while (in.hasNextInt()) {\n" +
+            "         int a = in.nextInt();\n" +
+            "         int b = in.nextInt();\n" +
+            "         System.out.println(a + b);\n" +
+            "      }\n" +
+            "   }\n" +
+            "}";
 
     @Test
     public void testRun() throws Exception {
@@ -173,15 +185,21 @@ public class LocalResolverTest {
         assertEquals(solution.getResult(), Result.Memory_Limit_Exceeded);
 
         // C Accept_Answer
-        solution = new Solution(8, problem, cCode, Language.C);
+        solution = new Solution(1, problem, cCode, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C Compile_Error
-        solution = new Solution(9, problem, cCode.substring(0, 30), Language.C);
+        solution = new Solution(2, problem, cCode.substring(0, 30), Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Compile_Error);
+
+        // Java Accept_Answer
+        solution = new Solution(1, problem, javaCode, Language.JAVA);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Accept_Answer);
     }
 }

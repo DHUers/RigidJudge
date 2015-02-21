@@ -19,7 +19,7 @@ class RunInSandbox {
     private static long time_usage;
     private static long memory_usage;
 
-    public static boolean doRun(Solution solution) {
+    public static boolean doRun(Solution solution, String target) {
         boolean runResult = false;
 
         ByteArrayOutputStream errorStream = null;
@@ -29,7 +29,7 @@ class RunInSandbox {
         //Sandbox sandbox = new Sandbox();  // TODO: Change to JNI
         //System.out.println(Sandbox.init());
         try {
-            String commandLine = "./sandbox/sandbox ./tmp/test " + solution.getTimeLimit() + " " + solution.getMemoryLimit();
+            String commandLine = "./sandbox/sandbox " + DataProvider.Local_RunCommand.get(solution.getLanguage()).replace("{target}", target) + " " + solution.getTimeLimit() + " " + solution.getMemoryLimit();
             logger.info("cmd: {}", commandLine);
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
@@ -76,10 +76,13 @@ class RunInSandbox {
             if (watchdog.killedProcess()) {
                 solution.setResult(Result.Time_Limit_Exceeded);
                 time_usage = solution.getTimeLimit();
+            } else {
+                solution.setResult(Result.Runtime_Error);
             }
             logger.error("Error!\n{}", errorStream);
             runResult = false;
         } catch (Exception e) {
+            solution.setResult(Result.Judge_Error);
             logger.error(null, e);
             runResult = false;
         } finally {
