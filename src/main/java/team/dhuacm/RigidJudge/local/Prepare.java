@@ -1,8 +1,6 @@
 package team.dhuacm.RigidJudge.local;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
@@ -13,10 +11,8 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.IOUtils;
 import team.dhuacm.RigidJudge.config.DataProvider;
 import team.dhuacm.RigidJudge.config.Language;
-import team.dhuacm.RigidJudge.config.Result;
 import team.dhuacm.RigidJudge.exception.JudgeException;
 import team.dhuacm.RigidJudge.exception.NetworkException;
 import team.dhuacm.RigidJudge.model.LocalProblem;
@@ -60,20 +56,13 @@ class Prepare {
         } else {
             solution.setMemoryLimit(problem.getMemoryLimit().get(Language.DEFAULT));
         }
-        //System.out.println(solution.getInput());
-        //System.out.println(solution.getStdAns());
 
         File file = new File("tmp");
         if (!file.exists()) {
             file.mkdir();
         }
-        if (solution.getLanguage().equals(Language.C)) {  // Temporarily, will change to DataProvider
-            file = new File("tmp/test.c");
-        } else if (solution.getLanguage().equals(Language.CPP)) {
-            file = new File("tmp/test.cpp");
-        } else {
-            file = new File("tmp/test.java");
-        }
+
+        file = new File("tmp/test." + DataProvider.Local_FileSuffix.get(solution.getLanguage()));
         if (!file.exists()) {
             file.createNewFile();
         }
@@ -83,24 +72,20 @@ class Prepare {
 
         // Prepare for Special judge, copy input/output data and pre-compile spj
         if (problem instanceof LocalSpecialProblem) {
-            FileUtils.fileTransferCopy(new File("data/" + problem.getInputFileName().substring(problem.getInputFileName().lastIndexOf("/") + 1)), new File("tmp/test.in"));
-            FileUtils.fileTransferCopy(new File("data/" + problem.getOutputFileName().substring(problem.getOutputFileName().lastIndexOf("/") + 1)), new File("tmp/test.out"));
+            LocalSpecialProblem specialProblem = (LocalSpecialProblem) problem;
 
-            if (((LocalSpecialProblem) problem).getJudgerProgramLanguage().equals(Language.C)) {  // Temporarily, will change to DataProvider
-                file = new File("tmp/spj.c");
-            } else if (((LocalSpecialProblem) problem).getJudgerProgramLanguage().equals(Language.CPP)) {
-                file = new File("tmp/spj.cpp");
-            } else {
-                file = new File("tmp/spj.java");
-            }
+            FileUtils.fileTransferCopy(new File("data/" + specialProblem.getInputFileName().substring(specialProblem.getInputFileName().lastIndexOf("/") + 1)), new File("tmp/test.in"));
+            FileUtils.fileTransferCopy(new File("data/" + specialProblem.getOutputFileName().substring(specialProblem.getOutputFileName().lastIndexOf("/") + 1)), new File("tmp/test.out"));
+
+            file = new File("tmp/spj." + DataProvider.Local_FileSuffix.get(specialProblem.getJudgerProgramLanguage()));
             if (!file.exists()) {
                 file.createNewFile();
             }
             writer = new BufferedWriter(new FileWriter(file));
-            writer.write(((LocalSpecialProblem) problem).getJudgerProgramCode());
+            writer.write(specialProblem.getJudgerProgramCode());
             writer.close();
 
-            if (!Compile.doCompile(((LocalSpecialProblem) problem).getJudgerProgramLanguage(), "tmp/spj", "tmp/spj")) {
+            if (!Compile.doCompile(specialProblem.getJudgerProgramLanguage(), "tmp/spj", "tmp/spj")) {
                 logger.error("SPJ compile error!");
                 return false;
             }

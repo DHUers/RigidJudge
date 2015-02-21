@@ -33,6 +33,7 @@ public class DataProvider {
     public static int Local_CompileTimeLimit = 0;
     public static int Local_OutputLengthLimit = 0;
     public static int Local_SpecialJudgeTimeLimit = 0;
+    public static final Map<Language, String> Local_FileSuffix = new HashMap<Language, String>();
     public static final Map<Language, String> Local_CompileCommand = new HashMap<Language, String>();
     public static final Map<Language, String> Local_RunCommand = new HashMap<Language, String>();
 
@@ -85,9 +86,25 @@ public class DataProvider {
         logger.info("        Data Server: {}:{}, username: {}, password: {}", Local_DataServerHost, Local_DataServerPort, Local_DataServerUsername, Local_DataServerPassword);
 
         try {
-            p.load(new FileInputStream("configs/local/compile.properties"));
+            p.load(new FileInputStream("configs/local/fileSuffix.properties"));
         } catch (FileNotFoundException e) {
-            logger.error("Fatal Error: Cannot find the file: configs/local/compile.properties", e);
+            logger.error("Fatal Error: Cannot find the file: configs/local/fileSuffix.properties", e);
+            System.exit(1);
+        } catch (IOException e) {
+            logger.error(null, e);
+        }
+        for (Language l : Language.values()) {
+            if (l.equals(Language.DEFAULT)) continue;
+            String suffix = p.getProperty(l.name().toLowerCase());
+            Local_FileSuffix.put(l, suffix);
+            logger.info("        {} - '{}'", l.name(), suffix);
+        }
+        logger.info("Init local/fileSuffix.properties Config OK!");
+
+        try {
+            p.load(new FileInputStream("configs/local/compileCmd.properties"));
+        } catch (FileNotFoundException e) {
+            logger.error("Fatal Error: Cannot find the file: configs/local/compileCmd.properties", e);
             System.exit(1);
         } catch (IOException e) {
             logger.error(null, e);
@@ -98,12 +115,12 @@ public class DataProvider {
             Local_CompileCommand.put(l, command);
             logger.info("        {} - '{}'", l.name(), command);
         }
-        logger.info("Init local/compile.properties Config OK!");
+        logger.info("Init local/compileCmd.properties Config OK!");
 
         try {
-            p.load(new FileInputStream("configs/local/run.properties"));
+            p.load(new FileInputStream("configs/local/runCmd.properties"));
         } catch (FileNotFoundException e) {
-            logger.error("Fatal Error: Cannot find the file: configs/local/run.properties", e);
+            logger.error("Fatal Error: Cannot find the file: configs/local/runCmd.properties", e);
             System.exit(1);
         } catch (IOException e) {
             logger.error(null, e);
@@ -114,7 +131,7 @@ public class DataProvider {
             Local_RunCommand.put(l, command);
             logger.info("        {} - '{}'", l.name(), command);
         }
-        logger.info("Init local/run.properties Config OK!");
+        logger.info("Init local/runCmd.properties Config OK!");
 
 
         logger.info("[Remote] Retry Num: {}, Socket Timeout: {}, Connection Timeout: {}", Remote_RetryTimes, Remote_SocketTimeout, Remote_ConnectionTimeout);
