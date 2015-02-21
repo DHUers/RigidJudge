@@ -119,6 +119,43 @@ public class LocalResolverTest {
             "      }\n" +
             "   }\n" +
             "}";
+    private static final String javaCode_WA = "import java.util.Scanner;\n" +
+            "\n" +
+            "public class Main {\n" +
+            "   public static void main(String[] args) {\n" +
+            "      Scanner in = new Scanner(System.in);\n" +
+            "      while (in.hasNextInt()) {\n" +
+            "         int a = in.nextInt();\n" +
+            "         int b = in.nextInt();\n" +
+            "         System.out.println(a - b);\n" +
+            "      }\n" +
+            "   }\n" +
+            "}";
+    private static final String javaCode_TLE = "import java.util.Scanner;\n" +
+            "\n" +
+            "public class Main {\n" +
+            "   public static void main(String[] args) {\n" +
+            "      Scanner in = new Scanner(System.in);\n" +
+            "      while (in.hasNextInt()) {\n" +
+            "         int a = in.nextInt();\n" +
+            "         int b = in.nextInt();\n" +
+            "         System.out.println(a - b);\n" +
+            "      }\n" +
+            "      while (true) {}\n" +
+            "   }\n" +
+            "}";
+    private static final String javaCode_RE = "import java.util.Scanner;\n" +
+            "\n" +
+            "public class Main {\n" +
+            "   public static void main(String[] args) {\n" +
+            "      Scanner in = new Scanner(System.in);\n" +
+            "      while (in.hasNextInt()) {\n" +
+            "         int a = in.nextInt();\n" +
+            "         int b = in.nextInt();\n" +
+            "         System.out.println(a - b / 0);\n" +
+            "      }\n" +
+            "   }\n" +
+            "}";
 
     @Test
     public void testRun() throws Exception {
@@ -201,5 +238,23 @@ public class LocalResolverTest {
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
+
+        // Java Wrong_Answer
+        solution = new Solution(2, problem, javaCode_WA, Language.JAVA);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Wrong_Answer);
+
+        // Java Time_Limit_Exceeded
+        solution = new Solution(3, problem, javaCode_TLE, Language.JAVA);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Time_Limit_Exceeded);
+
+        // Java Runtime_Error
+        solution = new Solution(3, problem, javaCode_RE, Language.JAVA);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Runtime_Error);
     }
 }

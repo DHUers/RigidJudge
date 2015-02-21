@@ -88,7 +88,7 @@ class RunInSandbox {
         } finally {
             solution.setTime(time_usage);
             solution.setMemory(memory_usage);
-            logger.info("Runtime: {} ms, Memory: {} KB", solution.getTime(), solution.getMemory());
+            logger.info("Time: {} ms, Memory: {} KB", solution.getTime(), solution.getMemory());
         }
 
         return runResult;

@@ -19,7 +19,7 @@ class Run {
     private static long timeBegin = 0;
     private static long timeEnd = 0;
     private static long memoryBegin = 0;
-    private static final long memoryEnd = 0;
+    private static long memoryEnd = 0;
 
     public static boolean doRun(Solution solution, String target) {
         boolean runResult = false;
@@ -28,7 +28,7 @@ class Run {
         ByteArrayOutputStream outputStream;
         ByteArrayInputStream inputStream;
         ExecuteWatchdog watchdog = null;
-        Runtime runtime;
+        Runtime runtime = null;
 
         try {
             String commandLine = DataProvider.Local_RunCommand.get(solution.getLanguage()).replace("{target}", "Main");
@@ -51,6 +51,7 @@ class Run {
             executor.execute(cmdLine);
 
             timeEnd = System.currentTimeMillis();
+            memoryEnd = runtime.totalMemory() - runtime.freeMemory();
 
             if (timeEnd - timeBegin >= solution.getTimeLimit()) {
                 solution.setResult(Result.Time_Limit_Exceeded);
@@ -71,6 +72,7 @@ class Run {
             logger.info("Run done!");
         } catch (ExecuteException e) {
             timeEnd = System.currentTimeMillis();
+            memoryEnd = runtime.totalMemory() - runtime.freeMemory();
             if (watchdog.killedProcess()) {
                 solution.setResult(Result.Time_Limit_Exceeded);
             } else {
@@ -80,13 +82,16 @@ class Run {
             runResult = false;
         } catch (Exception e) {
             timeEnd = System.currentTimeMillis();
+            memoryEnd = (runtime != null) ? runtime.totalMemory() - runtime.freeMemory() : memoryBegin;
             solution.setResult(Result.Runtime_Error);
             logger.error(null, e);
             runResult = false;
         } finally {
-            solution.setTime(timeEnd - timeBegin);
-            solution.setMemory((memoryEnd - memoryBegin) / 1024);
-            logger.info("Runtime: {} ms, Memory: {} KB", solution.getTime(), solution.getMemory());
+            long time_usage = timeEnd - timeBegin;
+            long memory_usage = (memoryEnd - memoryBegin) / 1024;
+            solution.setTime(time_usage < solution.getTimeLimit() ? time_usage : solution.getTimeLimit());
+            solution.setMemory(memory_usage < solution.getMemoryLimit() ? memory_usage : solution.getMemoryLimit());
+            logger.info("Time: {} ms, Memory: {} KB", solution.getTime(), solution.getMemory());
         }
 
         return runResult;
