@@ -156,6 +156,22 @@ public class LocalResolverTest {
             "      }\n" +
             "   }\n" +
             "}";
+    private static final String javaCode_RE_Malicious = "import java.util.Scanner;\n" +
+            "import java.io.*;\n" +
+            "\n" +
+            "public class Main {\n" +
+            "   public static void main(String[] args) {\n" +
+            "   Scanner cin = new Scanner(System.in);\n" +
+            "      File file = new File(\"data\");\n" +
+            "      if (!file.exists()) {\n" +
+            "         file.mkdir();\n" +
+            "      }\n" +
+            "      while (cin.hasNext()) {\n" +
+            "         int a = cin.nextInt(), b = cin.nextInt();\n" +
+            "         System.out.println(a + b);\n" +
+            "      }\n" +
+            "   }\n" +
+            "}";
 
     @Test
     public void testRun() throws Exception {
@@ -253,6 +269,12 @@ public class LocalResolverTest {
 
         // Java Runtime_Error
         solution = new Solution(3, problem, javaCode_RE, Language.JAVA);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Runtime_Error);
+
+        // Java Runtime_Error (Malicious)
+        solution = new Solution(3, problem, javaCode_RE_Malicious, Language.JAVA);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Runtime_Error);
