@@ -26,7 +26,7 @@ import java.util.Map;
  */
 class LocalController implements Runnable {
 
-    private static final String QUEUE_NAME = "judger_local_queue";
+    private static final String QUEUE_NAME = "judger_queue";
     private static Channel channel;
     private static QueueingConsumer consumer;
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -65,10 +65,10 @@ class LocalController implements Runnable {
         Map<Language, Integer> timeLimit = new HashMap<Language, Integer>();
         Map<Language, Integer> memoryLimit = new HashMap<Language, Integer>();
         for (Map.Entry<String, Object> entry : mapJudgeLimits.entrySet()) {
-            Language language = Language.valueOf(entry.getKey());
+            Language language = Language.valueOf(entry.getKey().toUpperCase());
             Map<String, Object> limits = (Map<String, Object>) entry.getValue();
-            timeLimit.put(language, (Integer) limits.get("time"));
-            memoryLimit.put(language, (Integer) limits.get("memory"));
+            timeLimit.put(language, Integer.parseInt((String) limits.get("time")));
+            memoryLimit.put(language, Integer.parseInt((String) limits.get("memory")));
         }
 
         Problem problem = null;
@@ -96,6 +96,7 @@ class LocalController implements Runnable {
                 new Thread() {
                     public void run() {
                         try {
+                            //channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);  // TODO: for test only
                             Solution solution = deserialize(message);
 
                             new LocalResolver(solution).handle();

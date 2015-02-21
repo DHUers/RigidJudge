@@ -1,7 +1,8 @@
-package team.dhuacm.RigidJudge.remote;
+package team.dhuacm.RigidJudge.utils;
 
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -17,9 +18,9 @@ import java.net.UnknownHostException;
 /**
  * Created by wujy on 15-1-10.
  */
-class HttpClientUtil {
+public class HttpClientUtil {
 
-    public static CloseableHttpClient get(final int retryCount, int socketTimeout, int connectionTimeout) {
+    public static CloseableHttpClient get(final int retryCount, int socketTimeout, int connectionTimeout, CredentialsProvider credentialsProvider) {
 
         System.setProperty("jsse.enableSNIExtension", "false");  // Resolve https issues
 
@@ -50,6 +51,10 @@ class HttpClientUtil {
 
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(socketTimeout * 1000).setConnectTimeout(connectionTimeout * 1000).build();
 
-        return HttpClients.custom().setDefaultRequestConfig(requestConfig).setRetryHandler(myRetryHandler).build();
+        if (credentialsProvider != null) {
+            return HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider).setDefaultRequestConfig(requestConfig).setRetryHandler(myRetryHandler).build();
+        } else {
+            return HttpClients.custom().setDefaultRequestConfig(requestConfig).setRetryHandler(myRetryHandler).build();
+        }
     }
 }

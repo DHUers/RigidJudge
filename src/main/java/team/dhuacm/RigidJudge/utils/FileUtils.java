@@ -1,4 +1,4 @@
-package team.dhuacm.RigidJudge.local;
+package team.dhuacm.RigidJudge.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +9,9 @@ import java.nio.channels.FileChannel;
 /**
  * Created by wujy on 15-1-25.
  */
-class FileUtils {
+public class FileUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(Compile.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(FileUtils.class.getSimpleName());
 
     public static String getFileContent(File file) {
         String fileContent = "";

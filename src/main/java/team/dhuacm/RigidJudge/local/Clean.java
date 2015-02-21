@@ -2,6 +2,7 @@ package team.dhuacm.RigidJudge.local;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import team.dhuacm.RigidJudge.utils.FileUtils;
 
 import java.io.File;
 

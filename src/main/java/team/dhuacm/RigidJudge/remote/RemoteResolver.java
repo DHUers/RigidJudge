@@ -4,13 +4,12 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.*;
-import team.dhuacm.RigidJudge.exception.JudgeException;
 import team.dhuacm.RigidJudge.exception.NetworkException;
 import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
+import team.dhuacm.RigidJudge.utils.HttpClientUtil;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Created by wujy on 15-1-8.
@@ -21,7 +20,7 @@ public class RemoteResolver {
     private final OJ oj;
     private final OJProperty ojProperty;
     private OJAccount ojAccount;
-    private final CloseableHttpClient client = HttpClientUtil.get(DataProvider.Remote_RetryTimes, DataProvider.Remote_SocketTimeout, DataProvider.Remote_ConnectionTimeout);
+    private final CloseableHttpClient client = HttpClientUtil.get(DataProvider.Remote_RetryTimes, DataProvider.Remote_SocketTimeout, DataProvider.Remote_ConnectionTimeout, null);
     private static final Logger logger = LoggerFactory.getLogger(RemoteResolver.class.getSimpleName());
 
     public RemoteResolver(Solution solution) throws InterruptedException {

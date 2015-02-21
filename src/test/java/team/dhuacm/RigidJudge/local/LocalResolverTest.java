@@ -118,11 +118,11 @@ public class LocalResolverTest {
         Problem problem = new LocalProblem(1, "test.in", "test.out", "all", timeLimit, memoryLimit);
         Problem problem_spj = new LocalSpecialProblem(2, "test.in", "test.out", "all", timeLimit, memoryLimit, cCode_SPJ_1, Language.C);
 
-        // C++ SPJ(C) Accept
+        // C++ SPJ(C) Accept_Answer
         Solution solution = new Solution(1, problem_spj, cppCode, Language.CPP);
         LocalResolver localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);
+        assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C++ SPJ(C) Wrong_Answer
         solution = new Solution(2, problem_spj, cppCode_WA, Language.CPP);
@@ -130,11 +130,11 @@ public class LocalResolverTest {
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Wrong_Answer);
 
-        // C++ Accept
+        // C++ Accept_Answer
         solution = new Solution(1, problem, cppCode, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);
+        assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C++ Time_Limit_Exceeded
         solution = new Solution(2, problem, cppCode_TLE, Language.CPP);
@@ -172,11 +172,11 @@ public class LocalResolverTest {
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Memory_Limit_Exceeded);
 
-        // C Accept
+        // C Accept_Answer
         solution = new Solution(8, problem, cCode, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);
+        assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C Compile_Error
         solution = new Solution(9, problem, cCode.substring(0, 30), Language.C);

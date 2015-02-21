@@ -33,19 +33,19 @@ public class RemoteResolverTest {
         solution = new Solution(2, new RemoteProblem(1, OJ.POJ, "1000"), cppCode, Language.CPP);
         remoteResolver = new RemoteResolver(solution);
         remoteResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);
+        assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // HDU C++
         solution = new Solution(3, new RemoteProblem(1, OJ.HDU, "1000"), cppCode, Language.CPP);
         remoteResolver = new RemoteResolver(solution);
         remoteResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);
+        assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // ZOJ C++
         solution = new Solution(4, new RemoteProblem(1, OJ.ZOJ, "1001"), cppCode, Language.CPP);
         remoteResolver = new RemoteResolver(solution);
         remoteResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);
+        assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // UVaLive C++
         solution = new Solution(5, new RemoteProblem(1, OJ.UVALIVE, "2000"), cppCode, Language.CPP);
@@ -57,7 +57,7 @@ public class RemoteResolverTest {
         solution = new Solution(6, new RemoteProblem(1, OJ.SGU, "100"), cppCode, Language.CPP);
         remoteResolver = new RemoteResolver(solution);
         remoteResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);
+        assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // SPOJ C++
         solution = new Solution(7, new RemoteProblem(1, OJ.SPOJ, "TEST"), cppCode, Language.CPP);
@@ -69,13 +69,13 @@ public class RemoteResolverTest {
         solution = new Solution(8, new RemoteProblem(1, OJ.AIZU, "1000"), cppCode, Language.CPP);
         remoteResolver = new RemoteResolver(solution);
         remoteResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);
+        assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // Ural C++
         solution = new Solution(9, new RemoteProblem(1, OJ.URAL, "1000"), cppCode, Language.CPP);
         remoteResolver = new RemoteResolver(solution);
         remoteResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept);
+        assertEquals(solution.getResult(), Result.Accept_Answer);
 /*  Turn off Codeforces test due to account security protection
         // Codeforces C++
         solution = new Solution(10, new RemoteProblem(1, OJ.CODEFORCES, "505A"), cppCode, Language.CPP);

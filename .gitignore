@@ -68,3 +68,5 @@ atlassian-ide-plugin.xml
 test
 /sandbox/sandbox
 /sandbox/test
+/data
+/tmp
