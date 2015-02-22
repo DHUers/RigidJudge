@@ -175,7 +175,7 @@ public class LocalResolverTest {
     private static final String javaCode_MLE = "import java.util.Scanner;\n" +
             "\n" +
             "public class Main {\n" +
-            "   public static long[] c = new long[3110000], d = new long[2660000], e = new long[2500000];\n" +
+            "   public static long[] c = new long[4110000], d = new long[2660000], e = new long[2500000];\n" +
             "\n" +
             "   public static void main(String[] args) {\n" +
             "      Scanner cin = new Scanner(System.in);\n" +

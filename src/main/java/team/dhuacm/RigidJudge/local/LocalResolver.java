@@ -1,5 +1,6 @@
 package team.dhuacm.RigidJudge.local;
 
+import org.apache.commons.codec.language.bm.Lang;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
@@ -28,7 +29,16 @@ public class LocalResolver {
             if (Compile.doCompile(solution.getLanguage(), source, target)) {
                 solution.setCompileInfo(Compile.compileInfo);
                 logger.info("Compile success!");
-                boolean runSuccess = (DataProvider.Local_RunInSandbox && !solution.getLanguage().equals(Language.JAVA)) ? RunInSandbox.doRun(solution, target) : Run.doRun(solution, target);
+                boolean runSuccess;
+                if (solution.getLanguage().equals(Language.JAVA)) {
+                    runSuccess = RunInJavaWrapper.doRun(solution);
+                } else {
+                    if (DataProvider.Local_RunInSandbox) {
+                        runSuccess = RunInSandbox.doRun(solution, target);
+                    } else {
+                        runSuccess = Run.doRun(solution, target);
+                    }
+                }
                 if (runSuccess) {
                     logger.info("Run success!");
                     CheckAnswer.doCheckAnswer(solution);

@@ -3,7 +3,7 @@ import java.lang.management.MemoryPoolMXBean;
 
 import java.util.List;
 
-public class Sandbox {
+public class JavaWrapper {
     public static long memoryUsage = 0;
     public static Main main = null;
 

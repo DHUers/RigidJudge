@@ -70,9 +70,9 @@ class Prepare {
         writer.write(solution.getCode());
         writer.close();
 
-        // Prepare for Java solutions, copy Java wrapper (Sandbox.class)
+        // Prepare for Java solutions, copy Java wrapper (JavaWrapper.class)
         if (solution.getLanguage().equals(Language.JAVA)) {
-            FileUtils.fileTransferCopy(new File("sandbox/Sandbox.class"), new File("tmp/Sandbox.class"));
+            FileUtils.fileTransferCopy(new File("sandbox/JavaWrapper.class"), new File("tmp/JavaWrapper.class"));
         }
 
         // Prepare for Special judge, copy input/output data and pre-compile spj
