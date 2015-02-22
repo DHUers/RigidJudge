@@ -1,12 +1,14 @@
 package team.dhuacm.RigidJudge.local;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
@@ -23,6 +25,9 @@ import team.dhuacm.RigidJudge.utils.HttpClientUtil;
 
 import javax.xml.crypto.Data;
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by wujy on 15-1-18.
@@ -108,14 +113,42 @@ class Prepare {
         }
 
         String dataServerPrefix = "http://" + DataProvider.Local_DataServerHost + ":" + DataProvider.Local_DataServerPort;
-        downloadIfNotExists("data/" + problem.getInputFileName().substring(problem.getInputFileName().lastIndexOf("/") + 1), dataServerPrefix + problem.getInputFileName());
-        downloadIfNotExists("data/" + problem.getOutputFileName().substring(problem.getOutputFileName().lastIndexOf("/") + 1), dataServerPrefix + problem.getOutputFileName());
+        downloadIfNeed("data/" + problem.getInputFileName().substring(problem.getInputFileName().lastIndexOf("/") + 1), dataServerPrefix + problem.getInputFileName());
+        downloadIfNeed("data/" + problem.getOutputFileName().substring(problem.getOutputFileName().lastIndexOf("/") + 1), dataServerPrefix + problem.getOutputFileName());
     }
 
-    private static void downloadIfNotExists(String filename, String url) throws JudgeException, NetworkException {
+    private static Date getLastModified(String url) throws JudgeException, NetworkException {
+        Date lastModified = null;
+        HttpHead head = new HttpHead(url);
+        CloseableHttpResponse response = null;
+        try {
+            response = httpClient.execute(head);
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+            lastModified = sdf.parse(response.getFirstHeader("last-modified").getValue());
+            logger.info("Last-Modified: {}", lastModified);
+        } catch (ClientProtocolException e) {
+            throw new JudgeException(e.getMessage(), e.getCause());
+        } catch (ParseException e) {
+            throw new JudgeException(e.getMessage(), e.getCause());
+        } catch (Exception e) {
+            throw new NetworkException(e.getMessage(), e.getCause());
+        } finally {
+            try {
+                if (null != response)
+                    response.close();
+            } catch (IOException e) {
+                logger.error(null, e);
+            }
+            head.releaseConnection();
+        }
+        return lastModified;
+    }
+
+    private static void downloadIfNeed(String filename, String url) throws JudgeException, NetworkException {
+        if (filename.startsWith("data/test")) return;
         File file = new File(filename);
-        if (!file.exists()) {
-            // download from data server
+
+        if (!file.exists() || getLastModified(url).compareTo(new Date(file.lastModified())) > 0) {
             HttpGet get = new HttpGet(url);
             CloseableHttpResponse response = null;
             try {
