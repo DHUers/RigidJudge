@@ -18,8 +18,9 @@ class Run {
     private static final Logger logger = LoggerFactory.getLogger(Run.class.getSimpleName());
     private static long timeBegin = 0;
     private static long timeEnd = 0;
-    private static long memoryBegin = 0;
-    private static long memoryEnd = 0;
+    //private static long memoryBegin = 0;
+    //private static long memoryEnd = 0;
+    private static long memory_usage;
 
     public static boolean doRun(Solution solution, String target) {
         boolean runResult = false;
@@ -31,7 +32,7 @@ class Run {
         Runtime runtime = null;
 
         try {
-            String commandLine = DataProvider.Local_RunCommand.get(solution.getLanguage()).replace("{target}", "Main");
+            String commandLine = DataProvider.Local_RunCommand.get(solution.getLanguage()).replace("{target}", "Sandbox");
             logger.info("cmd: {}", commandLine);
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
@@ -45,18 +46,22 @@ class Run {
             executor.setStreamHandler(streamHandler);
 
             runtime = Runtime.getRuntime();
-            memoryBegin = runtime.totalMemory() - runtime.freeMemory();
+            //memoryBegin = runtime.totalMemory() - runtime.freeMemory();
             timeBegin = System.currentTimeMillis();
 
             executor.execute(cmdLine);
 
             timeEnd = System.currentTimeMillis();
-            memoryEnd = runtime.totalMemory() - runtime.freeMemory();
+            System.out.println(errorStream);
+            String[] sandboxReply = errorStream.toString().split("\n");
+            //String result = sandboxReply[0].split(": ")[1];
+            //time_usage = Long.parseLong(sandboxReply[1].split(": ")[1].replace("ms", ""));
+            memory_usage = Long.parseLong(sandboxReply[0].split(": ")[1].replace("kB", ""));
 
             if (timeEnd - timeBegin >= solution.getTimeLimit()) {
                 solution.setResult(Result.Time_Limit_Exceeded);
                 runResult = false;
-            } else if (memoryEnd - memoryBegin >= solution.getMemoryLimit() * 1024) {
+            } else if (memory_usage >= solution.getMemoryLimit()) {
                 solution.setResult(Result.Memory_Limit_Exceeded);
                 runResult = false;
             } else {
@@ -72,7 +77,7 @@ class Run {
             logger.info("Run done!");
         } catch (ExecuteException e) {
             timeEnd = System.currentTimeMillis();
-            memoryEnd = runtime.totalMemory() - runtime.freeMemory();
+            //memoryEnd = runtime.totalMemory() - runtime.freeMemory();
             if (watchdog.killedProcess()) {
                 solution.setResult(Result.Time_Limit_Exceeded);
             } else {
@@ -82,13 +87,12 @@ class Run {
             runResult = false;
         } catch (Exception e) {
             timeEnd = System.currentTimeMillis();
-            memoryEnd = (runtime != null) ? runtime.totalMemory() - runtime.freeMemory() : memoryBegin;
+            //memoryEnd = (runtime != null) ? runtime.totalMemory() - runtime.freeMemory() : memoryBegin;
             solution.setResult(Result.Runtime_Error);
             logger.error(null, e);
             runResult = false;
         } finally {
             long time_usage = timeEnd - timeBegin;
-            long memory_usage = (memoryEnd - memoryBegin) / 1024;
             solution.setTime(time_usage < solution.getTimeLimit() ? time_usage : solution.getTimeLimit());
             solution.setMemory(memory_usage < solution.getMemoryLimit() ? memory_usage : solution.getMemoryLimit());
             logger.info("Time: {} ms, Memory: {} KB", solution.getTime(), solution.getMemory());

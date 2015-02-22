@@ -172,6 +172,19 @@ public class LocalResolverTest {
             "      }\n" +
             "   }\n" +
             "}";
+    private static final String javaCode_MLE = "import java.util.Scanner;\n" +
+            "\n" +
+            "public class Main {\n" +
+            "   public static long[] c = new long[3110000], d = new long[2660000], e = new long[2500000];\n" +
+            "\n" +
+            "   public static void main(String[] args) {\n" +
+            "      Scanner cin = new Scanner(System.in);\n" +
+            "      while (cin.hasNext()) {\n" +
+            "         int a = cin.nextInt(), b = cin.nextInt();\n" +
+            "         System.out.println(a + b);\n" +
+            "      }\n" +
+            "   }\n" +
+            "}";
 
     @Test
     public void testRun() throws Exception {
@@ -180,6 +193,7 @@ public class LocalResolverTest {
         timeLimit.put(Language.DEFAULT, 1000);
         timeLimit.put(Language.JAVA, 3000);
         memoryLimit.put(Language.DEFAULT, 65535);
+        memoryLimit.put(Language.JAVA, 70000);
         Problem problem = new LocalProblem(1, "test.in", "test.out", "all", timeLimit, memoryLimit);
         Problem problem_spj = new LocalSpecialProblem(2, "test.in", "test.out", "all", timeLimit, memoryLimit, cCode_SPJ_1, Language.C);
 
@@ -268,15 +282,21 @@ public class LocalResolverTest {
         assertEquals(solution.getResult(), Result.Time_Limit_Exceeded);
 
         // Java Runtime_Error
-        solution = new Solution(3, problem, javaCode_RE, Language.JAVA);
+        solution = new Solution(4, problem, javaCode_RE, Language.JAVA);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Runtime_Error);
 
         // Java Runtime_Error (Malicious)
-        solution = new Solution(3, problem, javaCode_RE_Malicious, Language.JAVA);
+        solution = new Solution(5, problem, javaCode_RE_Malicious, Language.JAVA);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Runtime_Error);
+
+        // Java Memory_Limit_Exceeded
+        solution = new Solution(6, problem, javaCode_MLE, Language.JAVA);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Memory_Limit_Exceeded);
     }
 }

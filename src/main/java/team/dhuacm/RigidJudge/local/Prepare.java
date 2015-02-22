@@ -70,6 +70,11 @@ class Prepare {
         writer.write(solution.getCode());
         writer.close();
 
+        // Prepare for Java solutions, copy Java wrapper (Sandbox.class)
+        if (solution.getLanguage().equals(Language.JAVA)) {
+            FileUtils.fileTransferCopy(new File("sandbox/Sandbox.class"), new File("tmp/Sandbox.class"));
+        }
+
         // Prepare for Special judge, copy input/output data and pre-compile spj
         if (problem instanceof LocalSpecialProblem) {
             LocalSpecialProblem specialProblem = (LocalSpecialProblem) problem;
