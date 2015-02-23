@@ -33,6 +33,7 @@ public class DataProvider {
     public static int Local_CompileTimeLimit = 0;
     public static int Local_OutputLengthLimit = 0;
     public static int Local_SpecialJudgeTimeLimit = 0;
+    public static boolean Local_DiffReport = true;
     public static final Map<Language, String> Local_FileSuffix = new HashMap<Language, String>();
     public static final Map<Language, String> Local_CompileCommand = new HashMap<Language, String>();
     public static final Map<Language, String> Local_RunCommand = new HashMap<Language, String>();
@@ -70,6 +71,7 @@ public class DataProvider {
         Local_CompileTimeLimit = Integer.parseInt(p.getProperty("Local_CompileTimeLimit", "5"));
         Local_OutputLengthLimit = Integer.parseInt(p.getProperty("Local_OutputLengthLimit", "5242880"));
         Local_SpecialJudgeTimeLimit = Integer.parseInt(p.getProperty("Local_SpecialJudgeTimeLimit", "5"));
+        Local_DiffReport = Boolean.parseBoolean(p.getProperty("Local_DiffReport", "true"));
 
         Remote_Concurrency = Integer.parseInt(p.getProperty("Remote_Concurrency", "10"));
         Remote_RetryTimes = Integer.parseInt(p.getProperty("Remote_RetryTimes", "3"));
@@ -81,7 +83,7 @@ public class DataProvider {
 
 
         logger.info("RabbitMQ Server: {}:{}", RabbitMQ_Host, RabbitMQ_Port);
-        logger.info("[Local] Run in Sandbox: {}, Compile Time Limit: {}", Local_RunInSandbox, Local_CompileTimeLimit);
+        logger.info("[Local] Run in Sandbox: {}, Diff Report: {}, Compile Time Limit: {}", Local_RunInSandbox, Local_DiffReport, Local_CompileTimeLimit);
         logger.info("        Output Length Limit: {}, Special Judge Time Limit: {}", Local_OutputLengthLimit, Local_SpecialJudgeTimeLimit);
         logger.info("        Data Server: {}:{}, username: {}, password: {}", Local_DataServerHost, Local_DataServerPort, Local_DataServerUsername, Local_DataServerPassword);
 

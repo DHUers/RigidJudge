@@ -14,6 +14,8 @@ public class Solution {
 
     private Result result;
     private String compileInfo;
+    private String executeInfo;
+    private String compareInfo;
     private long time;
     private long memory;
     private String output;
@@ -81,6 +83,22 @@ public class Solution {
 
     public void setCompileInfo(String compileInfo) {
         this.compileInfo = compileInfo;
+    }
+
+    public String getExecuteInfo() {
+        return executeInfo;
+    }
+
+    public void setExecuteInfo(String executeInfo) {
+        this.executeInfo = executeInfo;
+    }
+
+    public String getCompareInfo() {
+        return compareInfo;
+    }
+
+    public void setCompareInfo(String compareInfo) {
+        this.compareInfo = compareInfo;
     }
 
     public long getTime() {

@@ -1,6 +1,7 @@
 package team.dhuacm.RigidJudge.local;
 
 import org.apache.commons.exec.*;
+import org.apache.commons.exec.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
@@ -8,8 +9,10 @@ import team.dhuacm.RigidJudge.config.Result;
 import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.LocalSpecialProblem;
 import team.dhuacm.RigidJudge.model.Solution;
+import team.dhuacm.RigidJudge.utils.diff_match_patch;
 
 import java.io.*;
+import java.util.LinkedList;
 
 /**
  * Created by wujy on 15-1-18.
@@ -105,6 +108,14 @@ class CheckAnswer {
                     solution.setResult(Result.Presentation_Error);
                 } else {
                     solution.setResult(Result.Wrong_Answer);
+                }
+
+                if (DataProvider.Local_DiffReport) {
+                    diff_match_patch dmp = new diff_match_patch();
+                    LinkedList<diff_match_patch.Diff> diffs = dmp.diff_main(stdAns, output);
+                    dmp.diff_cleanupSemantic(diffs);
+                    solution.setCompareInfo(dmp.diff_prettyHtml(diffs));
+                    logger.info("Diff info: '{}'", solution.getCompareInfo());
                 }
             }
         }
