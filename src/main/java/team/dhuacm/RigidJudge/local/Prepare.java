@@ -1,7 +1,6 @@
 package team.dhuacm.RigidJudge.local;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
@@ -23,7 +22,6 @@ import team.dhuacm.RigidJudge.model.Solution;
 import team.dhuacm.RigidJudge.utils.FileUtils;
 import team.dhuacm.RigidJudge.utils.HttpClientUtil;
 
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,6 +49,13 @@ class Prepare {
 
         solution.setInput(FileUtils.getFileContent(new File("data/" + problem.getInputFileName().substring(problem.getInputFileName().lastIndexOf("/") + 1))));
         solution.setStdAns(FileUtils.getFileContent(new File("data/" + problem.getOutputFileName().substring(problem.getOutputFileName().lastIndexOf("/") + 1))));
+        if (!solution.getInput().endsWith("\n")) {  // normalize I/O to prevent PE
+            solution.setInput(solution.getInput() + "\n");
+        }
+        if (!solution.getStdAns().endsWith("\n")) {
+            solution.setStdAns(solution.getStdAns() + "\n");
+        }
+
         if (problem.getTimeLimit().containsKey(solution.getLanguage())) {
             solution.setTimeLimit(problem.getTimeLimit().get(solution.getLanguage()));
         } else {

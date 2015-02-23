@@ -72,41 +72,39 @@ class CheckAnswer {
 
     public static void doCheckAnswer(Solution solution) throws IOException {
         LocalProblem problem = (LocalProblem) solution.getProblem();
-        if (problem != null) {
-            if (problem instanceof LocalSpecialProblem) {
-                Writer writer = new BufferedWriter(new FileWriter(new File("tmp/test.user")));
-                writer.write(solution.getOutput());
-                writer.close();
+        if (problem instanceof LocalSpecialProblem) {
+            Writer writer = new BufferedWriter(new FileWriter(new File("tmp/test.user")));
+            writer.write(solution.getOutput());
+            writer.close();
 
-                switch (executeSpecialJudge("spj")) {
-                    case 0:
-                        solution.setResult(Result.Accept_Answer);
-                        break;
-                    case 1:
-                        solution.setResult(Result.Wrong_Answer);
-                        break;
-                    case 2:
-                        solution.setResult(Result.Presentation_Error);
-                        break;
-                    case -1:
-                        solution.setResult(Result.Judge_Error);
-                        break;
-                    default:
-                        solution.setResult(Result.Judge_Error);
-                }
-            } else {
-                //logger.info("'{}'", solution.getStdAns());
-                //logger.info("'{}'", solution.getOutput());
-                if (solution.getStdAns().equals(solution.getOutput())) {
+            switch (executeSpecialJudge("spj")) {
+                case 0:
                     solution.setResult(Result.Accept_Answer);
+                    break;
+                case 1:
+                    solution.setResult(Result.Wrong_Answer);
+                    break;
+                case 2:
+                    solution.setResult(Result.Presentation_Error);
+                    break;
+                case -1:
+                    solution.setResult(Result.Judge_Error);
+                    break;
+                default:
+                    solution.setResult(Result.Judge_Error);
+            }
+        } else {
+            //logger.info("'{}'", solution.getStdAns());
+            //logger.info("'{}'", solution.getOutput());
+            if (solution.getStdAns().equals(solution.getOutput())) {
+                solution.setResult(Result.Accept_Answer);
+            } else {
+                String stdAns = removeSpace(solution.getStdAns());
+                String output = removeSpace(solution.getOutput());
+                if (stdAns.equals(output)) {
+                    solution.setResult(Result.Presentation_Error);
                 } else {
-                    String stdAns = removeSpace(solution.getStdAns());
-                    String output = removeSpace(solution.getOutput());
-                    if (stdAns.equals(output)) {
-                        solution.setResult(Result.Presentation_Error);
-                    } else {
-                        solution.setResult(Result.Wrong_Answer);
-                    }
+                    solution.setResult(Result.Wrong_Answer);
                 }
             }
         }
