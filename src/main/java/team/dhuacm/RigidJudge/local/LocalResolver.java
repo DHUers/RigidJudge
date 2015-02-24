@@ -31,8 +31,8 @@ public class LocalResolver {
                 logger.info("Compile success!");
 
                 if (((LocalProblem) solution.getProblem()).getLimitType().equals("per")) {  // limit per case
-                    runAndCheckAnswer(solution, target);  // TODO: prepare I/O data, switch data (especially for SPJ)
-                } else {
+                    handleMultipleCase(solution, target);
+                } else {  // normal once execution
                     runAndCheckAnswer(solution, target);
                 }
             } else {
@@ -45,6 +45,29 @@ public class LocalResolver {
             solution.setResult(Result.Judge_Error);
         }
         Clean.doClean();
+    }
+
+    private void handleMultipleCase(Solution solution, String target) throws IOException {
+        String[] inputs = solution.getInput().split("<Case Separator>\\n");
+        String[] outputs = solution.getStdAns().split("<Case Separator>\\n");
+        if (inputs.length == outputs.length) {
+            Result result = Result.Queue;
+            for (int i = 0; i < inputs.length; i++) {
+                Solution caseSolution = new Solution(solution);
+                caseSolution.setInput(inputs[i]);
+                caseSolution.setStdAns(outputs[i]);
+                logger.info("Case #{} Begin", i+1, inputs[i], outputs[i]);
+                runAndCheckAnswer(caseSolution, target);
+                logger.info("Case #{} End {}", i+1, caseSolution.getResult());
+                if (result.compareTo(caseSolution.getResult()) < 0) {
+                    result = caseSolution.getResult();
+                }
+            }
+            solution.setResult(result);
+        } else {
+            logger.error("Test case not match! Input: {}, Output: {}.", inputs.length, outputs.length);
+            solution.setResult(Result.Judge_Error);
+        }
     }
 
     private void runAndCheckAnswer(Solution solution, String target) throws IOException {

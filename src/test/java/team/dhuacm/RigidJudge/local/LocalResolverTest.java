@@ -246,6 +246,8 @@ public class LocalResolverTest {
         Problem problem_spj_c = new LocalSpecialProblem(2, "test.in", "test.out", "all", timeLimit, memoryLimit, cCode_SPJ_1, Language.C);
         Problem problem_spj_cpp = new LocalSpecialProblem(3, "test.in", "test.out", "all", timeLimit, memoryLimit, cppCode_SPJ_1, Language.CPP);
         Problem problem_spj_java = new LocalSpecialProblem(4, "test.in", "test.out", "all", timeLimit, memoryLimit, javaCode_SPJ_1, Language.JAVA);
+        Problem problem_multicase = new LocalProblem(5, "multicase_test.in", "multicase_test.out", "per", timeLimit, memoryLimit);
+        Problem problem_multicase_spj_c = new LocalSpecialProblem(6, "multicase_test.in", "multicase_test.out", "per", timeLimit, memoryLimit, cCode_SPJ_1, Language.C);
 
         // C++ SPJ(C) Accept_Answer
         Solution solution = new Solution(1, problem_spj_c, cppCode, Language.CPP);
@@ -279,6 +281,30 @@ public class LocalResolverTest {
 
         // C++ SPJ(Java) Wrong_Answer
         solution = new Solution(2, problem_spj_java, cppCode_WA, Language.CPP);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Wrong_Answer);
+
+        // Multicase C++ Accept_Answer
+        solution = new Solution(1, problem_multicase, cppCode, Language.CPP);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Accept_Answer);
+
+        // Multicase C++ Wrong_Answer
+        solution = new Solution(2, problem_multicase, cppCode_WA, Language.CPP);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Wrong_Answer);
+
+        // Multicase C++ SPJ(C) Accept_Answer
+        solution = new Solution(3, problem_multicase_spj_c, cppCode, Language.CPP);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Accept_Answer);
+
+        // Multicase C++ SPJ(C) Wrong_Answer
+        solution = new Solution(4, problem_multicase_spj_c, cppCode_WA, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Wrong_Answer);

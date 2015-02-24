@@ -25,8 +25,22 @@ public class Solution {
     private String input;
     private String stdAns;
 
-    public Solution() {
-
+    public Solution(Solution solution) {
+        this.id = solution.id;
+        this.problem = solution.problem;
+        this.code = solution.code;
+        this.language = solution.language;
+        this.result = solution.result;
+        this.compileInfo = solution.compileInfo;
+        this.executeInfo = solution.executeInfo;
+        this.compareInfo = solution.compareInfo;
+        this.time = solution.time;
+        this.memory = solution.memory;
+        this.output = solution.output;
+        this.timeLimit = solution.timeLimit;
+        this.memoryLimit = solution.memoryLimit;
+        this.input = solution.input;
+        this.stdAns = solution.stdAns;
     }
 
     public Solution(int id, Problem problem, String code, Language language) {

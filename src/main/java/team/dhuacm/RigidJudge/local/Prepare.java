@@ -147,7 +147,7 @@ class Prepare {
     }
 
     private static void downloadIfNeed(String filename, String url) throws JudgeException, NetworkException {
-        if (filename.startsWith("data/test")) return;
+        if (filename.contains("test.")) return;
         File file = new File(filename);
 
         if (!file.exists() || getLastModified(url).compareTo(new Date(file.lastModified())) > 0) {
