@@ -49,7 +49,7 @@ class Sender implements Runnable {
         mapInfo.put("status", solution.getResult().toString().toLowerCase());
         mapInfo.put("time_usage", solution.getTime());
         mapInfo.put("memory_usage", solution.getMemory());
-        mapInfo.put("report", solution.getCompileInfo());
+        mapInfo.put("report", solution.getCompileInfo() + "\n" + solution.getExecuteInfo() + "\n" + solution.getCompareInfo());
         mapSolution.put("solution", mapInfo);
 
         return objectMapper.writeValueAsString(mapSolution);

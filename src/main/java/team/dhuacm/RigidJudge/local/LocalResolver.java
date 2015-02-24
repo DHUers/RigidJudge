@@ -62,6 +62,8 @@ public class LocalResolver {
                 if (result.compareTo(caseSolution.getResult()) < 0) {
                     result = caseSolution.getResult();
                 }
+                solution.setExecuteInfo(solution.getExecuteInfo() + "Case #" + (i+1) + ": " + caseSolution.getResult() + "\n" + caseSolution.getExecuteInfo() + "\n");
+                solution.setCompareInfo(solution.getCompareInfo() + "Case #" + (i+1) + ": " + caseSolution.getCompareInfo() + "\n");
             }
             solution.setResult(result);
         } else {
