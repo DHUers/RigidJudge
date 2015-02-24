@@ -337,6 +337,125 @@ public class LocalResolverTest_Extra {
             "            printf(\"%c %d\\n\", count[i].letter, count[i].cnt);\n" +
             "    }\n" +
             "}";
+    private static final String cppCode_09 = "#include <iostream>\n" +
+            "#include <cstring>\n" +
+            "#include <cstdio>\n" +
+            "using namespace std;\n" +
+            "\n" +
+            "const int MAXN = 110;\n" +
+            "const int INF = 0x3f3f3f3f;\n" +
+            "int nCase, n, dp[MAXN][MAXN], value[MAXN], sum[MAXN];\n" +
+            "bool visited[MAXN][MAXN];\n" +
+            "\n" +
+            "void init() {\n" +
+            "    sum[0] = 0;\n" +
+            "    memset(dp, 0, sizeof(dp));\n" +
+            "    memset(visited, false, sizeof(visited));\n" +
+            "}\n" +
+            "\n" +
+            "void input() {\n" +
+            "    scanf(\"%d\", &n);\n" +
+            "    for (int i = 1; i <= n; i++) {\n" +
+            "        scanf(\"%d\", &value[i]);\n" +
+            "        sum[i] = sum[i-1] + value[i];\n" +
+            "    }\n" +
+            "}\n" +
+            "\n" +
+            "int DP(int l, int r) {\n" +
+            "    if (l >= r) return 0;\n" +
+            "    if (visited[l][r]) return dp[l][r];\n" +
+            "    visited[l][r] = true;\n" +
+            "\n" +
+            "    int ret = -INF;\n" +
+            "    for (int i = 1; i <= r-l; i++) {\n" +
+            "        ret = max(ret, sum[r] - sum[l] - min(DP(l+i, r), DP(l, r-i)));\n" +
+            "    }\n" +
+            "    return dp[l][r] = ret;\n" +
+            "}\n" +
+            "\n" +
+            "void solve() {\n" +
+            "    printf(\"%d\\n\", DP(0, n) * 2 - sum[n]);\n" +
+            "}\n" +
+            "\n" +
+            "int main() {\n" +
+            "    //freopen(\"YK_Game.in\", \"r\", stdin);\n" +
+            "    //freopen(\"YK_Game.out\", \"w\", stdout);\n" +
+            "    scanf(\"%d\", &nCase);\n" +
+            "    while (nCase--) {\n" +
+            "        init();\n" +
+            "        input();\n" +
+            "        solve();\n" +
+            "    }\n" +
+            "    return 0;\n" +
+            "}";
+    private static final String cppCode_10 = "#include <cstdio>\n" +
+            "using namespace std;\n" +
+            "\n" +
+            "const int MAXN = 10010;\n" +
+            "const int MAXM = 100010;\n" +
+            "int nCase, ans[MAXM], father[MAXN], rank[MAXN], cnt, N, M;\n" +
+            "\n" +
+            "struct Line {\n" +
+            "    int x, y;\n" +
+            "} line[MAXM];\n" +
+            "\n" +
+            "void init() {\n" +
+            "    for (int i = 0; i < N; i++) {\n" +
+            "        father[i] = i;\n" +
+            "    }\n" +
+            "    cnt = N;\n" +
+            "}\n" +
+            "\n" +
+            "int find(int v) {\n" +
+            "    return father[v] = father[v] == v ? v : find(father[v]);\n" +
+            "}\n" +
+            "\n" +
+            "void merge(int x, int y) {\n" +
+            "    int a = find(x), b = find(y);\n" +
+            "    if (a == b) return;\n" +
+            "    if (rank[a] < rank[b]) {\n" +
+            "        father[a] = b;\n" +
+            "    } else {\n" +
+            "        father[b] = a;\n" +
+            "        if (rank[b] == rank[a]) {\n" +
+            "            rank[a]++;\n" +
+            "        }\n" +
+            "    }\n" +
+            "    cnt--;\n" +
+            "}\n" +
+            "\n" +
+            "void input() {\n" +
+            "    scanf(\"%d%d\", &N, &M);\n" +
+            "    for (int i = 0; i < M; i++) {\n" +
+            "        scanf(\"%d%d\", &line[i].x, &line[i].y);\n" +
+            "    }\n" +
+            "}\n" +
+            "\n" +
+            "void work() {\n" +
+            "    for (int i = M-1; i >= 0; i--) {\n" +
+            "        ans[i] = cnt;\n" +
+            "        merge(line[i].x, line[i].y);\n" +
+            "    }\n" +
+            "}\n" +
+            "\n" +
+            "void output() {\n" +
+            "    for (int i = 0; i < M; i++) {\n" +
+            "        printf(\"%d\\n\", ans[i]);\n" +
+            "    }\n" +
+            "}\n" +
+            "\n" +
+            "int main() {\n" +
+            "    //freopen(\"DH_Network.in\", \"r\", stdin);\n" +
+            "    //freopen(\"DH_Network.out\", \"w\", stdout);\n" +
+            "    scanf(\"%d\", &nCase);\n" +
+            "    while (nCase--) {\n" +
+            "        input();\n" +
+            "        init();\n" +
+            "        work();\n" +
+            "        output();\n" +
+            "    }\n" +
+            "    return 0;\n" +
+            "}";
 
     @Test
     public void testRun() throws Exception {
@@ -354,6 +473,8 @@ public class LocalResolverTest_Extra {
         Problem problem_06 = new LocalProblem(6, "06_test.in", "06_test.out", "all", timeLimit, memoryLimit);
         Problem problem_07 = new LocalProblem(7, "07_test.in", "07_test.out", "all", timeLimit, memoryLimit);
         Problem problem_08 = new LocalProblem(8, "08_test.in", "08_test.out", "all", timeLimit, memoryLimit);
+        Problem problem_09 = new LocalProblem(9, "09_test.in", "09_test.out", "all", timeLimit, memoryLimit);
+        Problem problem_10 = new LocalProblem(10, "10_test.in", "10_test.out", "all", timeLimit, memoryLimit);
 
         // C 01 Accept_Answer
         Solution solution = new Solution(1, problem_01, cCode_01, Language.C);
@@ -399,6 +520,18 @@ public class LocalResolverTest_Extra {
 
         // C 08 Accept_Answer
         solution = new Solution(8, problem_08, cCode_08, Language.C);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Accept_Answer);
+
+        // C++ 09 Accept_Answer
+        solution = new Solution(9, problem_09, cppCode_09, Language.CPP);
+        localResolver = new LocalResolver(solution);
+        localResolver.handle();
+        assertEquals(solution.getResult(), Result.Accept_Answer);
+
+        // C++ 10 Accept_Answer
+        solution = new Solution(10, problem_10, cppCode_10, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
