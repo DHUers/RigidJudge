@@ -16,14 +16,14 @@ import static org.junit.Assert.assertEquals;
 public class LocalResolverTest {
 
     private static final String cppCode = "#include <iostream>\n" +
-                                "using namespace std;\n" +
-                                "int a, b;\n" +
-                                "int main() {\n" +
-                                "   while (cin >> a >> b) {\n" +
-                                "       cout << a + b << endl;\n" +
-                                "   }\n" +
-                                "   return 0;\n" +
-                                "}";
+            "using namespace std;\n" +
+            "int a, b;\n" +
+            "int main() {\n" +
+            "   while (cin >> a >> b) {\n" +
+            "       cout << a + b << endl;\n" +
+            "   }\n" +
+            "   return 0;\n" +
+            "}";
     private static final String cppCode_TLE = "#include <iostream>\n" +
             "using namespace std;\n" +
             "int a, b;\n" +
@@ -80,33 +80,33 @@ public class LocalResolverTest {
             "   return 0;\n" +
             "}";
     private static final String cCode = "#include <stdio.h>\n" +
-                                "int a, b;\n" +
-                                "int main() {\n" +
-                                "   while(~scanf(\"%d%d\", &a, &b)) {\n" +
-                                "       printf(\"%d\\n\", a+b);\n" +
-                                "   }\n" +
-                                "   return 0;\n" +
-                                "}";
+            "int a, b;\n" +
+            "int main() {\n" +
+            "   while(~scanf(\"%d%d\", &a, &b)) {\n" +
+            "       printf(\"%d\\n\", a+b);\n" +
+            "   }\n" +
+            "   return 0;\n" +
+            "}";
     private static final String cCode_SPJ_1 = "#include <stdio.h>\n" +
-                                    "int main(int argc,char *args[]) {\n" +
-                                    "   FILE *f_in = fopen(args[1], \"r\");\n" +
-                                    "   FILE *f_out = fopen(args[2], \"r\");\n" +
-                                    "   FILE *f_user = fopen(args[3], \"r\");\n" +
-                                    "   int ret = 0;  // 0-AC, 1-WA, 2-PE, -1-JE\n" +
-                                    "   int a, b, c;\n" +
-                                    "   while (fscanf(f_in, \"%d %d\", &a, &b) != EOF) {\n" +
-                                    "       fscanf(f_user, \"%d\", &c);\n" +
-                                    "       if (a + b != c) {\n" +
-                                    "           printf(\"%d %d %d\\n\", a, b, c);\n" +
-                                    "           ret = 1;\n" +
-                                    "           break;\n" +
-                                    "       }\n" +
-                                    "   }\n" +
-                                    "   fclose(f_in);\n" +
-                                    "   fclose(f_out);\n" +
-                                    "   fclose(f_user);\n" +
-                                    "   return ret;\n" +
-                                    "}";
+            "int main(int argc, char *args[]) {\n" +
+            "   FILE *f_in = fopen(args[1], \"r\");\n" +
+            "   FILE *f_out = fopen(args[2], \"r\");\n" +
+            "   FILE *f_user = fopen(args[3], \"r\");\n" +
+            "   int ret = 0;  // 0-AC, 1-WA, 2-PE, -1-JE\n" +
+            "   int a, b, c;\n" +
+            "   while (fscanf(f_in, \"%d %d\", &a, &b) != EOF) {\n" +
+            "       fscanf(f_user, \"%d\", &c);\n" +
+            "       if (a + b != c) {\n" +
+            "           printf(\"%d + %d != %d\\n\", a, b, c);\n" +
+            "           ret = 1;\n" +
+            "           break;\n" +
+            "       }\n" +
+            "   }\n" +
+            "   fclose(f_in);\n" +
+            "   fclose(f_out);\n" +
+            "   fclose(f_user);\n" +
+            "   return ret;\n" +
+            "}\n";
     private static final String cppCode_SPJ_1 = "#include <iostream>\n" +
             "#include <fstream>\n" +
             "using namespace std;\n" +
@@ -120,6 +120,7 @@ public class LocalResolverTest {
             "    while (in >> a >> b) {\n" +
             "        user >> c;\n" +
             "        if (a + b != c) {\n" +
+            "            cout << a << \" + \" << b << \" != \" << c << endl;\n" +
             "            ret = 1;\n" +
             "            break;\n" +
             "        }\n" +
@@ -129,7 +130,31 @@ public class LocalResolverTest {
             "    user.close();\n" +
             "    return ret;\n" +
             "}\n";
-    private static final String javaCode_SPJ_1 = "";
+    private static final String javaCode_SPJ_1 = "import java.io.File;\n" +
+            "import java.util.Scanner;\n" +
+            "\n" +
+            "public class spj {  // class name must be 'spj', do NOT change.\n" +
+            "    public static void main(String args[]) {\n" +
+            "        try {\n" +
+            "            Scanner in = new Scanner(new File(args[0]));\n" +
+            "            Scanner out = new Scanner(new File(args[1]));\n" +
+            "            Scanner user = new Scanner(new File(args[2]));\n" +
+            "            int ret = 0;  // 0-AC, 1-WA, 2-PE, -1-JE\n" +
+            "            while (in.hasNext()) {\n" +
+            "                int a = in.nextInt(), b = in.nextInt();\n" +
+            "                int c = user.nextInt();\n" +
+            "                if (a + b != c) {\n" +
+            "                    System.out.printf(\"%d + %d != %d\\n\", a, b, c);\n" +
+            "                    ret = 1;\n" +
+            "                    break;\n" +
+            "                }\n" +
+            "            }\n" +
+            "            System.exit(ret);\n" +
+            "        } catch (Exception e) {\n" +
+            "            System.exit(-1);\n" +
+            "        }\n" +
+            "    }\n" +
+            "}";
     private static final String javaCode = "import java.util.Scanner;\n" +
             "\n" +
             "public class Main {\n" +
@@ -245,7 +270,7 @@ public class LocalResolverTest {
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Wrong_Answer);
-/*
+
         // C++ SPJ(Java) Accept_Answer
         solution = new Solution(1, problem_spj_java, cppCode, Language.CPP);
         localResolver = new LocalResolver(solution);
@@ -257,7 +282,7 @@ public class LocalResolverTest {
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Wrong_Answer);
-*/
+
         // C++ Accept_Answer
         solution = new Solution(1, problem, cppCode, Language.CPP);
         localResolver = new LocalResolver(solution);

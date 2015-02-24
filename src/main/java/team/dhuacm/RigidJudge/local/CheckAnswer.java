@@ -1,10 +1,10 @@
 package team.dhuacm.RigidJudge.local;
 
 import org.apache.commons.exec.*;
-import org.apache.commons.exec.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
+import team.dhuacm.RigidJudge.config.Language;
 import team.dhuacm.RigidJudge.config.Result;
 import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.LocalSpecialProblem;
@@ -32,7 +32,7 @@ class CheckAnswer {
         return temp.toString();
     }
 
-    private static int executeSpecialJudge(String filename) {
+    private static int executeSpecialJudge(String filename, Language language) {
         int returnValue = -1;
 
         ByteArrayOutputStream errorStream = null;
@@ -40,14 +40,18 @@ class CheckAnswer {
         ExecuteWatchdog watchdog = null;
 
         try {
-            String commandLine = "./" + filename + " test.in test.out test.user";
-            logger.info("cmd: {}", commandLine);
+            String commandLine;
+            if (language.equals(Language.JAVA)) {
+                commandLine = "java -cp tmp " + filename + " tmp/test.in tmp/test.out tmp/test.user";
+            } else {
+                commandLine = "./tmp/" + filename + " tmp/test.in tmp/test.out tmp/test.user";
+            }
+            logger.info("cmd: '{}'", commandLine);
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
             DefaultExecutor executor = new DefaultExecutor();
             watchdog = new ExecuteWatchdog(DataProvider.Local_SpecialJudgeTimeLimit * 1000);
             executor.setWatchdog(watchdog);
-            executor.setWorkingDirectory(new File("tmp"));
             executor.setExitValues(new int[]{0, 1, 2});
             outputStream = new ByteArrayOutputStream();
             errorStream = new ByteArrayOutputStream();
@@ -56,7 +60,7 @@ class CheckAnswer {
 
             returnValue = executor.execute(cmdLine);
 
-            logger.info("Run done!\n{}", outputStream.toString());
+            logger.info("SPJ Run done!\n{}{}", outputStream.toString(), errorStream.toString());
         } catch (ExecuteException e) {
             if (watchdog.killedProcess()) {
                 logger.error("SPJ TimeLimitExceeded!\n");
@@ -80,7 +84,7 @@ class CheckAnswer {
             writer.write(solution.getOutput());
             writer.close();
 
-            switch (executeSpecialJudge("spj")) {
+            switch (executeSpecialJudge("spj", ((LocalSpecialProblem) problem).getJudgerProgramLanguage())) {
                 case 0:
                     solution.setResult(Result.Accept_Answer);
                     break;

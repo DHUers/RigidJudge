@@ -11,6 +11,7 @@ int main(int argc, char *args[]) {
     while (in >> a >> b) {
         user >> c;
         if (a + b != c) {
+            cout << a << " + " << b << " != " << c << endl;
             ret = 1;
             break;
         }

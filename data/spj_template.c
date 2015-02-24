@@ -8,6 +8,7 @@ int main(int argc, char *args[]) {
    while (fscanf(f_in, "%d %d", &a, &b) != EOF) {
        fscanf(f_user, "%d", &c);
        if (a + b != c) {
+           printf("%d + %d != %d\n", a, b, c);
            ret = 1;
            break;
        }
