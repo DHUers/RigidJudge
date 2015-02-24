@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
 import team.dhuacm.RigidJudge.config.Language;
 import team.dhuacm.RigidJudge.config.Result;
+import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
 import java.io.IOException;
@@ -28,21 +29,11 @@ public class LocalResolver {
             if (Compile.doCompile(solution.getLanguage(), source, target)) {
                 solution.setCompileInfo(Compile.compileInfo);
                 logger.info("Compile success!");
-                boolean runSuccess;
-                if (solution.getLanguage().equals(Language.JAVA)) {
-                    runSuccess = RunInJavaWrapper.doRun(solution);
+
+                if (((LocalProblem) solution.getProblem()).getLimitType().equals("per")) {  // limit per case
+                    runAndCheckAnswer(solution, target);  // TODO: prepare I/O data, switch data (especially for SPJ)
                 } else {
-                    if (DataProvider.Local_RunInSandbox) {
-                        runSuccess = RunInSandbox.doRun(solution, target);
-                    } else {
-                        runSuccess = Run.doRun(solution, target);
-                    }
-                }
-                if (runSuccess) {
-                    logger.info("Run success!");
-                    CheckAnswer.doCheckAnswer(solution);
-                } else {
-                    logger.info("Run failed! {}", solution.getResult());
+                    runAndCheckAnswer(solution, target);
                 }
             } else {
                 solution.setCompileInfo(Compile.compileInfo);
@@ -54,6 +45,25 @@ public class LocalResolver {
             solution.setResult(Result.Judge_Error);
         }
         Clean.doClean();
+    }
+
+    private void runAndCheckAnswer(Solution solution, String target) throws IOException {
+        boolean runSuccess;
+        if (solution.getLanguage().equals(Language.JAVA)) {
+            runSuccess = RunInJavaWrapper.doRun(solution);
+        } else {
+            if (DataProvider.Local_RunInSandbox) {
+                runSuccess = RunInSandbox.doRun(solution, target);
+            } else {
+                runSuccess = Run.doRun(solution, target);
+            }
+        }
+        if (runSuccess) {
+            logger.info("Run success!");
+            CheckAnswer.doCheckAnswer(solution);
+        } else {
+            logger.info("Run failed! {}", solution.getResult());
+        }
     }
 
 }

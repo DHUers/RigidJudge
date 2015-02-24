@@ -9,7 +9,7 @@ import team.dhuacm.RigidJudge.config.Result;
 import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.LocalSpecialProblem;
 import team.dhuacm.RigidJudge.model.Solution;
-import team.dhuacm.RigidJudge.utils.diff_match_patch;
+import team.dhuacm.RigidJudge.utils.DiffUtils;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -83,6 +83,12 @@ class CheckAnswer {
             Writer writer = new BufferedWriter(new FileWriter(new File("tmp/test.user")));
             writer.write(solution.getOutput());
             writer.close();
+            writer = new BufferedWriter(new FileWriter(new File("tmp/test.in")));
+            writer.write(solution.getInput());
+            writer.close();
+            writer = new BufferedWriter(new FileWriter(new File("tmp/test.out")));
+            writer.write(solution.getStdAns());
+            writer.close();
 
             switch (executeSpecialJudge("spj", ((LocalSpecialProblem) problem).getJudgerProgramLanguage())) {
                 case 0:
@@ -115,10 +121,10 @@ class CheckAnswer {
                 }
 
                 if (DataProvider.Local_DiffReport) {
-                    diff_match_patch dmp = new diff_match_patch();
-                    LinkedList<diff_match_patch.Diff> diffs = dmp.diff_main(stdAns, output);
-                    dmp.diff_cleanupSemantic(diffs);
-                    solution.setCompareInfo(dmp.diff_prettyHtml(diffs));
+                    DiffUtils diff = new DiffUtils();
+                    LinkedList<DiffUtils.Diff> diffs = diff.diff_main(stdAns, output);
+                    diff.diff_cleanupSemantic(diffs);
+                    solution.setCompareInfo(diff.diff_prettyHtml(diffs));
                     logger.info("Diff info: '{}'", solution.getCompareInfo());
                 }
             }

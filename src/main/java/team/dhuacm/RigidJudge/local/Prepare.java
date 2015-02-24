@@ -85,12 +85,9 @@ class Prepare {
             FileUtils.fileTransferCopy(new File("sandbox/JavaWrapper.class"), new File("tmp/JavaWrapper.class"));
         }
 
-        // Prepare for Special judge, copy input/output data and pre-compile spj
+        // Prepare for Special judge, Pre-Compile SPJ
         if (problem instanceof LocalSpecialProblem) {
             LocalSpecialProblem specialProblem = (LocalSpecialProblem) problem;
-
-            FileUtils.fileTransferCopy(new File("data/" + specialProblem.getInputFileName().substring(specialProblem.getInputFileName().lastIndexOf("/") + 1)), new File("tmp/test.in"));
-            FileUtils.fileTransferCopy(new File("data/" + specialProblem.getOutputFileName().substring(specialProblem.getOutputFileName().lastIndexOf("/") + 1)), new File("tmp/test.out"));
 
             file = new File("tmp/spj" + DataProvider.Local_FileSuffix.get(specialProblem.getJudgerProgramLanguage()));
             if (!file.exists()) {
