@@ -24,4 +24,19 @@ public enum Result {
         }
         return null;
     }
+
+    public static Result parseResult(String str) {
+        if (str.equalsIgnoreCase("Queue")) return Queue;
+        if (str.equalsIgnoreCase("AC") || str.startsWith("Accept")) return Accept_Answer;
+        if (str.equalsIgnoreCase("WA") || str.startsWith("Wrong")) return Wrong_Answer;
+        if (str.equalsIgnoreCase("TLE") || str.startsWith("Time")) return Time_Limit_Exceeded;
+        if (str.equalsIgnoreCase("MLT") || str.startsWith("Memory")) return Memory_Limit_Exceeded;
+        if (str.equalsIgnoreCase("PE") || str.startsWith("Presentation")) return Presentation_Error;
+        if (str.equalsIgnoreCase("RE") || str.startsWith("Runtime")) return Runtime_Error;
+        if (str.equalsIgnoreCase("CE") || str.startsWith("Compile")) return Compile_Error;
+        if (str.equalsIgnoreCase("OLE") || str.startsWith("Output")) return Output_Limit_Exceeded;
+        if (str.equalsIgnoreCase("NE") || str.startsWith("Network")) return Network_Error;
+        if (str.equalsIgnoreCase("JE") || str.startsWith("Judge")) return Judge_Error;
+        return Queue;
+    }
 }

@@ -7,6 +7,7 @@ import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.Problem;
 import team.dhuacm.RigidJudge.model.Solution;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -465,75 +466,88 @@ public class LocalResolverTest_Extra {
         timeLimit.put(Language.JAVA, 3000);
         memoryLimit.put(Language.DEFAULT, 65535);
         memoryLimit.put(Language.JAVA, 70000);
-        Problem problem_01 = new LocalProblem(1, "01_test.in", "01_test.out", "all", timeLimit, memoryLimit);
-        Problem problem_02 = new LocalProblem(2, "02_test.in", "02_test.out", "all", timeLimit, memoryLimit);
-        Problem problem_03 = new LocalProblem(3, "03_test.in", "03_test.out", "all", timeLimit, memoryLimit);
-        Problem problem_04 = new LocalProblem(4, "04_test.in", "04_test.out", "all", timeLimit, memoryLimit);
-        Problem problem_05 = new LocalProblem(5, "05_test.in", "05_test.out", "all", timeLimit, memoryLimit);
-        Problem problem_06 = new LocalProblem(6, "06_test.in", "06_test.out", "all", timeLimit, memoryLimit);
-        Problem problem_07 = new LocalProblem(7, "07_test.in", "07_test.out", "all", timeLimit, memoryLimit);
-        Problem problem_08 = new LocalProblem(8, "08_test.in", "08_test.out", "all", timeLimit, memoryLimit);
-        Problem problem_09 = new LocalProblem(9, "09_test.in", "09_test.out", "all", timeLimit, memoryLimit);
-        Problem problem_10 = new LocalProblem(10, "10_test.in", "10_test.out", "all", timeLimit, memoryLimit);
+        Problem[] problems = new Problem[15];
+        problems[1] = new LocalProblem(1, "01_test.in", "01_test.out", "all", timeLimit, memoryLimit);
+        problems[2] = new LocalProblem(2, "02_test.in", "02_test.out", "all", timeLimit, memoryLimit);
+        problems[3] = new LocalProblem(3, "03_test.in", "03_test.out", "all", timeLimit, memoryLimit);
+        problems[4] = new LocalProblem(4, "04_test.in", "04_test.out", "all", timeLimit, memoryLimit);
+        problems[5] = new LocalProblem(5, "05_test.in", "05_test.out", "all", timeLimit, memoryLimit);
+        problems[6] = new LocalProblem(6, "06_test.in", "06_test.out", "all", timeLimit, memoryLimit);
+        problems[7] = new LocalProblem(7, "07_test.in", "07_test.out", "all", timeLimit, memoryLimit);
+        problems[8] = new LocalProblem(8, "08_test.in", "08_test.out", "all", timeLimit, memoryLimit);
+        problems[9] = new LocalProblem(9, "09_test.in", "09_test.out", "all", timeLimit, memoryLimit);
+        problems[10] = new LocalProblem(10, "10_test.in", "10_test.out", "all", timeLimit, memoryLimit);
 
         // C 01 Accept_Answer
-        Solution solution = new Solution(1, problem_01, cCode_01, Language.C);
+        Solution solution = new Solution(1, problems[1], cCode_01, Language.C);
         LocalResolver localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C 02 Accept_Answer
-        solution = new Solution(2, problem_02, cCode_02, Language.C);
+        solution = new Solution(2, problems[2], cCode_02, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C 03 Accept_Answer
-        solution = new Solution(3, problem_03, cCode_03, Language.C);
+        solution = new Solution(3, problems[3], cCode_03, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C 04 Accept_Answer
-        solution = new Solution(4, problem_04, cCode_04, Language.C);
+        solution = new Solution(4, problems[4], cCode_04, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C 05 Accept_Answer
-        solution = new Solution(5, problem_05, cCode_05, Language.C);
+        solution = new Solution(5, problems[5], cCode_05, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C 06 Accept_Answer
-        solution = new Solution(6, problem_06, cCode_06, Language.C);
+        solution = new Solution(6, problems[6], cCode_06, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C 07 Accept_Answer
-        solution = new Solution(7, problem_07, cCode_07, Language.C);
+        solution = new Solution(7, problems[7], cCode_07, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C 08 Accept_Answer
-        solution = new Solution(8, problem_08, cCode_08, Language.C);
+        solution = new Solution(8, problems[8], cCode_08, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C++ 09 Accept_Answer
-        solution = new Solution(9, problem_09, cppCode_09, Language.CPP);
+        solution = new Solution(9, problems[9], cppCode_09, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
 
         // C++ 10 Accept_Answer
-        solution = new Solution(10, problem_10, cppCode_10, Language.CPP);
+        solution = new Solution(10, problems[10], cppCode_10, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Accept_Answer);
+
+
+        // Real solution data Test
+        File[] files = new File("src/test/resources/testdata").listFiles();
+        for (int i = 0; i < files.length; i++) {
+            System.out.println(files[i].getName());
+            Language language = Language.valueOf(files[i].getName().split(".")[1]);
+            String code = files[i].getContent();  // TODO:
+            String[] params = files[i].getName().split(".")[0].split("_");
+            Problem problem = problems[Integer.parseInt(params[3])];
+        }
+
     }
 }
