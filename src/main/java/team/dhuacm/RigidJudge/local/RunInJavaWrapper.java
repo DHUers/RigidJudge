@@ -19,12 +19,11 @@ class RunInJavaWrapper {
 
     public static boolean doRun(Solution solution) {
         boolean runResult = false;
-        long timeBegin = 0, timeEnd = 0,  memory_usage = 0;
+        long time_usage = 0,  memory_usage = 0;
         ByteArrayOutputStream errorStream = null;
         ByteArrayOutputStream outputStream;
         ByteArrayInputStream inputStream;
         ExecuteWatchdog watchdog = null;
-        Runtime runtime = null;
 
         try {
             String commandLine = DataProvider.Local_RunCommand.get(solution.getLanguage()).replace("{target}", "JavaWrapper");
@@ -32,7 +31,7 @@ class RunInJavaWrapper {
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
             DefaultExecutor executor = new DefaultExecutor();
-            watchdog = new ExecuteWatchdog(solution.getTimeLimit());
+            watchdog = new ExecuteWatchdog(solution.getTimeLimit() + 100);
             executor.setWatchdog(watchdog);
             outputStream = new ByteArrayOutputStream();
             errorStream = new ByteArrayOutputStream();
@@ -40,16 +39,13 @@ class RunInJavaWrapper {
             PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream, inputStream);
             executor.setStreamHandler(streamHandler);
 
-            timeBegin = System.currentTimeMillis();
-
             executor.execute(cmdLine);
 
-            timeEnd = System.currentTimeMillis();
             String[] wrapperReply = errorStream.toString().split("\n");
-            //time_usage = Long.parseLong(wrapperReply[1].split(": ")[1].replace("ms", ""));
-            memory_usage = Long.parseLong(wrapperReply[0].split(": ")[1].replace("kB", ""));
+            time_usage = Long.parseLong(wrapperReply[0].split(": ")[1].replace(" ms", ""));
+            memory_usage = Long.parseLong(wrapperReply[1].split(": ")[1].replace(" KB", ""));
 
-            if (timeEnd - timeBegin >= solution.getTimeLimit()) {
+            if (time_usage >= solution.getTimeLimit()) {
                 solution.setResult(Result.Time_Limit_Exceeded);
                 runResult = false;
             } else if (memory_usage >= solution.getMemoryLimit()) {
@@ -67,7 +63,6 @@ class RunInJavaWrapper {
             solution.setExecuteInfo(errorStream.toString());
             logger.info("Run done!\n{}", errorStream);
         } catch (ExecuteException e) {
-            timeEnd = System.currentTimeMillis();
             if (watchdog.killedProcess()) {
                 solution.setResult(Result.Time_Limit_Exceeded);
             } else {
@@ -76,12 +71,10 @@ class RunInJavaWrapper {
             logger.error("Error!\n{}", errorStream.toString());
             runResult = false;
         } catch (Exception e) {
-            timeEnd = System.currentTimeMillis();
             solution.setResult(Result.Runtime_Error);
             logger.error(null, e);
             runResult = false;
         } finally {
-            long time_usage = timeEnd - timeBegin;
             solution.setTime(time_usage < solution.getTimeLimit() ? time_usage : solution.getTimeLimit());
             solution.setMemory(memory_usage < solution.getMemoryLimit() ? memory_usage : solution.getMemoryLimit());
             logger.info("Time: {} ms, Memory: {} KB", solution.getTime(), solution.getMemory());
