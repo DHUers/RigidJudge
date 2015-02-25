@@ -64,7 +64,17 @@ typedef struct
 /* result code translation table */
 const char* result_name[] =
 {
-    "PD", "OK", "RF", "ML", "OL", "TL", "RT", "AT", "IE", "BP", NULL,
+    "PD", /* pending */
+    "OK", /* okay */
+    "RF", /* restricted function */
+    "ML", /* memory limit exceeded */
+    "OL", /* output limit exceeded */
+    "TL", /* time limit exceeded */
+    "RT", /* runtime error */
+    "AT", /* abnormal termination */
+    "IE", /* internal error */
+    "BP", /* bad policy */
+    NULL,
 };
 
 /* initialize and apply local policy rules */
@@ -72,7 +82,7 @@ void policy_setup(minisbox_t*);
 
 typedef enum
 {
-    P_ELAPSED = 0, P_CPU = 1, P_MEMORY = 2,
+    P_ELAPSED = 0, P_CPU = 1, P_MEMORY = 2, P_SYSCALL = 3,
 } probe_t;
 
 res_t probe(const sandbox_t*, probe_t);
@@ -95,12 +105,13 @@ int main(int argc, const char* argv[])
     msb.sbox.task.ifd = STDIN_FILENO;  /* input to targeted program */
     msb.sbox.task.ofd = STDOUT_FILENO; /* output from targeted program */
     msb.sbox.task.efd = STDERR_FILENO; /* error from targeted program */
-    msb.sbox.task.quota[S_QUOTA_WALLCLOCK] = 30000; /* 30 sec */
+    msb.sbox.task.quota[S_QUOTA_WALLCLOCK] = 1000;  /*  2 sec */
     msb.sbox.task.quota[S_QUOTA_CPU] = 1000;        /*  1 sec */
-    msb.sbox.task.quota[S_QUOTA_MEMORY] = 67108864; /*  64 MB  */
+    msb.sbox.task.quota[S_QUOTA_MEMORY] = 67108864; /*  64 MB */
     msb.sbox.task.quota[S_QUOTA_DISK] = 1048576;    /*  1 MB  */
     if (argc > 2) {
         msb.sbox.task.quota[S_QUOTA_CPU] = atoi(argv[2]);
+        msb.sbox.task.quota[S_QUOTA_WALLCLOCK] = atoi(argv[2]);
     }
     if (argc > 3) {
         msb.sbox.task.quota[S_QUOTA_MEMORY] = atoi(argv[3]) * 1024;
@@ -116,7 +127,9 @@ int main(int argc, const char* argv[])
     /* verbose statistics */
     fprintf(stderr, "result: %s\n", result_name[res]);
     fprintf(stderr, "cpu: %ldms\n", probe(&msb.sbox, P_CPU));
-    fprintf(stderr, "mem: %ldkB\n", probe(&msb.sbox, P_MEMORY));
+    fprintf(stderr, "time: %ldms\n", probe(&msb.sbox, P_ELAPSED));
+    fprintf(stderr, "mem: %ldKB\n", probe(&msb.sbox, P_MEMORY));
+    fprintf(stderr, "syscall: %ld\n", probe(&msb.sbox, P_SYSCALL));
     /* destroy sandbox instance */
     sandbox_fini(&msb.sbox);
     return EX_OK;
@@ -138,6 +151,8 @@ res_t probe(const sandbox_t* psbox, probe_t key)
         return ts2ms(psbox->stat.cpu_info.clock);
     case P_MEMORY:
         return psbox->stat.mem_info.vsize_peak / 1024;
+    case P_SYSCALL:
+        return psbox->stat.syscall;
     default:
         break;
     }

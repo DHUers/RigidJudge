@@ -37,11 +37,11 @@ class Compile {
             errorStream = new ByteArrayOutputStream();
             PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
             executor.setStreamHandler(streamHandler);
+
             executor.execute(cmdLine);
 
             compileInfo = "Compile successfully!";
             compileResult = true;
-
         } catch (ExecuteException e) {
             String info;
             info = errorStream.toString() + outputStream.toString();

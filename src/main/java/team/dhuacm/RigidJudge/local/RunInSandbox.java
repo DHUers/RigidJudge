@@ -16,12 +16,10 @@ import java.io.ByteArrayOutputStream;
 class RunInSandbox {
 
     private static final Logger logger = LoggerFactory.getLogger(RunInSandbox.class.getSimpleName());
-    private static long time_usage;
-    private static long memory_usage;
 
     public static boolean doRun(Solution solution, String target) {
         boolean runResult = false;
-
+        long time_usage = 0, memory_usage = 0;
         ByteArrayOutputStream errorStream = null;
         ByteArrayOutputStream outputStream;
         ByteArrayInputStream inputStream;
@@ -34,7 +32,7 @@ class RunInSandbox {
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
             DefaultExecutor executor = new DefaultExecutor();
-            watchdog = new ExecuteWatchdog(solution.getTimeLimit() + 100);
+            watchdog = new ExecuteWatchdog(solution.getTimeLimit() * 2);
             executor.setWatchdog(watchdog);
             outputStream = new ByteArrayOutputStream();
             errorStream = new ByteArrayOutputStream();
@@ -44,12 +42,22 @@ class RunInSandbox {
 
             executor.execute(cmdLine);
 
-            System.out.println(errorStream);
+            logger.info("Run done!\n{}", errorStream);
             String[] sandboxReply = errorStream.toString().split("\n");
             String result = sandboxReply[0].split(": ")[1];
-            time_usage = Long.parseLong(sandboxReply[1].split(": ")[1].replace("ms", ""));
-            memory_usage = Long.parseLong(sandboxReply[2].split(": ")[1].replace("kB", ""));
-            // "PD", "OK", "RF", "ML", "OL", "TL", "RT", "AT", "IE", "BP", NULL,
+            time_usage = Long.parseLong(sandboxReply[2].split(": ")[1].replace("ms", ""));
+            memory_usage = Long.parseLong(sandboxReply[3].split(": ")[1].replace("KB", ""));
+
+            // "PD", /* pending */
+            // "OK", /* okay */
+            // "RF", /* restricted function */
+            // "ML", /* memory limit exceeded */
+            // "OL", /* output limit exceeded */
+            // "TL", /* time limit exceeded */
+            // "RT", /* runtime error */
+            // "AT", /* abnormal termination */
+            // "IE", /* internal error */
+            // "BP", /* bad policy */
             if (result.equals("OK")) {
                 solution.setOutput(outputStream.toString());
                 if (outputStream.toString().length() >= DataProvider.Local_OutputLengthLimit) {
@@ -57,10 +65,6 @@ class RunInSandbox {
                 } else {  // AC or WA or PE
                     runResult = true;
                 }
-            } else if (result.equals("RF")) {  // dangerous, killed
-                solution.setResult(Result.Runtime_Error);
-            } else if (result.equals("RT")) {
-                solution.setResult(Result.Runtime_Error);
             } else if (result.equals("ML")) {
                 solution.setResult(Result.Memory_Limit_Exceeded);
                 memory_usage = solution.getMemoryLimit();
@@ -69,9 +73,10 @@ class RunInSandbox {
                 time_usage = solution.getTimeLimit();
             } else if (result.equals("OL")) {
                 solution.setResult(Result.Output_Limit_Exceeded);
+            } else {
+                solution.setResult(Result.Runtime_Error);
             }
-
-            logger.info("Run done!");
+            solution.setExecuteInfo(errorStream.toString());
         } catch (ExecuteException e) {
             if (watchdog.killedProcess()) {
                 solution.setResult(Result.Time_Limit_Exceeded);
@@ -80,6 +85,17 @@ class RunInSandbox {
                 solution.setResult(Result.Runtime_Error);
             }
             logger.error("Error!\n{}", errorStream);
+            runResult = false;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            /* Issue:
+             *      If program can not terminate when EOF and waiting for extra input redundantly,
+             *      sandbox returned with blank error stream.
+             *      This caused exception while parsing sandbox report.
+             *      We mark it with TLE verdict currently.
+             */
+            solution.setResult(Result.Time_Limit_Exceeded);
+            time_usage = solution.getTimeLimit();
+            logger.error(null, e);
             runResult = false;
         } catch (Exception e) {
             solution.setResult(Result.Judge_Error);

@@ -44,7 +44,7 @@ public class LocalResolver {
             logger.error("Fetch problem data failed!");
             solution.setResult(Result.Judge_Error);
         }
-        Clean.doClean();
+        //Clean.doClean();
     }
 
     private void handleMultipleCase(Solution solution, String target) throws IOException {

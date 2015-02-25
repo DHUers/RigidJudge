@@ -16,14 +16,10 @@ import java.io.ByteArrayOutputStream;
 class Run {
 
     private static final Logger logger = LoggerFactory.getLogger(Run.class.getSimpleName());
-    private static long timeBegin = 0;
-    private static long timeEnd = 0;
-    private static long memoryBegin = 0;
-    private static long memoryEnd = 0;
 
     public static boolean doRun(Solution solution, String target) {
         boolean runResult = false;
-
+        long timeBegin = 0, timeEnd = 0, memoryBegin = 0, memoryEnd = 0;
         ByteArrayOutputStream errorStream = null;
         ByteArrayOutputStream outputStream;
         ByteArrayInputStream inputStream;
@@ -68,8 +64,8 @@ class Run {
                     runResult = true;
                 }
             }
-
-            logger.info("Run done!");
+            solution.setExecuteInfo(errorStream.toString());
+            logger.info("Run done!\n{}", errorStream);
         } catch (ExecuteException e) {
             timeEnd = System.currentTimeMillis();
             memoryEnd = runtime.totalMemory() - runtime.freeMemory();

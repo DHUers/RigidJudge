@@ -16,13 +16,10 @@ import java.io.ByteArrayOutputStream;
 class RunInJavaWrapper {
 
     private static final Logger logger = LoggerFactory.getLogger(RunInJavaWrapper.class.getSimpleName());
-    private static long timeBegin = 0;
-    private static long timeEnd = 0;
-    private static long memory_usage;
 
     public static boolean doRun(Solution solution) {
         boolean runResult = false;
-
+        long timeBegin = 0, timeEnd = 0,  memory_usage = 0;
         ByteArrayOutputStream errorStream = null;
         ByteArrayOutputStream outputStream;
         ByteArrayInputStream inputStream;
@@ -48,11 +45,9 @@ class RunInJavaWrapper {
             executor.execute(cmdLine);
 
             timeEnd = System.currentTimeMillis();
-            System.out.println(errorStream);
-            String[] sandboxReply = errorStream.toString().split("\n");
-            //String result = sandboxReply[0].split(": ")[1];
-            //time_usage = Long.parseLong(sandboxReply[1].split(": ")[1].replace("ms", ""));
-            memory_usage = Long.parseLong(sandboxReply[0].split(": ")[1].replace("kB", ""));
+            String[] wrapperReply = errorStream.toString().split("\n");
+            //time_usage = Long.parseLong(wrapperReply[1].split(": ")[1].replace("ms", ""));
+            memory_usage = Long.parseLong(wrapperReply[0].split(": ")[1].replace("kB", ""));
 
             if (timeEnd - timeBegin >= solution.getTimeLimit()) {
                 solution.setResult(Result.Time_Limit_Exceeded);
@@ -69,8 +64,8 @@ class RunInJavaWrapper {
                     runResult = true;
                 }
             }
-
-            logger.info("Run done!");
+            solution.setExecuteInfo(errorStream.toString());
+            logger.info("Run done!\n{}", errorStream);
         } catch (ExecuteException e) {
             timeEnd = System.currentTimeMillis();
             if (watchdog.killedProcess()) {

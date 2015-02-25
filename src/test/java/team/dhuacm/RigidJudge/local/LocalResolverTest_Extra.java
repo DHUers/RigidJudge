@@ -6,8 +6,12 @@ import team.dhuacm.RigidJudge.config.Result;
 import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.Problem;
 import team.dhuacm.RigidJudge.model.Solution;
+import team.dhuacm.RigidJudge.utils.FileUtils;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -462,7 +466,7 @@ public class LocalResolverTest_Extra {
     public void testRun() throws Exception {
         Map<Language, Integer> timeLimit = new HashMap<Language, Integer>();
         Map<Language, Integer> memoryLimit = new HashMap<Language, Integer>();
-        timeLimit.put(Language.DEFAULT, 1000);
+        timeLimit.put(Language.DEFAULT, 2000);
         timeLimit.put(Language.JAVA, 3000);
         memoryLimit.put(Language.DEFAULT, 65535);
         memoryLimit.put(Language.JAVA, 70000);
@@ -541,13 +545,36 @@ public class LocalResolverTest_Extra {
 
         // Real solution data Test
         File[] files = new File("src/test/resources/testdata").listFiles();
-        for (int i = 0; i < files.length; i++) {
-            System.out.println(files[i].getName());
-            Language language = Language.valueOf(files[i].getName().split(".")[1]);
-            String code = files[i].getContent();  // TODO:
-            String[] params = files[i].getName().split(".")[0].split("_");
-            Problem problem = problems[Integer.parseInt(params[3])];
+        File file = new File("report_detail.txt");
+        if (!file.exists()) {
+            file.createNewFile();
         }
+        Writer writer = new BufferedWriter(new FileWriter(file));
+        File file1 = new File("report.txt");
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        Writer writer1 = new BufferedWriter(new FileWriter(file1));
+        for (int i = 0; i < (files != null ? files.length : 0); i++) {
+            // filename: 'SolutionID_TimeMillis_UserID_ProblemID_Result.Language'
+            String[] params = files[i].getName().replace(".", "_").split("_");
+            Language language = Language.valueOf(params[5]);
+            Problem problem = problems[Integer.parseInt(params[3])];
+            Result result = Result.parseResult(params[4]);
 
+            String code = FileUtils.getFileContent(files[i]);
+            solution = new Solution(Integer.parseInt(params[0]), problem, code, language);
+            localResolver = new LocalResolver(solution);
+            localResolver.handle();
+            //assertEquals(solution.getResult(), result);
+            if (!solution.getResult().equals(result)) {
+                writer1.write(files[i].getName().replace(".", "_") + "_" + solution.getResult() + "_" + solution.getTime() + "_" + solution.getMemory() + "\n");
+                writer.write(files[i].getName() + " -> " + solution.getResult() + "\n" + solution.getCompileInfo() + "\n" + solution.getExecuteInfo() + "\n" + solution.getCompareInfo() + "\n\n");
+            }
+            writer.flush();
+            writer1.flush();
+        }
+        writer.close();
+        writer1.close();
     }
 }
