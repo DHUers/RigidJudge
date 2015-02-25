@@ -569,7 +569,7 @@ public class LocalResolverTest_Extra {
             //assertEquals(solution.getResult(), result);
             if (!solution.getResult().equals(result)) {
                 if (solution.getResult().equals(Result.Runtime_Error) && result.equals(Result.Time_Limit_Exceeded)) continue;  // ignore TLE -> RE
-                writer1.write(files[i].getName().replace(".", "_") + "_" + solution.getResult() + "_" + solution.getTime() + "_" + solution.getMemory() + "\n");
+                writer1.write(files[i].getName().replace(".", "_").replace("_", ",") + "," + solution.getResult() + "," + solution.getTime() + "," + solution.getMemory() + "\n");
                 writer.write(files[i].getName() + " -> " + solution.getResult() + "\n" + solution.getCompileInfo() + "\n" + solution.getExecuteInfo() + "\n" + solution.getCompareInfo() + "\n\n");
                 writer.flush();
                 writer1.flush();
