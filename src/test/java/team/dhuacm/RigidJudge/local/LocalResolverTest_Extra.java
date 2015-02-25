@@ -568,11 +568,12 @@ public class LocalResolverTest_Extra {
             localResolver.handle();
             //assertEquals(solution.getResult(), result);
             if (!solution.getResult().equals(result)) {
+                if (solution.getResult().equals(Result.Runtime_Error) && result.equals(Result.Time_Limit_Exceeded)) continue;  // ignore TLE -> RE
                 writer1.write(files[i].getName().replace(".", "_") + "_" + solution.getResult() + "_" + solution.getTime() + "_" + solution.getMemory() + "\n");
                 writer.write(files[i].getName() + " -> " + solution.getResult() + "\n" + solution.getCompileInfo() + "\n" + solution.getExecuteInfo() + "\n" + solution.getCompareInfo() + "\n\n");
+                writer.flush();
+                writer1.flush();
             }
-            writer.flush();
-            writer1.flush();
         }
         writer.close();
         writer1.close();

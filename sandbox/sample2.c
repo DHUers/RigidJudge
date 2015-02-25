@@ -105,7 +105,7 @@ int main(int argc, const char* argv[])
     msb.sbox.task.ifd = STDIN_FILENO;  /* input to targeted program */
     msb.sbox.task.ofd = STDOUT_FILENO; /* output from targeted program */
     msb.sbox.task.efd = STDERR_FILENO; /* error from targeted program */
-    msb.sbox.task.quota[S_QUOTA_WALLCLOCK] = 1000;  /*  2 sec */
+    msb.sbox.task.quota[S_QUOTA_WALLCLOCK] = 1000;  /*  1 sec */
     msb.sbox.task.quota[S_QUOTA_CPU] = 1000;        /*  1 sec */
     msb.sbox.task.quota[S_QUOTA_MEMORY] = 67108864; /*  64 MB */
     msb.sbox.task.quota[S_QUOTA_DISK] = 1048576;    /*  1 MB  */
@@ -126,10 +126,10 @@ int main(int argc, const char* argv[])
     result_t res = *sandbox_execute(&msb.sbox);
     /* verbose statistics */
     fprintf(stderr, "result: %s\n", result_name[res]);
-    fprintf(stderr, "cpu: %ldms\n", probe(&msb.sbox, P_CPU));
-    fprintf(stderr, "time: %ldms\n", probe(&msb.sbox, P_ELAPSED));
-    fprintf(stderr, "mem: %ldKB\n", probe(&msb.sbox, P_MEMORY));
-    fprintf(stderr, "syscall: %ld\n", probe(&msb.sbox, P_SYSCALL));
+    fprintf(stderr, "cpu: %ld ms\n", probe(&msb.sbox, P_CPU));
+    fprintf(stderr, "time: %ld ms\n", probe(&msb.sbox, P_ELAPSED));
+    fprintf(stderr, "memory: %ld KB\n", probe(&msb.sbox, P_MEMORY));
+    fprintf(stderr, "last_syscall: %ld\n", probe(&msb.sbox, P_SYSCALL));
     /* destroy sandbox instance */
     sandbox_fini(&msb.sbox);
     return EX_OK;
