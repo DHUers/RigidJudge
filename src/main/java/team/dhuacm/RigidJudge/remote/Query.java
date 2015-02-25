@@ -128,7 +128,7 @@ class Query {
                         if (null == result)
                             return;
                         solution.setResult(result);
-                        //if (result == Result.Accept_Answer) {
+                        //if (result == Result.Accepted) {
                         if (ojProperty.getQueryMemoryColumn() != 0) {
                             Element memoryTdElement = tdElements.get(ojProperty.getQueryMemoryColumn() - 1);
                             String memoryStr = memoryTdElement.getTextExtractor().toString();

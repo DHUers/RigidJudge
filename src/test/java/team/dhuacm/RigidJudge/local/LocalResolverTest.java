@@ -249,11 +249,11 @@ public class LocalResolverTest {
         Problem problem_multicase = new LocalProblem(5, "multicase_test.in", "multicase_test.out", "per", timeLimit, memoryLimit);
         Problem problem_multicase_spj_c = new LocalSpecialProblem(6, "multicase_test.in", "multicase_test.out", "per", timeLimit, memoryLimit, cCode_SPJ_1, Language.C);
 
-        // C++ SPJ(C) Accept_Answer
+        // C++ SPJ(C) Accepted
         Solution solution = new Solution(1, problem_spj_c, cppCode, Language.CPP);
         LocalResolver localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
         // C++ SPJ(C) Wrong_Answer
         solution = new Solution(2, problem_spj_c, cppCode_WA, Language.CPP);
@@ -261,11 +261,11 @@ public class LocalResolverTest {
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Wrong_Answer);
 
-        // C++ SPJ(C++) Accept_Answer
+        // C++ SPJ(C++) Accepted
         solution = new Solution(1, problem_spj_cpp, cppCode, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
         // C++ SPJ(C++) Wrong_Answer
         solution = new Solution(2, problem_spj_cpp, cppCode_WA, Language.CPP);
@@ -273,11 +273,11 @@ public class LocalResolverTest {
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Wrong_Answer);
 
-        // C++ SPJ(Java) Accept_Answer
+        // C++ SPJ(Java) Accepted
         solution = new Solution(1, problem_spj_java, cppCode, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
         // C++ SPJ(Java) Wrong_Answer
         solution = new Solution(2, problem_spj_java, cppCode_WA, Language.CPP);
@@ -285,11 +285,11 @@ public class LocalResolverTest {
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Wrong_Answer);
 
-        // Multicase C++ Accept_Answer
+        // Multicase C++ Accepted
         solution = new Solution(1, problem_multicase, cppCode, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
         // Multicase C++ Wrong_Answer
         solution = new Solution(2, problem_multicase, cppCode_WA, Language.CPP);
@@ -297,11 +297,11 @@ public class LocalResolverTest {
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Wrong_Answer);
 
-        // Multicase C++ SPJ(C) Accept_Answer
+        // Multicase C++ SPJ(C) Accepted
         solution = new Solution(3, problem_multicase_spj_c, cppCode, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
         // Multicase C++ SPJ(C) Wrong_Answer
         solution = new Solution(4, problem_multicase_spj_c, cppCode_WA, Language.CPP);
@@ -309,11 +309,11 @@ public class LocalResolverTest {
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Wrong_Answer);
 
-        // C++ Accept_Answer
+        // C++ Accepted
         solution = new Solution(1, problem, cppCode, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
         // C++ Time_Limit_Exceeded
         solution = new Solution(2, problem, cppCode_TLE, Language.CPP);
@@ -351,11 +351,11 @@ public class LocalResolverTest {
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Memory_Limit_Exceeded);
 
-        // C Accept_Answer
+        // C Accepted
         solution = new Solution(1, problem, cCode, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
         // C Compile_Error
         solution = new Solution(2, problem, cCode.substring(0, 30), Language.C);
@@ -363,11 +363,11 @@ public class LocalResolverTest {
         localResolver.handle();
         assertEquals(solution.getResult(), Result.Compile_Error);
 
-        // Java Accept_Answer
+        // Java Accepted
         solution = new Solution(1, problem, javaCode, Language.JAVA);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
         // Java Wrong_Answer
         solution = new Solution(2, problem, javaCode_WA, Language.JAVA);

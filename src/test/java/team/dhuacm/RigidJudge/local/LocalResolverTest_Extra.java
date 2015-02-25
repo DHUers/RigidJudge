@@ -482,65 +482,65 @@ public class LocalResolverTest_Extra {
         problems[9] = new LocalProblem(9, "09_test.in", "09_test.out", "all", timeLimit, memoryLimit);
         problems[10] = new LocalProblem(10, "10_test.in", "10_test.out", "all", timeLimit, memoryLimit);
 
-        // C 01 Accept_Answer
+        // C 01 Accepted
         Solution solution = new Solution(1, problems[1], cCode_01, Language.C);
         LocalResolver localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
-        // C 02 Accept_Answer
+        // C 02 Accepted
         solution = new Solution(2, problems[2], cCode_02, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
-        // C 03 Accept_Answer
+        // C 03 Accepted
         solution = new Solution(3, problems[3], cCode_03, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
-        // C 04 Accept_Answer
+        // C 04 Accepted
         solution = new Solution(4, problems[4], cCode_04, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
-        // C 05 Accept_Answer
+        // C 05 Accepted
         solution = new Solution(5, problems[5], cCode_05, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
-        // C 06 Accept_Answer
+        // C 06 Accepted
         solution = new Solution(6, problems[6], cCode_06, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
-        // C 07 Accept_Answer
+        // C 07 Accepted
         solution = new Solution(7, problems[7], cCode_07, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
-        // C 08 Accept_Answer
+        // C 08 Accepted
         solution = new Solution(8, problems[8], cCode_08, Language.C);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
-        // C++ 09 Accept_Answer
+        // C++ 09 Accepted
         solution = new Solution(9, problems[9], cppCode_09, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
-        // C++ 10 Accept_Answer
+        // C++ 10 Accepted
         solution = new Solution(10, problems[10], cppCode_10, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        assertEquals(solution.getResult(), Result.Accept_Answer);
+        assertEquals(solution.getResult(), Result.Accepted);
 
 
         // Real solution data Test

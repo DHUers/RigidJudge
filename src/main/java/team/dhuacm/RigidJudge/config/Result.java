@@ -5,7 +5,7 @@ package team.dhuacm.RigidJudge.config;
  */
 public enum Result {
     // 0 Queue
-    // 1 Accept_Answer
+    // 1 Accepted
     // 2 Wrong_Answer
     // 3 Time_Limit_Exceeded
     // 4 Memory_Limit_Exceeded
@@ -15,7 +15,7 @@ public enum Result {
     // 8 Output_Limit_Exceeded
     // 9 Network_Error
     // 10 Judge_Error
-    Queue, Accept_Answer, Wrong_Answer, Time_Limit_Exceeded, Memory_Limit_Exceeded, Presentation_Error, Runtime_Error, Compile_Error, Output_Limit_Exceeded, Network_Error, Judge_Error;
+    Queue, Accepted, Wrong_Answer, Time_Limit_Exceeded, Memory_Limit_Exceeded, Presentation_Error, Runtime_Error, Compile_Error, Output_Limit_Exceeded, Network_Error, Judge_Error;
 
     public static Result fromOrdinal(int id) {
         for (Result r : Result.values()) {
@@ -27,7 +27,7 @@ public enum Result {
 
     public static Result parseResult(String str) {
         if (str.equalsIgnoreCase("Queue")) return Queue;
-        if (str.equalsIgnoreCase("AC") || str.startsWith("Accept")) return Accept_Answer;
+        if (str.equalsIgnoreCase("AC") || str.startsWith("Accept")) return Accepted;
         if (str.equalsIgnoreCase("WA") || str.startsWith("Wrong")) return Wrong_Answer;
         if (str.equalsIgnoreCase("TLE") || str.startsWith("Time")) return Time_Limit_Exceeded;
         if (str.equalsIgnoreCase("MLT") || str.startsWith("Memory")) return Memory_Limit_Exceeded;

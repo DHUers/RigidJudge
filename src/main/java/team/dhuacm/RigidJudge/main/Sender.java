@@ -7,6 +7,7 @@ import com.rabbitmq.client.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
+import team.dhuacm.RigidJudge.config.Result;
 import team.dhuacm.RigidJudge.model.Solution;
 
 import java.io.IOException;
@@ -46,7 +47,11 @@ class Sender implements Runnable {
         Map<String, Object> mapInfo = new HashMap<String, Object>();
         mapInfo.put("id", solution.getId());
         mapInfo.put("revision", 0);
-        mapInfo.put("status", solution.getResult().toString().toLowerCase());
+        if (solution.getResult().equals(Result.Accepted)) {
+            mapInfo.put("status", "accept_answer");
+        } else {
+            mapInfo.put("status", solution.getResult().toString().toLowerCase());
+        }
         mapInfo.put("time_usage", solution.getTime());
         mapInfo.put("memory_usage", solution.getMemory());
         mapInfo.put("report", solution.getCompileInfo() + "\n" + solution.getExecuteInfo() + "\n" + solution.getCompareInfo());

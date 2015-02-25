@@ -92,7 +92,7 @@ class CheckAnswer {
 
             switch (executeSpecialJudge("spj", ((LocalSpecialProblem) problem).getJudgerProgramLanguage())) {
                 case 0:
-                    solution.setResult(Result.Accept_Answer);
+                    solution.setResult(Result.Accepted);
                     break;
                 case 1:
                     solution.setResult(Result.Wrong_Answer);
@@ -110,7 +110,7 @@ class CheckAnswer {
             //logger.info("'{}'", solution.getStdAns());
             //logger.info("'{}'", solution.getOutput());
             if (solution.getStdAns().equals(solution.getOutput())) {
-                solution.setResult(Result.Accept_Answer);
+                solution.setResult(Result.Accepted);
             } else {
                 String stdAns = removeSpace(solution.getStdAns());
                 String output = removeSpace(solution.getOutput());
