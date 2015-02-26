@@ -1,4 +1,14 @@
 language: java
+
+before_install:
+  - sudo apt-get update
+  # gcc
+  - sudo apt-get install gcc-4.8
+  - gcc --version
+  # g++
+  - sudo apt-get install g++-4.8
+  - g++ --version
+
 notifications:
   slack:
     rooms:
