@@ -13,21 +13,19 @@ public class FileUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class.getSimpleName());
 
-    public static String getFileContent(File file) {
-        String fileContent = "";
-        try {
-            RandomAccessFile raf = new RandomAccessFile(file, "r");
-            byte[] fileBytes = new byte[(int) raf.length()];
-            raf.read(fileBytes);
-            fileContent = new String(fileBytes);
-            fileContent = fileContent.replace("\r\n", "\n");
-            if (fileContent.endsWith("\n")) {
-                fileContent = fileContent.substring(0, fileContent.length() - 1);
-            }
-            raf.close();
-        } catch (IOException e) {
-            logger.error(null, e);
+    public static String getFileContent(File file) throws IOException {
+        String fileContent;
+
+        RandomAccessFile raf = new RandomAccessFile(file, "r");
+        byte[] fileBytes = new byte[(int) raf.length()];
+        raf.read(fileBytes);
+        fileContent = new String(fileBytes);
+        fileContent = fileContent.replace("\r\n", "\n");
+        if (fileContent.endsWith("\n")) {
+            fileContent = fileContent.substring(0, fileContent.length() - 1);
         }
+        raf.close();
+
         return fileContent;
     }
 

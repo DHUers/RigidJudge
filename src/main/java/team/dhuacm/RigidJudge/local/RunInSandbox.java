@@ -44,9 +44,10 @@ class RunInSandbox {
 
             logger.info("Run done!\n{}", errorStream);
             String[] sandboxReply = errorStream.toString().split("\n");
-            String result = sandboxReply[0].split(": ")[1];
-            time_usage = Long.parseLong(sandboxReply[2].split(": ")[1].replace(" ms", ""));
-            memory_usage = Long.parseLong(sandboxReply[3].split(": ")[1].replace(" KB", ""));
+            int lines = sandboxReply.length;
+            String result = sandboxReply[lines-5].split(": ")[1];
+            time_usage = Long.parseLong(sandboxReply[lines-3].split(": ")[1].replace(" ms", ""));
+            memory_usage = Long.parseLong(sandboxReply[lines-2].split(": ")[1].replace(" KB", ""));
 
             // "PD", /* pending */
             // "OK", /* okay */

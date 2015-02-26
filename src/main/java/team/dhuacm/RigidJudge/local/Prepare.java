@@ -36,16 +36,10 @@ class Prepare {
     private static CloseableHttpClient httpClient = null;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static boolean doPrepare(Solution solution, String source) throws IOException {
-
+    public static void doPrepare(Solution solution, String source) throws IOException, JudgeException, NetworkException {
         LocalProblem problem = (LocalProblem) solution.getProblem();
 
-        try {
-            prepareData(problem);
-        } catch (Exception e) {
-            logger.error(null, e);
-            return false;
-        }
+        prepareData(problem);
 
         solution.setInput(FileUtils.getFileContent(new File("data/" + problem.getInputFileName().substring(problem.getInputFileName().lastIndexOf("/") + 1))));
         solution.setStdAns(FileUtils.getFileContent(new File("data/" + problem.getOutputFileName().substring(problem.getOutputFileName().lastIndexOf("/") + 1))));
@@ -98,12 +92,9 @@ class Prepare {
             writer.close();
 
             if (!Compile.doCompile(specialProblem.getJudgerProgramLanguage(), "tmp/spj", "tmp/spj")) {
-                logger.error("SPJ compile error!");
-                return false;
+                throw new JudgeException("SPJ compile error!" + Compile.compileInfo);
             }
         }
-
-        return true;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

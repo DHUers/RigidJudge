@@ -17,7 +17,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class LocalResolverTest_Extra {
+public class LocalResolverTest_Extra_C {
 
     private static final String cCode_01 = "#include <stdio.h>\n" +
             "int main()\n" +

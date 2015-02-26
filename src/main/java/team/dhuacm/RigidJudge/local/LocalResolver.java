@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
 import team.dhuacm.RigidJudge.config.Language;
 import team.dhuacm.RigidJudge.config.Result;
+import team.dhuacm.RigidJudge.exception.JudgeException;
+import team.dhuacm.RigidJudge.exception.NetworkException;
 import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
@@ -23,9 +25,11 @@ public class LocalResolver {
         logger.info("problem id: {} - solution id: {}", solution.getProblem().getId(), solution.getId());
     }
 
-    public void handle() throws IOException {
+    public void handle() {
         String source = "tmp/Main", target = "tmp/Main";
-        if (Prepare.doPrepare(solution, source)) {
+        try {
+            Prepare.doPrepare(solution, source);
+
             if (Compile.doCompile(solution.getLanguage(), source, target)) {
                 solution.setCompileInfo(Compile.compileInfo);
                 logger.info("Compile success!");
@@ -40,11 +44,18 @@ public class LocalResolver {
                 solution.setResult(Result.Compile_Error);
                 logger.info("Compile failed!");
             }
-        } else {
-            logger.error("Fetch problem data failed!");
+
+            Clean.doClean();
+        } catch (IOException e) {
+            logger.error("Fetch problem data failed!", e);
+            solution.setResult(Result.Judge_Error);
+        } catch (NetworkException e) {
+            logger.error("Fetch problem data failed!", e);
+            solution.setResult(Result.Network_Error);
+        } catch (JudgeException e) {
+            logger.error("Fetch problem data failed!", e);
             solution.setResult(Result.Judge_Error);
         }
-        Clean.doClean();
     }
 
     private void handleMultipleCase(Solution solution, String target) throws IOException {
