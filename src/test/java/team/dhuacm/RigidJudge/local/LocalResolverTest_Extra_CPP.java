@@ -822,7 +822,6 @@ public class LocalResolverTest_Extra_CPP {
         Solution solution = new Solution(1, problems[1], cppCode_01, Language.CPP);
         LocalResolver localResolver = new LocalResolver(solution);
         localResolver.handle();
-        System.err.println(solution.getResult() + "\n" + solution.getCompileInfo());
         assertEquals(solution.getResult(), Result.Accepted);
 
         // C++ 02 Accepted

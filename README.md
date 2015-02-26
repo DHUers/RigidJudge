@@ -1,19 +1,31 @@
 [![Build Status](https://travis-ci.org/DHUers/RigidJudge.svg?branch=master)](https://travis-ci.org/DHUers/RigidJudge)
 
 # RigidJudge
-Judge of RigidOJ
+A powerful and stable judge system designed for RigidOJ.
+It can also be used by other OnlineJudge system which takes RabbitMQ as the distribution intermediary.
 
 ## Features
 ### Local Judge
-* Sandbox protection
-* Special judge
+* Sandbox protection (Linux)
+* SpecialJudge (Program comparison)
+* Multiple test case judge
+* Time & memory limits for different languages
+* Problem data download & cache
+* Language & Compiler Support:
+
+    GCC G++ JDK Clang
 
 ### Remote Judge
-* Proxy to remote Onlinejudge. (UVa POJ HDU ZOJ UVaLive SGU SPOJ AIZU Ural Codeforces Codeforces::Gym ...)
+* Proxy to remote OnlineJudges.
+* Concurrent tasks
+* Automatically retry
+* Remote OnlineJudge Support:
+
+    UVa POJ HDU ZOJ UVaLive SGU SPOJ AIZU Ural Codeforces Codeforces::Gym
 
 ## Requirements
-- JRE 7
-- RabbitMQ 3.4
+* JRE 7
+* RabbitMQ 3.4
 
 ## Support
 
