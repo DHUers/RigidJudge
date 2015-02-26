@@ -534,7 +534,7 @@ public class LocalResolverTest_Extra_C {
         solution = new Solution(9, problems[9], cppCode_09, Language.CPP);
         localResolver = new LocalResolver(solution);
         localResolver.handle();
-        System.out.println(solution.getResult() + "\n" + solution.getCompileInfo());
+        System.err.println(solution.getResult() + "\n" + solution.getCompileInfo());
         assertEquals(solution.getResult(), Result.Accepted);
 
         // C++ 10 Accepted

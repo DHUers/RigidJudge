@@ -253,7 +253,7 @@ public class LocalResolverTest {
         Solution solution = new Solution(1, problem_spj_c, cppCode, Language.CPP);
         LocalResolver localResolver = new LocalResolver(solution);
         localResolver.handle();
-        System.out.println(solution.getResult() + "\n" + solution.getCompileInfo());
+        System.err.println(solution.getResult() + "\n" + solution.getCompileInfo());
         assertEquals(solution.getResult(), Result.Accepted);
 
         // C++ SPJ(C) Wrong_Answer
