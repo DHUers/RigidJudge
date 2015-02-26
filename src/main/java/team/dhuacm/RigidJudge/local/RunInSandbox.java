@@ -44,7 +44,7 @@ class RunInSandbox {
 
             logger.info("Run done!\n{}", errorStream);
             String[] sandboxReply = errorStream.toString().split("\n");
-            int lines = sandboxReply.length;
+            int lines = sandboxReply.length;  // prevent program wrote data to error stream
             String result = sandboxReply[lines-5].split(": ")[1];
             time_usage = Long.parseLong(sandboxReply[lines-3].split(": ")[1].replace(" ms", ""));
             memory_usage = Long.parseLong(sandboxReply[lines-2].split(": ")[1].replace(" KB", ""));

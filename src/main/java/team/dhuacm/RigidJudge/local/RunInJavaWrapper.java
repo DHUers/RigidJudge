@@ -42,8 +42,9 @@ class RunInJavaWrapper {
             executor.execute(cmdLine);
 
             String[] wrapperReply = errorStream.toString().split("\n");
-            time_usage = Long.parseLong(wrapperReply[0].split(": ")[1].replace(" ms", ""));
-            memory_usage = Long.parseLong(wrapperReply[1].split(": ")[1].replace(" KB", ""));
+            int lines = wrapperReply.length;  // prevent program wrote data to error stream
+            time_usage = Long.parseLong(wrapperReply[lines-2].split(": ")[1].replace(" ms", ""));
+            memory_usage = Long.parseLong(wrapperReply[lines-1].split(": ")[1].replace(" KB", ""));
 
             if (time_usage >= solution.getTimeLimit()) {
                 solution.setResult(Result.Time_Limit_Exceeded);
