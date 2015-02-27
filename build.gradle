@@ -29,7 +29,7 @@ jar {
 }
 
 distZip {
-    into(project.name) {
+    into(project.name + "/bin") {
         from '.'
         include 'configs/*'
         include 'configs/local/*'
@@ -40,7 +40,7 @@ distZip {
 }
 
 distTar {
-    into(project.name) {
+    into(project.name + "/bin") {
         from '.'
         include 'configs/*'
         include 'configs/local/*'
