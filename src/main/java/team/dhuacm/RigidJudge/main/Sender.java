@@ -29,34 +29,32 @@ class Sender implements Runnable {
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
     }
 
-    private String serialize(Solution solution) throws JsonProcessingException {
-        /*
-        {
-            "solution":
-            {
-                "id":1,
-                "revision":0,
-                "status":"accept_answer",
-                "time_usage":1111(ms),
-                "memory_usage": 232323(kb),
-                "report":"html or markdown report, details about this solution. can be blank?"
-            }
-        }
-        */
-        Map<String, Object> mapSolution = new HashMap<String, Object>();
-        Map<String, Object> mapInfo = new HashMap<String, Object>();
-        mapInfo.put("id", solution.getId());
-        mapInfo.put("revision", 0);
-        if (solution.getResult().equals(Result.Accepted)) {
-            mapInfo.put("status", "accepted_answer");
-        } else {
-            mapInfo.put("status", solution.getResult().toString().toLowerCase());
-        }
-        mapInfo.put("time_usage", solution.getTime());
-        mapInfo.put("memory_usage", solution.getMemory());
-        mapInfo.put("report", solution.getCompileInfo() + "\n" + solution.getExecuteInfo() + "\n" + solution.getCompareInfo());
-        mapSolution.put("solution", mapInfo);
 
+    /**
+     * @param solution the Solution need to be serialized
+     * @return JSON string
+     * @throws JsonProcessingException
+     * example: https://github.com/DHUers/RigidJudge/wiki/JSON-Prototype
+     */
+    private String serialize(Solution solution) throws JsonProcessingException {
+        Map<String, Object> mapSolution = null;
+        try {
+            mapSolution = new HashMap<String, Object>();
+            Map<String, Object> mapInfo = new HashMap<String, Object>();
+            mapInfo.put("id", solution.getId());
+            mapInfo.put("revision", 0);
+            if (solution.getResult().equals(Result.Accepted)) {
+                mapInfo.put("status", "accepted_answer");
+            } else {
+                mapInfo.put("status", solution.getResult().toString().toLowerCase());
+            }
+            mapInfo.put("time_usage", solution.getTime());
+            mapInfo.put("memory_usage", solution.getMemory());
+            mapInfo.put("report", solution.getCompileInfo() + "\n" + solution.getExecuteInfo() + "\n" + solution.getCompareInfo());
+            mapSolution.put("solution", mapInfo);
+        } catch (Exception e) {
+            logger.error("Serialize to JSON error!", e);
+        }
         return objectMapper.writeValueAsString(mapSolution);
     }
 

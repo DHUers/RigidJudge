@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
 import team.dhuacm.RigidJudge.config.Language;
 import team.dhuacm.RigidJudge.config.OJ;
-import team.dhuacm.RigidJudge.model.Problem;
+import team.dhuacm.RigidJudge.config.Result;
 import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 import team.dhuacm.RigidJudge.remote.RemoteResolver;
@@ -32,7 +32,8 @@ class RemoteController implements Runnable {
     private static QueueingConsumer consumer;
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = LoggerFactory.getLogger(RemoteController.class.getSimpleName());
-
+    private static Solution solution;
+    
     public RemoteController(Connection connection) throws IOException {
         channel = connection.createChannel();
         channel.queueDeclare(QUEUE_NAME, true, false, false, null);
@@ -42,25 +43,37 @@ class RemoteController implements Runnable {
         logger.info("Connected to the remote channel, waiting for solutions ...");
     }
 
+    /**
+     * @param message JSON string
+     * @return whether parsed JSON successfully
+     * example: https://github.com/DHUers/RigidJudge/wiki/JSON-Prototype
+     */
     @SuppressWarnings("unchecked")
-    private Solution deserialize(String message) throws IOException {
-        Map<String, Map<String, Object>> maps = objectMapper.readValue(message, Map.class);
+    private boolean deserialize(String message) {
+        solution = new Solution(0, null, null, null);
+        try {
+            Map<String, Map<String, Object>> maps = objectMapper.readValue(message, Map.class);
 
-        Map<String, Object> mapSolution = maps.get("solution");
-        String source = (String) mapSolution.get("source");
-        String platform = (String) mapSolution.get("platform");
-        if (platform.equals("c++")) {
-            platform = "cpp";
+            Map<String, Object> mapSolution = maps.get("solution");
+            solution.setCode((String) mapSolution.get("source"));
+            String platform = (String) mapSolution.get("platform");
+            if (platform.equalsIgnoreCase("c++")) {
+                platform = "cpp";
+            }
+            solution.setLanguage(Language.valueOf(platform.toUpperCase()));
+            solution.setId((Integer) mapSolution.get("id"));
+            int problemId = (Integer) mapSolution.get("problem_id");
+
+            List<LinkedHashMap<String, Object>> listProblems = (List<LinkedHashMap<String, Object>>) maps.get("problems");
+            Map<String, Object> judgeData = (Map<String, Object>) listProblems.get(0).get("judge_data");
+            String[] vendor = ((String) judgeData.get("vendor")).split(",");
+
+            solution.setProblem(new RemoteProblem(problemId, OJ.valueOf(vendor[0].toUpperCase()), vendor[1]));
+        } catch (Exception e) {
+            logger.error("Parse JSON error!", e);
+            return false;
         }
-        int solutionId = (Integer) mapSolution.get("id");
-        int problemId = (Integer) mapSolution.get("problem_id");
-
-        List<LinkedHashMap<String, Object>> listProblems = (List<LinkedHashMap<String, Object>>) maps.get("problems");
-        Map<String, Object> judgeData = (Map<String, Object>) listProblems.get(0).get("judge_data");
-        String[] vendor = ((String) judgeData.get("vendor")).split(",");
-
-        Problem problem = new RemoteProblem(problemId, OJ.valueOf(vendor[0].toUpperCase()), vendor[1]);
-        return new Solution(solutionId, problem, source, Language.valueOf(platform.toUpperCase()));
+        return true;
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
@@ -77,23 +90,22 @@ class RemoteController implements Runnable {
                 new Thread() {
                     public void run() {
                         try {
-                            Solution solution = deserialize(message);
-
-                            new RemoteResolver(solution).handle();
+                            if (deserialize(message)) {
+                                new RemoteResolver(solution).handle();
+                            } else {
+                                solution.setResult(Result.Judge_Error);
+                            }
                             logger.info("Result is '{}'.", solution.getResult());
-
-                            DataProvider.JudgedSolutionQueue.put(solution);
-                            logger.info("Sent to finished queue successfully!");
-
+                            if (solution.getId() != 0) {
+                                DataProvider.JudgedSolutionQueue.put(solution);
+                                logger.debug("Sent to result queue successfully!");
+                            }
                             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
-                        } catch (JsonMappingException e) {
-                            logger.error(null, e);
-                        } catch (JsonParseException e) {
-                            logger.error(null, e);
-                        } catch (IOException e) {
-                            logger.error(null, e);
+                            logger.debug("Sent ACK message successfully!");
                         } catch (InterruptedException e) {
-                            logger.error(null, e);
+                            logger.error("Send to result queue failed!", e);
+                        } catch (IOException e) {
+                            logger.error("Send ACK message failed!", e);
                         }
                     }
                 }.start();
