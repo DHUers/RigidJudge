@@ -48,7 +48,7 @@ class Sender implements Runnable {
         mapInfo.put("id", solution.getId());
         mapInfo.put("revision", 0);
         if (solution.getResult().equals(Result.Accepted)) {
-            mapInfo.put("status", "accept_answer");
+            mapInfo.put("status", "accepted_answer");
         } else {
             mapInfo.put("status", solution.getResult().toString().toLowerCase());
         }

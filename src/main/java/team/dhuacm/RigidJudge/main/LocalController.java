@@ -48,7 +48,7 @@ class LocalController implements Runnable {
         Map<String, Object> mapSolution = maps.get("solution");
         String source = (String) mapSolution.get("source");
         String platform = (String) mapSolution.get("platform");
-        if (platform.equals("c++")) {
+        if (platform.equalsIgnoreCase("c++")) {
             platform = "cpp";
         }
         int solutionId = (Integer) mapSolution.get("id");

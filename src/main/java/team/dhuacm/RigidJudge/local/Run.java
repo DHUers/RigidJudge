@@ -27,7 +27,7 @@ class Run {
         Runtime runtime = null;
 
         try {
-            String commandLine = DataProvider.Local_RunCommand.get(solution.getLanguage()).replace("{target}", "Sandbox");
+            String commandLine = DataProvider.Local_RunCommand.get(solution.getLanguage()).replace("{target}", target);
             logger.info("cmd: {}", commandLine);
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
