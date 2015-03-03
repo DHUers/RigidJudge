@@ -19,6 +19,8 @@ public class DataProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(DataProvider.class.getSimpleName());
 
+    private static final Properties p;
+    
     // Common configurations
     public static String RabbitMQ_Host;
     public static int RabbitMQ_Port;
@@ -52,7 +54,7 @@ public class DataProvider {
     public static final LinkedBlockingQueue<Solution> JudgedSolutionQueue = new LinkedBlockingQueue<Solution>();
 
     static {
-        Properties p = new Properties();
+        p = new Properties();
         try {
             p.load(new FileInputStream("configs/Config.properties"));
         } catch (FileNotFoundException e) {
@@ -62,26 +64,26 @@ public class DataProvider {
             logger.error(null, e);
         }
 
-        RabbitMQ_Host = p.getProperty("RabbitMQ_Host", "127.0.0.1");
-        RabbitMQ_Port = Integer.parseInt(p.getProperty("RabbitMQ_Port", "5672"));
-        RabbitMQ_Username = p.getProperty("RabbitMQ_Username", "judger");
-        RabbitMQ_Password = p.getProperty("RabbitMQ_Password", "JUDGER_PASSWORD");
+        RabbitMQ_Host = getEnvIfNotEmpty("RabbitMQ_Host", "127.0.0.1");
+        RabbitMQ_Port = Integer.parseInt(getEnvIfNotEmpty("RabbitMQ_Port", "5672"));
+        RabbitMQ_Username = getEnvIfNotEmpty("RabbitMQ_Username", "judger");
+        RabbitMQ_Password = getEnvIfNotEmpty("RabbitMQ_Password", "JUDGER_PASSWORD");
 
-        Local_DataServerHost = p.getProperty("Local_DataServerHost", "127.0.0.1");
-        Local_DataServerPort = Integer.parseInt(p.getProperty("Local_DataServerPort", "80"));
-        Local_DataServerUsername = p.getProperty("Local_DataServerUsername", "");
-        Local_DataServerPassword = p.getProperty("Local_DataServerPassword", "");
-        Local_RunInSandbox = Boolean.parseBoolean(p.getProperty("Local_RunInSandbox", "true"));
-        Local_CompileTimeLimit = Integer.parseInt(p.getProperty("Local_CompileTimeLimit", "5"));
-        Local_OutputLengthLimit = Integer.parseInt(p.getProperty("Local_OutputLengthLimit", "5242880"));
-        Local_SpecialJudgeTimeLimit = Integer.parseInt(p.getProperty("Local_SpecialJudgeTimeLimit", "5"));
-        Local_DiffReport = Boolean.parseBoolean(p.getProperty("Local_DiffReport", "true"));
+        Local_DataServerHost = getEnvIfNotEmpty("Local_DataServerHost", "127.0.0.1");
+        Local_DataServerPort = Integer.parseInt(getEnvIfNotEmpty("Local_DataServerPort", "80"));
+        Local_DataServerUsername = getEnvIfNotEmpty("Local_DataServerUsername", "");
+        Local_DataServerPassword = getEnvIfNotEmpty("Local_DataServerPassword", "");
+        Local_RunInSandbox = Boolean.parseBoolean(getEnvIfNotEmpty("Local_RunInSandbox", "true"));
+        Local_CompileTimeLimit = Integer.parseInt(getEnvIfNotEmpty("Local_CompileTimeLimit", "5"));
+        Local_OutputLengthLimit = Integer.parseInt(getEnvIfNotEmpty("Local_OutputLengthLimit", "5242880"));
+        Local_SpecialJudgeTimeLimit = Integer.parseInt(getEnvIfNotEmpty("Local_SpecialJudgeTimeLimit", "5"));
+        Local_DiffReport = Boolean.parseBoolean(getEnvIfNotEmpty("Local_DiffReport", "true"));
 
-        Remote_Concurrency = Integer.parseInt(p.getProperty("Remote_Concurrency", "10"));
-        Remote_RetryTimes = Integer.parseInt(p.getProperty("Remote_RetryTimes", "3"));
-        Remote_SocketTimeout = Integer.parseInt(p.getProperty("Remote_SocketTimeout", "30"));
-        Remote_ConnectionTimeout = Integer.parseInt(p.getProperty("Remote_ConnectionTimeout", "30"));
-        for (String str : p.getProperty("Remote_QueryInterval").split(",")) {
+        Remote_Concurrency = Integer.parseInt(getEnvIfNotEmpty("Remote_Concurrency", "10"));
+        Remote_RetryTimes = Integer.parseInt(getEnvIfNotEmpty("Remote_RetryTimes", "3"));
+        Remote_SocketTimeout = Integer.parseInt(getEnvIfNotEmpty("Remote_SocketTimeout", "30"));
+        Remote_ConnectionTimeout = Integer.parseInt(getEnvIfNotEmpty("Remote_ConnectionTimeout", "30"));
+        for (String str : getEnvIfNotEmpty("Remote_QueryInterval", "10,20,25,30,60,120,600,1200,2400").split(",")) {
             Remote_QueryInterval.add(Integer.parseInt(str));
         }
 
@@ -101,7 +103,7 @@ public class DataProvider {
         }
         for (Language l : Language.values()) {
             if (l.equals(Language.DEFAULT)) continue;
-            String suffix = p.getProperty(l.name().toLowerCase());
+            String suffix = getEnvIfNotEmpty(l.name().toLowerCase(), "");
             Local_FileSuffix.put(l, suffix);
             logger.info("        {} - '{}'", l.name(), suffix);
         }
@@ -117,7 +119,7 @@ public class DataProvider {
         }
         for (Language l : Language.values()) {
             if (l.equals(Language.DEFAULT)) continue;
-            String command = p.getProperty(l.name().toLowerCase());
+            String command = getEnvIfNotEmpty(l.name().toLowerCase(), "");
             Local_CompileCommand.put(l, command);
             logger.info("        {} - '{}'", l.name(), command);
         }
@@ -133,7 +135,7 @@ public class DataProvider {
         }
         for (Language l : Language.values()) {
             if (l.equals(Language.DEFAULT)) continue;
-            String command = p.getProperty(l.name().toLowerCase());
+            String command = getEnvIfNotEmpty(l.name().toLowerCase(), "");
             Local_RunCommand.put(l, command);
             logger.info("        {} - '{}'", l.name(), command);
         }
@@ -189,5 +191,14 @@ public class DataProvider {
             }
         }
         logger.info("Init remote/OJProperty Config OK!");
+    }
+
+    private static String getEnvIfNotEmpty(String env, String defaultEnv) {
+        String envName = "RIGIDOJ_" + env.toUpperCase();
+        if (System.getenv(envName) != null) {
+            return System.getenv(envName);
+        } else {
+            return p.getProperty(env, defaultEnv);
+        }
     }
 }
