@@ -40,6 +40,8 @@ distZip {
 }
 
 distTar {
+    compression = Compression.GZIP
+    extension = "tar.gz"
     into(project.name + "/bin") {
         from '.'
         include 'configs/*'
