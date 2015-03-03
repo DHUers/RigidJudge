@@ -22,6 +22,8 @@ public class DataProvider {
     // Common configurations
     public static String RabbitMQ_Host;
     public static int RabbitMQ_Port;
+    public static String RabbitMQ_Username;
+    public static String RabbitMQ_Password;
     public static final HashMap<OJ, OJProperty> OJs = new HashMap<OJ, OJProperty>();
 
     // Local judge configurations
@@ -62,6 +64,8 @@ public class DataProvider {
 
         RabbitMQ_Host = p.getProperty("RabbitMQ_Host", "127.0.0.1");
         RabbitMQ_Port = Integer.parseInt(p.getProperty("RabbitMQ_Port", "5672"));
+        RabbitMQ_Username = p.getProperty("RabbitMQ_Username", "judger");
+        RabbitMQ_Password = p.getProperty("RabbitMQ_Password", "JUDGER_PASSWORD");
 
         Local_DataServerHost = p.getProperty("Local_DataServerHost", "127.0.0.1");
         Local_DataServerPort = Integer.parseInt(p.getProperty("Local_DataServerPort", "80"));
@@ -82,7 +86,7 @@ public class DataProvider {
         }
 
 
-        logger.info("RabbitMQ Server: {}:{}", RabbitMQ_Host, RabbitMQ_Port);
+        logger.info("RabbitMQ Server: {}:{}, Username: {}, Password: {}", RabbitMQ_Host, RabbitMQ_Port, RabbitMQ_Username, RabbitMQ_Password);
         logger.info("[Local] Run in Sandbox: {}, Diff Report: {}, Compile Time Limit: {}", Local_RunInSandbox, Local_DiffReport, Local_CompileTimeLimit);
         logger.info("        Output Length Limit: {}, Special Judge Time Limit: {}", Local_OutputLengthLimit, Local_SpecialJudgeTimeLimit);
         logger.info("        Data Server: {}:{}, username: {}, password: {}", Local_DataServerHost, Local_DataServerPort, Local_DataServerUsername, Local_DataServerPassword);

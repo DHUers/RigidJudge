@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.DataProvider;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 
 /**
@@ -19,8 +20,19 @@ public class RigidJudge {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(DataProvider.RabbitMQ_Host);
         factory.setPort(DataProvider.RabbitMQ_Port);
+        factory.setUsername("judger");
+        factory.setPassword(DataProvider.RabbitMQ_Password);
         connection = factory.newConnection();
         logger.info("Initialization finished.");
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run () {
+                try {
+                    connection.close();
+                } catch (IOException e) {
+                    logger.info("Connection closed.");
+                }
+            }
+        });
     }
 
     public static void main(String[] args) throws IOException {
