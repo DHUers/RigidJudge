@@ -118,7 +118,7 @@ class LocalController implements Runnable {
                             }
                             logger.info("Result is '{}'.", solution.getResult());
                             if (solution.getId() != 0) {
-                                DataProvider.JudgedSolutionQueue.put(solution);
+                                DataProvider.JUDGED_SOLUTION_QUEUE.put(solution);
                                 logger.debug("Sent to result queue successfully!");
                             }
                             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);

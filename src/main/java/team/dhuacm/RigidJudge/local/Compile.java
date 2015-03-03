@@ -25,13 +25,13 @@ class Compile {
         ExecuteWatchdog watchdog = null;
 
         try {
-            String commandLine = DataProvider.Local_CompileCommand.get(language);
+            String commandLine = DataProvider.LOCAL_COMPILE_COMMAND.get(language);
             commandLine = commandLine.replace("{source}", source).replace("{target}", target);
             logger.info("cmd: '{}'", commandLine);
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
             DefaultExecutor executor = new DefaultExecutor();
-            watchdog = new ExecuteWatchdog(DataProvider.Local_CompileTimeLimit * 1000);
+            watchdog = new ExecuteWatchdog(DataProvider.LOCAL_COMPILE_TIME_LIMIT * 1000);
             executor.setWatchdog(watchdog);
             outputStream = new ByteArrayOutputStream();
             errorStream = new ByteArrayOutputStream();

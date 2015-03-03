@@ -50,7 +50,7 @@ class CheckAnswer {
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
             DefaultExecutor executor = new DefaultExecutor();
-            watchdog = new ExecuteWatchdog(DataProvider.Local_SpecialJudgeTimeLimit * 1000);
+            watchdog = new ExecuteWatchdog(DataProvider.LOCAL_SPECIAL_JUDGE_TIME_LIMIT * 1000);
             executor.setWatchdog(watchdog);
             executor.setExitValues(new int[]{0, 1, 2});
             outputStream = new ByteArrayOutputStream();
@@ -120,7 +120,7 @@ class CheckAnswer {
                     solution.setResult(Result.Wrong_Answer);
                 }
 
-                if (DataProvider.Local_DiffReport) {
+                if (DataProvider.LOCAL_DIFF_REPORT) {
                     DiffUtils diff = new DiffUtils();
                     LinkedList<DiffUtils.Diff> diffs = diff.diff_main(stdAns, output);
                     diff.diff_cleanupSemantic(diffs);

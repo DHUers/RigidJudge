@@ -88,7 +88,7 @@ public class LocalResolver {
         if (solution.getLanguage().equals(Language.JAVA)) {
             runSuccess = RunInJavaWrapper.doRun(solution);
         } else {
-            if (DataProvider.Local_RunInSandbox) {
+            if (DataProvider.LOCAL_RUN_IN_SANDBOX) {
                 runSuccess = RunInSandbox.doRun(solution, target);
             } else {
                 runSuccess = Run.doRun(solution, target);

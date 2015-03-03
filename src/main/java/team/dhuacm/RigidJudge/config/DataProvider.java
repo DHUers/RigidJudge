@@ -22,36 +22,36 @@ public class DataProvider {
     private static final Properties p;
     
     // Common configurations
-    public static String RabbitMQ_Host;
-    public static int RabbitMQ_Port;
-    public static String RabbitMQ_Username;
-    public static String RabbitMQ_Password;
-    public static final HashMap<OJ, OJProperty> OJs = new HashMap<OJ, OJProperty>();
+    public static final String RABBITMQ_HOST;
+    public static final Integer RABBITMQ_PORT;
+    public static final String RABBITMQ_USERNAME;
+    public static final String RABBITMQ_PASSWORD;
+    public static final HashMap<OJ, OJProperty> OJ_LIST = new HashMap<OJ, OJProperty>();
 
     // Local judge configurations
-    public static String Local_DataServerHost;
-    public static int Local_DataServerPort;
-    public static String Local_DataServerUsername;
-    public static String Local_DataServerPassword;
-    public static boolean Local_RunInSandbox = true;
-    public static int Local_CompileTimeLimit = 0;
-    public static int Local_OutputLengthLimit = 0;
-    public static int Local_SpecialJudgeTimeLimit = 0;
-    public static boolean Local_DiffReport = true;
-    public static final Map<Language, String> Local_FileSuffix = new HashMap<Language, String>();
-    public static final Map<Language, String> Local_CompileCommand = new HashMap<Language, String>();
-    public static final Map<Language, String> Local_RunCommand = new HashMap<Language, String>();
+    public static final String LOCAL_DATA_SERVER_HOST;
+    public static final Integer LOCAL_DATA_SERVER_PORT;
+    public static final String LOCAL_DATA_SERVER_USERNAME;
+    public static final String LOCAL_DATA_SERVER_PASSWORD;
+    public static final Boolean LOCAL_RUN_IN_SANDBOX;
+    public static final Integer LOCAL_COMPILE_TIME_LIMIT;
+    public static final Integer LOCAL_OUTPUT_LENGTH_LIMIT;
+    public static final Integer LOCAL_SPECIAL_JUDGE_TIME_LIMIT;
+    public static final Boolean LOCAL_DIFF_REPORT;
+    public static final Map<Language, String> LOCAL_FILE_SUFFIX = new HashMap<Language, String>();
+    public static final Map<Language, String> LOCAL_COMPILE_COMMAND = new HashMap<Language, String>();
+    public static final Map<Language, String> LOCAL_RUN_COMMAND = new HashMap<Language, String>();
 
     // Remote judge configurations
-    public static final List<Integer> Remote_QueryInterval = new ArrayList<Integer>();
-    public static int Remote_Concurrency = 0;
-    public static int Remote_RetryTimes = 0;
-    public static int Remote_SocketTimeout = 0;
-    public static int Remote_ConnectionTimeout = 0;
-    public static final HashMap<OJ, BlockingQueue<OJAccount>> Remote_OJAccounts = new HashMap<OJ, BlockingQueue<OJAccount>>();
+    public static final List<Integer> REMOTE_QUERY_INTERVAL = new ArrayList<Integer>();
+    public static final Integer REMOTE_CONCURRENCY;
+    public static final Integer REMOTE_RETRY_TIMES;
+    public static final Integer REMOTE_SOCKET_TIMEOUT;
+    public static final Integer REMOTE_CONNECTION_TIMEOUT;
+    public static final HashMap<OJ, BlockingQueue<OJAccount>> REMOTE_OJ_ACCOUNT_LIST = new HashMap<OJ, BlockingQueue<OJAccount>>();
 
     // Common data structure
-    public static final LinkedBlockingQueue<Solution> JudgedSolutionQueue = new LinkedBlockingQueue<Solution>();
+    public static final LinkedBlockingQueue<Solution> JUDGED_SOLUTION_QUEUE = new LinkedBlockingQueue<Solution>();
 
     static {
         p = new Properties();
@@ -64,34 +64,34 @@ public class DataProvider {
             logger.error(null, e);
         }
 
-        RabbitMQ_Host = getEnvIfNotEmpty("RabbitMQ_Host", "127.0.0.1");
-        RabbitMQ_Port = Integer.parseInt(getEnvIfNotEmpty("RabbitMQ_Port", "5672"));
-        RabbitMQ_Username = getEnvIfNotEmpty("RabbitMQ_Username", "judger");
-        RabbitMQ_Password = getEnvIfNotEmpty("RabbitMQ_Password", "JUDGER_PASSWORD");
+        RABBITMQ_HOST = getEnvIfNotEmpty("RabbitMQ_Host", "127.0.0.1");
+        RABBITMQ_PORT = Integer.parseInt(getEnvIfNotEmpty("RabbitMQ_Port", "5672"));
+        RABBITMQ_USERNAME = getEnvIfNotEmpty("RabbitMQ_Username", "judger");
+        RABBITMQ_PASSWORD = getEnvIfNotEmpty("RabbitMQ_Password", "JUDGER_PASSWORD");
 
-        Local_DataServerHost = getEnvIfNotEmpty("Local_DataServerHost", "127.0.0.1");
-        Local_DataServerPort = Integer.parseInt(getEnvIfNotEmpty("Local_DataServerPort", "80"));
-        Local_DataServerUsername = getEnvIfNotEmpty("Local_DataServerUsername", "");
-        Local_DataServerPassword = getEnvIfNotEmpty("Local_DataServerPassword", "");
-        Local_RunInSandbox = Boolean.parseBoolean(getEnvIfNotEmpty("Local_RunInSandbox", "true"));
-        Local_CompileTimeLimit = Integer.parseInt(getEnvIfNotEmpty("Local_CompileTimeLimit", "5"));
-        Local_OutputLengthLimit = Integer.parseInt(getEnvIfNotEmpty("Local_OutputLengthLimit", "5242880"));
-        Local_SpecialJudgeTimeLimit = Integer.parseInt(getEnvIfNotEmpty("Local_SpecialJudgeTimeLimit", "5"));
-        Local_DiffReport = Boolean.parseBoolean(getEnvIfNotEmpty("Local_DiffReport", "true"));
+        LOCAL_DATA_SERVER_HOST = getEnvIfNotEmpty("Local_DataServerHost", "127.0.0.1");
+        LOCAL_DATA_SERVER_PORT = Integer.parseInt(getEnvIfNotEmpty("Local_DataServerPort", "80"));
+        LOCAL_DATA_SERVER_USERNAME = getEnvIfNotEmpty("Local_DataServerUsername", "");
+        LOCAL_DATA_SERVER_PASSWORD = getEnvIfNotEmpty("Local_DataServerPassword", "");
+        LOCAL_RUN_IN_SANDBOX = Boolean.parseBoolean(getEnvIfNotEmpty("Local_RunInSandbox", "true"));
+        LOCAL_COMPILE_TIME_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_CompileTimeLimit", "5"));
+        LOCAL_OUTPUT_LENGTH_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_OutputLengthLimit", "5242880"));
+        LOCAL_SPECIAL_JUDGE_TIME_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_SpecialJudgeTimeLimit", "5"));
+        LOCAL_DIFF_REPORT = Boolean.parseBoolean(getEnvIfNotEmpty("Local_DiffReport", "true"));
 
-        Remote_Concurrency = Integer.parseInt(getEnvIfNotEmpty("Remote_Concurrency", "10"));
-        Remote_RetryTimes = Integer.parseInt(getEnvIfNotEmpty("Remote_RetryTimes", "3"));
-        Remote_SocketTimeout = Integer.parseInt(getEnvIfNotEmpty("Remote_SocketTimeout", "30"));
-        Remote_ConnectionTimeout = Integer.parseInt(getEnvIfNotEmpty("Remote_ConnectionTimeout", "30"));
+        REMOTE_CONCURRENCY = Integer.parseInt(getEnvIfNotEmpty("Remote_Concurrency", "10"));
+        REMOTE_RETRY_TIMES = Integer.parseInt(getEnvIfNotEmpty("Remote_RetryTimes", "3"));
+        REMOTE_SOCKET_TIMEOUT = Integer.parseInt(getEnvIfNotEmpty("Remote_SocketTimeout", "30"));
+        REMOTE_CONNECTION_TIMEOUT = Integer.parseInt(getEnvIfNotEmpty("Remote_ConnectionTimeout", "30"));
         for (String str : getEnvIfNotEmpty("Remote_QueryInterval", "10,20,25,30,60,120,600,1200,2400").split(",")) {
-            Remote_QueryInterval.add(Integer.parseInt(str));
+            REMOTE_QUERY_INTERVAL.add(Integer.parseInt(str));
         }
 
 
-        logger.info("RabbitMQ Server: {}:{}, Username: {}, Password: {}", RabbitMQ_Host, RabbitMQ_Port, RabbitMQ_Username, RabbitMQ_Password);
-        logger.info("[Local] Run in Sandbox: {}, Diff Report: {}, Compile Time Limit: {}", Local_RunInSandbox, Local_DiffReport, Local_CompileTimeLimit);
-        logger.info("        Output Length Limit: {}, Special Judge Time Limit: {}", Local_OutputLengthLimit, Local_SpecialJudgeTimeLimit);
-        logger.info("        Data Server: {}:{}, username: {}, password: {}", Local_DataServerHost, Local_DataServerPort, Local_DataServerUsername, Local_DataServerPassword);
+        logger.info("RabbitMQ Server: {}:{}, Username: {}, Password: {}", RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USERNAME, RABBITMQ_PASSWORD);
+        logger.info("[Local] Run in Sandbox: {}, Diff Report: {}, Compile Time Limit: {}", LOCAL_RUN_IN_SANDBOX, LOCAL_DIFF_REPORT, LOCAL_COMPILE_TIME_LIMIT);
+        logger.info("        Output Length Limit: {}, Special Judge Time Limit: {}", LOCAL_OUTPUT_LENGTH_LIMIT, LOCAL_SPECIAL_JUDGE_TIME_LIMIT);
+        logger.info("        Data Server: {}:{}, username: {}, password: {}", LOCAL_DATA_SERVER_HOST, LOCAL_DATA_SERVER_PORT, LOCAL_DATA_SERVER_USERNAME, LOCAL_DATA_SERVER_PASSWORD);
 
         try {
             p.load(new FileInputStream("configs/local/fileSuffix.properties"));
@@ -104,7 +104,7 @@ public class DataProvider {
         for (Language l : Language.values()) {
             if (l.equals(Language.DEFAULT)) continue;
             String suffix = getEnvIfNotEmpty(l.name().toLowerCase(), "");
-            Local_FileSuffix.put(l, suffix);
+            LOCAL_FILE_SUFFIX.put(l, suffix);
             logger.info("        {} - '{}'", l.name(), suffix);
         }
         logger.info("Init local/fileSuffix.properties Config OK!");
@@ -120,7 +120,7 @@ public class DataProvider {
         for (Language l : Language.values()) {
             if (l.equals(Language.DEFAULT)) continue;
             String command = getEnvIfNotEmpty(l.name().toLowerCase(), "");
-            Local_CompileCommand.put(l, command);
+            LOCAL_COMPILE_COMMAND.put(l, command);
             logger.info("        {} - '{}'", l.name(), command);
         }
         logger.info("Init local/compileCmd.properties Config OK!");
@@ -136,14 +136,14 @@ public class DataProvider {
         for (Language l : Language.values()) {
             if (l.equals(Language.DEFAULT)) continue;
             String command = getEnvIfNotEmpty(l.name().toLowerCase(), "");
-            Local_RunCommand.put(l, command);
+            LOCAL_RUN_COMMAND.put(l, command);
             logger.info("        {} - '{}'", l.name(), command);
         }
         logger.info("Init local/runCmd.properties Config OK!");
 
 
-        logger.info("[Remote] Retry Num: {}, Socket Timeout: {}, Connection Timeout: {}", Remote_RetryTimes, Remote_SocketTimeout, Remote_ConnectionTimeout);
-        logger.info("         Query Time: {}", Remote_QueryInterval);
+        logger.info("[Remote] Retry Num: {}, Socket Timeout: {}, Connection Timeout: {}", REMOTE_RETRY_TIMES, REMOTE_SOCKET_TIMEOUT, REMOTE_CONNECTION_TIMEOUT);
+        logger.info("         Query Time: {}", REMOTE_QUERY_INTERVAL);
 
         // Remote OJ Accounts
         Scanner scanner = null;
@@ -156,10 +156,10 @@ public class DataProvider {
                     String ojName = strs[0].trim().toUpperCase();
                     OJ oj = OJ.valueOf(ojName);
                     OJAccount account = new OJAccount(strs[1].trim(), strs[2].trim());
-                    BlockingQueue<OJAccount> queue = Remote_OJAccounts.get(oj);
+                    BlockingQueue<OJAccount> queue = REMOTE_OJ_ACCOUNT_LIST.get(oj);
                     if (null == queue) {
                         queue = new LinkedBlockingQueue<OJAccount>();
-                        Remote_OJAccounts.put(oj, queue);
+                        REMOTE_OJ_ACCOUNT_LIST.put(oj, queue);
                     }
                     queue.put(account);
                 }
@@ -175,18 +175,18 @@ public class DataProvider {
             }
         }
 
-        for (OJ oj : Remote_OJAccounts.keySet()) {
-            logger.info("         {} - {}", oj, Remote_OJAccounts.get(oj).size());
+        for (OJ oj : REMOTE_OJ_ACCOUNT_LIST.keySet()) {
+            logger.info("         {} - {}", oj, REMOTE_OJ_ACCOUNT_LIST.get(oj).size());
         }
         logger.info("Init remote/OJAccounts.properties Config OK!");
 
-        // OJs
+        // OJ_LIST
         File file = new File("configs/remote/OJProperty");
         if (file.isDirectory()) {
             for (File f : file.listFiles()) {
                 if (f.getName().endsWith(".properties")) {
                     OJProperty ojProperty = new OJProperty(f);
-                    OJs.put(OJ.valueOf(ojProperty.getOjName().toUpperCase()), ojProperty);
+                    OJ_LIST.put(OJ.valueOf(ojProperty.getOjName().toUpperCase()), ojProperty);
                 }
             }
         }

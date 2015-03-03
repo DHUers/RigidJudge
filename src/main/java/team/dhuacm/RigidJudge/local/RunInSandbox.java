@@ -27,7 +27,7 @@ class RunInSandbox {
         //Sandbox sandbox = new Sandbox();  // TODO: Change to JNI
         //System.out.println(Sandbox.init());
         try {
-            String commandLine = "./sandbox/sandbox " + DataProvider.Local_RunCommand.get(solution.getLanguage()).replace("{target}", target) + " " + solution.getTimeLimit() + " " + solution.getMemoryLimit();
+            String commandLine = "./sandbox/sandbox " + DataProvider.LOCAL_RUN_COMMAND.get(solution.getLanguage()).replace("{target}", target) + " " + solution.getTimeLimit() + " " + solution.getMemoryLimit();
             logger.info("cmd: {}", commandLine);
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
@@ -61,7 +61,7 @@ class RunInSandbox {
             // "BP", /* bad policy */
             if (result.equals("OK")) {
                 solution.setOutput(outputStream.toString());
-                if (outputStream.toString().length() >= DataProvider.Local_OutputLengthLimit) {
+                if (outputStream.toString().length() >= DataProvider.LOCAL_OUTPUT_LENGTH_LIMIT) {
                     solution.setResult(Result.Output_Limit_Exceeded);
                 } else {  // AC or WA or PE
                     runResult = true;

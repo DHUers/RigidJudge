@@ -66,7 +66,7 @@ class Prepare {
             file.mkdir();
         }
 
-        file = new File(source + DataProvider.Local_FileSuffix.get(solution.getLanguage()));
+        file = new File(source + DataProvider.LOCAL_FILE_SUFFIX.get(solution.getLanguage()));
         if (!file.exists()) {
             file.createNewFile();
         }
@@ -83,7 +83,7 @@ class Prepare {
         if (problem instanceof LocalSpecialProblem) {
             LocalSpecialProblem specialProblem = (LocalSpecialProblem) problem;
 
-            file = new File("tmp/spj" + DataProvider.Local_FileSuffix.get(specialProblem.getJudgerProgramLanguage()));
+            file = new File("tmp/spj" + DataProvider.LOCAL_FILE_SUFFIX.get(specialProblem.getJudgerProgramLanguage()));
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -105,7 +105,7 @@ class Prepare {
             file.mkdir();
         }
 
-        String dataServerPrefix = "http://" + DataProvider.Local_DataServerHost + ":" + DataProvider.Local_DataServerPort;
+        String dataServerPrefix = "http://" + DataProvider.LOCAL_DATA_SERVER_HOST + ":" + DataProvider.LOCAL_DATA_SERVER_PORT;
         downloadIfNeed("data/" + problem.getInputFileName().substring(problem.getInputFileName().lastIndexOf("/") + 1), dataServerPrefix + problem.getInputFileName());
         downloadIfNeed("data/" + problem.getOutputFileName().substring(problem.getOutputFileName().lastIndexOf("/") + 1), dataServerPrefix + problem.getOutputFileName());
     }
@@ -177,8 +177,8 @@ class Prepare {
     static {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(
-                new AuthScope(DataProvider.Local_DataServerHost, DataProvider.Local_DataServerPort),
-                new UsernamePasswordCredentials(DataProvider.Local_DataServerUsername, DataProvider.Local_DataServerPassword));
-        httpClient = HttpClientUtil.get(DataProvider.Remote_RetryTimes, DataProvider.Remote_SocketTimeout, DataProvider.Remote_ConnectionTimeout, credentialsProvider);
+                new AuthScope(DataProvider.LOCAL_DATA_SERVER_HOST, DataProvider.LOCAL_DATA_SERVER_PORT),
+                new UsernamePasswordCredentials(DataProvider.LOCAL_DATA_SERVER_USERNAME, DataProvider.LOCAL_DATA_SERVER_PASSWORD));
+        httpClient = HttpClientUtil.get(DataProvider.REMOTE_RETRY_TIMES, DataProvider.REMOTE_SOCKET_TIMEOUT, DataProvider.REMOTE_CONNECTION_TIMEOUT, credentialsProvider);
     }
 }

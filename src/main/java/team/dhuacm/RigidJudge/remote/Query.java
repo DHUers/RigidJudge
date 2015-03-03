@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.*;
 import team.dhuacm.RigidJudge.exception.JudgeException;
 import team.dhuacm.RigidJudge.exception.NetworkException;
-import team.dhuacm.RigidJudge.model.RemoteProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
 import java.io.IOException;
@@ -32,8 +31,8 @@ class Query {
 
     public static void doQuery(CloseableHttpClient client, OJProperty ojProperty, OJAccount ojAccount, Solution solution) throws JudgeException, NetworkException {
 
-        for (int i = 0; i < DataProvider.Remote_QueryInterval.size(); i++) {
-            long sleepTime = DataProvider.Remote_QueryInterval.get(i) * 1000;
+        for (int i = 0; i < DataProvider.REMOTE_QUERY_INTERVAL.size(); i++) {
+            long sleepTime = DataProvider.REMOTE_QUERY_INTERVAL.get(i) * 1000;
             try {
                 Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
@@ -44,7 +43,7 @@ class Query {
             getResult(client, ojProperty, ojAccount, solution);
 
             if (Result.Queue == solution.getResult()) {
-                if (i + 1 == DataProvider.Remote_QueryInterval.size()) {
+                if (i + 1 == DataProvider.REMOTE_QUERY_INTERVAL.size()) {
                     solution.setResult(Result.Network_Error);
                 }
             } else {

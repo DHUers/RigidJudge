@@ -1,7 +1,5 @@
 package team.dhuacm.RigidJudge.main;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -37,7 +35,7 @@ class RemoteController implements Runnable {
     public RemoteController(Connection connection) throws IOException {
         channel = connection.createChannel();
         channel.queueDeclare(QUEUE_NAME, true, false, false, null);
-        channel.basicQos(DataProvider.Remote_Concurrency);
+        channel.basicQos(DataProvider.REMOTE_CONCURRENCY);
         consumer = new QueueingConsumer(channel);
         channel.basicConsume(QUEUE_NAME, false, consumer);
         logger.info("Connected to the remote channel, waiting for solutions ...");
@@ -97,7 +95,7 @@ class RemoteController implements Runnable {
                             }
                             logger.info("Result is '{}'.", solution.getResult());
                             if (solution.getId() != 0) {
-                                DataProvider.JudgedSolutionQueue.put(solution);
+                                DataProvider.JUDGED_SOLUTION_QUEUE.put(solution);
                                 logger.debug("Sent to result queue successfully!");
                             }
                             channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);

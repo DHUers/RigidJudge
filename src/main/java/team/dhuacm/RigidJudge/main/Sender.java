@@ -63,10 +63,10 @@ class Sender implements Runnable {
     public void run() {
         try {
             while (true) {
-                if (DataProvider.JudgedSolutionQueue.isEmpty()) {
+                if (DataProvider.JUDGED_SOLUTION_QUEUE.isEmpty()) {
                     Thread.sleep(1000);
                 } else {
-                    Solution solution = DataProvider.JudgedSolutionQueue.take();
+                    Solution solution = DataProvider.JUDGED_SOLUTION_QUEUE.take();
 
                     String message = serialize(solution);
 

@@ -20,7 +20,7 @@ public class RemoteResolver {
     private final OJ oj;
     private final OJProperty ojProperty;
     private OJAccount ojAccount;
-    private final CloseableHttpClient client = HttpClientUtil.get(DataProvider.Remote_RetryTimes, DataProvider.Remote_SocketTimeout, DataProvider.Remote_ConnectionTimeout, null);
+    private final CloseableHttpClient client = HttpClientUtil.get(DataProvider.REMOTE_RETRY_TIMES, DataProvider.REMOTE_SOCKET_TIMEOUT, DataProvider.REMOTE_CONNECTION_TIMEOUT, null);
     private static final Logger logger = LoggerFactory.getLogger(RemoteResolver.class.getSimpleName());
 
     public RemoteResolver(Solution solution) throws InterruptedException {
@@ -31,8 +31,8 @@ public class RemoteResolver {
             oj_external = OJ.CODEFORCES;
         }
         oj = oj_external;
-        ojProperty = DataProvider.OJs.get(oj);
-        ojAccount = DataProvider.Remote_OJAccounts.get(oj).take();
+        ojProperty = DataProvider.OJ_LIST.get(oj);
+        ojAccount = DataProvider.REMOTE_OJ_ACCOUNT_LIST.get(oj).take();
         logger.info("Account: {}", ojAccount.getUsername());
     }
 
@@ -60,7 +60,7 @@ public class RemoteResolver {
         } finally {
             try {
                 if (null != ojAccount) {
-                    DataProvider.Remote_OJAccounts.get(oj).put(ojAccount);
+                    DataProvider.REMOTE_OJ_ACCOUNT_LIST.get(oj).put(ojAccount);
                 }
                 if (null != client)
                     client.close();

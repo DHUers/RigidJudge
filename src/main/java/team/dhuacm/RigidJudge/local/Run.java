@@ -27,7 +27,7 @@ class Run {
         Runtime runtime = null;
 
         try {
-            String commandLine = DataProvider.Local_RunCommand.get(solution.getLanguage()).replace("{target}", target);
+            String commandLine = DataProvider.LOCAL_RUN_COMMAND.get(solution.getLanguage()).replace("{target}", target);
             logger.info("cmd: {}", commandLine);
 
             CommandLine cmdLine = CommandLine.parse(commandLine);
@@ -57,7 +57,7 @@ class Run {
                 runResult = false;
             } else {
                 solution.setOutput(outputStream.toString());
-                if (outputStream.toString().length() >= DataProvider.Local_OutputLengthLimit) {
+                if (outputStream.toString().length() >= DataProvider.LOCAL_OUTPUT_LENGTH_LIMIT) {
                     solution.setResult(Result.Output_Limit_Exceeded);
                     runResult = false;
                 } else {
