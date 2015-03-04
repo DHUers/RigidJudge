@@ -9,10 +9,10 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logFile.log</file>
+        <file>log/${HOSTNAME}/logFile.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>log/${HOSTNAME}/logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- keep 1 days' worth of history -->
             <maxHistory>5</maxHistory>

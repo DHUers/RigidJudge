@@ -69,29 +69,29 @@ public class DataProvider {
         RABBITMQ_USERNAME = getEnvIfNotEmpty("RabbitMQ_Username", "judger");
         RABBITMQ_PASSWORD = getEnvIfNotEmpty("RabbitMQ_Password", "JUDGER_PASSWORD");
 
-        LOCAL_DATA_SERVER_HOST = getEnvIfNotEmpty("Local_DataServerHost", "127.0.0.1");
-        LOCAL_DATA_SERVER_PORT = Integer.parseInt(getEnvIfNotEmpty("Local_DataServerPort", "80"));
-        LOCAL_DATA_SERVER_USERNAME = getEnvIfNotEmpty("Local_DataServerUsername", "");
-        LOCAL_DATA_SERVER_PASSWORD = getEnvIfNotEmpty("Local_DataServerPassword", "");
-        LOCAL_RUN_IN_SANDBOX = Boolean.parseBoolean(getEnvIfNotEmpty("Local_RunInSandbox", "true"));
-        LOCAL_COMPILE_TIME_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_CompileTimeLimit", "5"));
-        LOCAL_OUTPUT_LENGTH_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_OutputLengthLimit", "5242880"));
-        LOCAL_SPECIAL_JUDGE_TIME_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_SpecialJudgeTimeLimit", "5"));
-        LOCAL_DIFF_REPORT = Boolean.parseBoolean(getEnvIfNotEmpty("Local_DiffReport", "true"));
+        LOCAL_DATA_SERVER_HOST = getEnvIfNotEmpty("Local_Data_Server_Host", "127.0.0.1");
+        LOCAL_DATA_SERVER_PORT = Integer.parseInt(getEnvIfNotEmpty("Local_Data_Server_Port", "80"));
+        LOCAL_DATA_SERVER_USERNAME = getEnvIfNotEmpty("Local_Data_Server_Username", "");
+        LOCAL_DATA_SERVER_PASSWORD = getEnvIfNotEmpty("Local_Data_Server_Password", "");
+        LOCAL_RUN_IN_SANDBOX = Boolean.parseBoolean(getEnvIfNotEmpty("Local_Run_In_Sandbox", "true"));
+        LOCAL_COMPILE_TIME_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_Compile_Time_Limit", "5"));
+        LOCAL_OUTPUT_LENGTH_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_Output_Length_Limit", "5242880"));
+        LOCAL_SPECIAL_JUDGE_TIME_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_Special_Judge_Time_Limit", "5"));
+        LOCAL_DIFF_REPORT = Boolean.parseBoolean(getEnvIfNotEmpty("Local_Diff_Report", "true"));
 
         REMOTE_CONCURRENCY = Integer.parseInt(getEnvIfNotEmpty("Remote_Concurrency", "10"));
-        REMOTE_RETRY_TIMES = Integer.parseInt(getEnvIfNotEmpty("Remote_RetryTimes", "3"));
-        REMOTE_SOCKET_TIMEOUT = Integer.parseInt(getEnvIfNotEmpty("Remote_SocketTimeout", "30"));
-        REMOTE_CONNECTION_TIMEOUT = Integer.parseInt(getEnvIfNotEmpty("Remote_ConnectionTimeout", "30"));
-        for (String str : getEnvIfNotEmpty("Remote_QueryInterval", "10,20,25,30,60,120,600,1200,2400").split(",")) {
+        REMOTE_RETRY_TIMES = Integer.parseInt(getEnvIfNotEmpty("Remote_Retry_Times", "3"));
+        REMOTE_SOCKET_TIMEOUT = Integer.parseInt(getEnvIfNotEmpty("Remote_Socket_Timeout", "30"));
+        REMOTE_CONNECTION_TIMEOUT = Integer.parseInt(getEnvIfNotEmpty("Remote_Connection_Timeout", "30"));
+        for (String str : getEnvIfNotEmpty("Remote_Query_Interval", "10,20,25,30,60,120,600,1200,2400").split(",")) {
             REMOTE_QUERY_INTERVAL.add(Integer.parseInt(str));
         }
 
 
-        logger.info("RabbitMQ Server: {}:{}, Username: {}, Password: {}", RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USERNAME, RABBITMQ_PASSWORD);
-        logger.info("[Local] Run in Sandbox: {}, Diff Report: {}, Compile Time Limit: {}", LOCAL_RUN_IN_SANDBOX, LOCAL_DIFF_REPORT, LOCAL_COMPILE_TIME_LIMIT);
-        logger.info("        Output Length Limit: {}, Special Judge Time Limit: {}", LOCAL_OUTPUT_LENGTH_LIMIT, LOCAL_SPECIAL_JUDGE_TIME_LIMIT);
-        logger.info("        Data Server: {}:{}, username: {}, password: {}", LOCAL_DATA_SERVER_HOST, LOCAL_DATA_SERVER_PORT, LOCAL_DATA_SERVER_USERNAME, LOCAL_DATA_SERVER_PASSWORD);
+        logger.info("RabbitMQ server: {}:{}, Username: {}, Password: {}", RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USERNAME, RABBITMQ_PASSWORD);
+        logger.info("[Local] Run in sandbox: {}, Diff report: {}, Compile time limit: {}", LOCAL_RUN_IN_SANDBOX, LOCAL_DIFF_REPORT, LOCAL_COMPILE_TIME_LIMIT);
+        logger.info("        Output length limit: {}, Special judge time limit: {}", LOCAL_OUTPUT_LENGTH_LIMIT, LOCAL_SPECIAL_JUDGE_TIME_LIMIT);
+        logger.info("        Data server: {}:{}, Username: {}, Password: {}", LOCAL_DATA_SERVER_HOST, LOCAL_DATA_SERVER_PORT, LOCAL_DATA_SERVER_USERNAME, LOCAL_DATA_SERVER_PASSWORD);
 
         try {
             p.load(new FileInputStream("configs/local/fileSuffix.properties"));
@@ -107,7 +107,7 @@ public class DataProvider {
             LOCAL_FILE_SUFFIX.put(l, suffix);
             logger.info("        {} - '{}'", l.name(), suffix);
         }
-        logger.info("Init local/fileSuffix.properties Config OK!");
+        logger.info("Init local/fileSuffix.properties config OK!");
 
         try {
             p.load(new FileInputStream("configs/local/compileCmd.properties"));
@@ -123,7 +123,7 @@ public class DataProvider {
             LOCAL_COMPILE_COMMAND.put(l, command);
             logger.info("        {} - '{}'", l.name(), command);
         }
-        logger.info("Init local/compileCmd.properties Config OK!");
+        logger.info("Init local/compileCmd.properties config OK!");
 
         try {
             p.load(new FileInputStream("configs/local/runCmd.properties"));
@@ -139,11 +139,11 @@ public class DataProvider {
             LOCAL_RUN_COMMAND.put(l, command);
             logger.info("        {} - '{}'", l.name(), command);
         }
-        logger.info("Init local/runCmd.properties Config OK!");
+        logger.info("Init local/runCmd.properties config OK!");
 
 
-        logger.info("[Remote] Retry Num: {}, Socket Timeout: {}, Connection Timeout: {}", REMOTE_RETRY_TIMES, REMOTE_SOCKET_TIMEOUT, REMOTE_CONNECTION_TIMEOUT);
-        logger.info("         Query Time: {}", REMOTE_QUERY_INTERVAL);
+        logger.info("[Remote] Retry num: {}, Socket timeout: {}, Connection timeout: {}", REMOTE_RETRY_TIMES, REMOTE_SOCKET_TIMEOUT, REMOTE_CONNECTION_TIMEOUT);
+        logger.info("         Query interval: {}", REMOTE_QUERY_INTERVAL);
 
         // Remote OJ Accounts
         Scanner scanner = null;
@@ -178,7 +178,7 @@ public class DataProvider {
         for (OJ oj : REMOTE_OJ_ACCOUNT_LIST.keySet()) {
             logger.info("         {} - {}", oj, REMOTE_OJ_ACCOUNT_LIST.get(oj).size());
         }
-        logger.info("Init remote/OJAccounts.properties Config OK!");
+        logger.info("Init remote/OJAccounts.properties config OK!");
 
         // OJ_LIST
         File file = new File("configs/remote/OJProperty");
@@ -190,7 +190,7 @@ public class DataProvider {
                 }
             }
         }
-        logger.info("Init remote/OJProperty Config OK!");
+        logger.info("Init remote/OJProperty config OK!");
     }
 
     private static String getEnvIfNotEmpty(String env, String defaultEnv) {
