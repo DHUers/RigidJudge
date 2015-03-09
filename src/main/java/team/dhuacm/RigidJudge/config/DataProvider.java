@@ -29,10 +29,8 @@ public class DataProvider {
     public static final HashMap<OJ, OJProperty> OJ_LIST = new HashMap<OJ, OJProperty>();
 
     // Local judge configurations
-    public static final String LOCAL_DATA_SERVER_HOST;
-    public static final Integer LOCAL_DATA_SERVER_PORT;
-    public static final String LOCAL_DATA_SERVER_USERNAME;
-    public static final String LOCAL_DATA_SERVER_PASSWORD;
+    public static final String LOCAL_DATA_SERVER_URL;
+    public static final String LOCAL_DATA_SERVER_TOKEN;
     public static final Boolean LOCAL_RUN_IN_SANDBOX;
     public static final Integer LOCAL_COMPILE_TIME_LIMIT;
     public static final Integer LOCAL_OUTPUT_LENGTH_LIMIT;
@@ -69,10 +67,8 @@ public class DataProvider {
         RABBITMQ_USERNAME = getEnvIfNotEmpty("RabbitMQ_Username", "judger");
         RABBITMQ_PASSWORD = getEnvIfNotEmpty("RabbitMQ_Password", "JUDGER_PASSWORD");
 
-        LOCAL_DATA_SERVER_HOST = getEnvIfNotEmpty("Local_Data_Server_Host", "127.0.0.1");
-        LOCAL_DATA_SERVER_PORT = Integer.parseInt(getEnvIfNotEmpty("Local_Data_Server_Port", "80"));
-        LOCAL_DATA_SERVER_USERNAME = getEnvIfNotEmpty("Local_Data_Server_Username", "");
-        LOCAL_DATA_SERVER_PASSWORD = getEnvIfNotEmpty("Local_Data_Server_Password", "");
+        LOCAL_DATA_SERVER_URL = getEnvIfNotEmpty("Local_Data_Server_Url", "127.0.0.1:80");
+        LOCAL_DATA_SERVER_TOKEN = getEnvIfNotEmpty("Local_Data_Server_Token", "RigidJudge");
         LOCAL_RUN_IN_SANDBOX = Boolean.parseBoolean(getEnvIfNotEmpty("Local_Run_In_Sandbox", "true"));
         LOCAL_COMPILE_TIME_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_Compile_Time_Limit", "5"));
         LOCAL_OUTPUT_LENGTH_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_Output_Length_Limit", "5242880"));
@@ -91,7 +87,7 @@ public class DataProvider {
         logger.info("RabbitMQ server: {}:{}, Username: {}, Password: {}", RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USERNAME, RABBITMQ_PASSWORD);
         logger.info("[Local] Run in sandbox: {}, Diff report: {}, Compile time limit: {}", LOCAL_RUN_IN_SANDBOX, LOCAL_DIFF_REPORT, LOCAL_COMPILE_TIME_LIMIT);
         logger.info("        Output length limit: {}, Special judge time limit: {}", LOCAL_OUTPUT_LENGTH_LIMIT, LOCAL_SPECIAL_JUDGE_TIME_LIMIT);
-        logger.info("        Data server: {}:{}, Username: {}, Password: {}", LOCAL_DATA_SERVER_HOST, LOCAL_DATA_SERVER_PORT, LOCAL_DATA_SERVER_USERNAME, LOCAL_DATA_SERVER_PASSWORD);
+        logger.info("        Data server: {}, Token: {}", LOCAL_DATA_SERVER_URL, LOCAL_DATA_SERVER_TOKEN);
 
         try {
             p.load(new FileInputStream("configs/local/fileSuffix.properties"));

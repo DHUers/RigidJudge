@@ -1,8 +1,7 @@
 package team.dhuacm.RigidJudge.local;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.http.HttpEntity;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -22,6 +21,8 @@ import team.dhuacm.RigidJudge.model.Solution;
 import team.dhuacm.RigidJudge.utils.FileUtils;
 import team.dhuacm.RigidJudge.utils.HttpClientUtil;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,8 +42,8 @@ class Prepare {
 
         prepareData(problem);
 
-        solution.setInput(FileUtils.getFileContent(new File("data/" + problem.getInputFileName().substring(problem.getInputFileName().lastIndexOf("/") + 1))));
-        solution.setStdAns(FileUtils.getFileContent(new File("data/" + problem.getOutputFileName().substring(problem.getOutputFileName().lastIndexOf("/") + 1))));
+        solution.setInput(FileUtils.getFileContent(new File("data/" + problem.getInputFileUrl())));
+        solution.setStdAns(FileUtils.getFileContent(new File("data/" + problem.getOutputFileUrl())));
         if (!solution.getInput().endsWith("\n")) {  // normalize I/O to prevent PE
             solution.setInput(solution.getInput() + "\n");
         }
@@ -105,11 +106,29 @@ class Prepare {
             file.mkdir();
         }
 
-        String dataServerPrefix = "http://" + DataProvider.LOCAL_DATA_SERVER_HOST + ":" + DataProvider.LOCAL_DATA_SERVER_PORT;
-        downloadIfNeed("data/" + problem.getInputFileName().substring(problem.getInputFileName().lastIndexOf("/") + 1), dataServerPrefix + problem.getInputFileName());
-        downloadIfNeed("data/" + problem.getOutputFileName().substring(problem.getOutputFileName().lastIndexOf("/") + 1), dataServerPrefix + problem.getOutputFileName());
+        String dataServerPrefix = "http://" + DataProvider.LOCAL_DATA_SERVER_URL + "/attachments/";
+        downloadIfNeed("data/" + problem.getInputFileUrl(), dataServerPrefix + getToken(problem.getInputFileUrl()) + problem.getInputFileUrl());
+        downloadIfNeed("data/" + problem.getOutputFileUrl(), dataServerPrefix + getToken(problem.getOutputFileUrl()) + problem.getOutputFileUrl());
     }
 
+    private static String getToken(String text) throws JudgeException {
+        try {
+            Mac hmacSha1;
+            try {
+                hmacSha1 = Mac.getInstance("HmacSHA1");
+            } catch (Exception e) {
+                hmacSha1 = Mac.getInstance("HMAC-SHA-1");
+            }
+            hmacSha1.init(new SecretKeySpec(DataProvider.LOCAL_DATA_SERVER_TOKEN.getBytes(), "RAW"));
+            String hexString = Hex.encodeHexString(hmacSha1.doFinal(text.getBytes()));
+            logger.debug("'{}' => '{}'", text, hexString);
+            return hexString;
+        } catch (Exception e) {
+            throw new JudgeException(e.getMessage(), e.getCause());
+        }
+    }
+
+    @Deprecated
     private static Date getLastModified(String url) throws JudgeException, NetworkException {
         Date lastModified = null;
         HttpHead head = new HttpHead(url);
@@ -141,7 +160,8 @@ class Prepare {
         if (filename.contains("test.")) return;
         File file = new File(filename);
 
-        if (!file.exists() || getLastModified(url).compareTo(new Date(file.lastModified())) > 0) {
+        //if (!file.exists() || getLastModified(url).compareTo(new Date(file.lastModified())) > 0) {
+        if (!file.exists()) {
             HttpGet get = new HttpGet(url);
             CloseableHttpResponse response = null;
             try {
@@ -176,9 +196,6 @@ class Prepare {
 
     static {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(
-                new AuthScope(DataProvider.LOCAL_DATA_SERVER_HOST, DataProvider.LOCAL_DATA_SERVER_PORT),
-                new UsernamePasswordCredentials(DataProvider.LOCAL_DATA_SERVER_USERNAME, DataProvider.LOCAL_DATA_SERVER_PASSWORD));
         httpClient = HttpClientUtil.get(DataProvider.REMOTE_RETRY_TIMES, DataProvider.REMOTE_SOCKET_TIMEOUT, DataProvider.REMOTE_CONNECTION_TIMEOUT, credentialsProvider);
     }
 }

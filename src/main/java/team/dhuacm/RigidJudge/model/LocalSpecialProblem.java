@@ -11,8 +11,8 @@ public class LocalSpecialProblem extends LocalProblem {
     private String judgerProgramCode;
     private Language judgerProgramLanguage;
 
-    public LocalSpecialProblem(int id, String inputFileName, String outputFileName, String limitType, Map<Language, Integer> timeLimit, Map<Language, Integer> memoryLimit, String judgerProgramCode, Language judgerProgramLanguage) {
-        super(id, inputFileName, outputFileName, limitType, timeLimit, memoryLimit);
+    public LocalSpecialProblem(int id, String inputFileUrl, String outputFileUrl, String limitType, Map<Language, Integer> timeLimit, Map<Language, Integer> memoryLimit, String judgerProgramCode, Language judgerProgramLanguage) {
+        super(id, inputFileUrl, outputFileUrl, limitType, timeLimit, memoryLimit);
         this.judgerProgramCode = judgerProgramCode;
         this.judgerProgramLanguage = judgerProgramLanguage;
     }

@@ -9,9 +9,9 @@ import java.util.Map;
  * Created by wujy on 15-1-8.
  */
 public class LocalProblem extends Problem {
-    private String inputFileName;
+    private String inputFileUrl;
     protected String input;
-    private String outputFileName;
+    private String outputFileUrl;
     protected String output;
     private String limitType;
     private Map<Language, Integer> timeLimit = new HashMap<Language, Integer>();
@@ -19,27 +19,27 @@ public class LocalProblem extends Problem {
 
     public LocalProblem(int id, String inputFileName, String outputFileName, String limitType, Map<Language, Integer> timeLimit, Map<Language, Integer> memoryLimit) {
         super(id);
-        this.inputFileName = inputFileName;
-        this.outputFileName = outputFileName;
+        this.inputFileUrl = inputFileName;
+        this.outputFileUrl = outputFileName;
         this.limitType = limitType;
         this.timeLimit = timeLimit;
         this.memoryLimit = memoryLimit;
     }
 
-    public String getInputFileName() {
-        return inputFileName;
+    public String getInputFileUrl() {
+        return inputFileUrl;
     }
 
-    public void setInputFileName(String inputFileName) {
-        this.inputFileName = inputFileName;
+    public void setInputFileUrl(String inputFileUrl) {
+        this.inputFileUrl = inputFileUrl;
     }
 
-    public String getOutputFileName() {
-        return outputFileName;
+    public String getOutputFileUrl() {
+        return outputFileUrl;
     }
 
-    public void setOutputFileName(String outputFileName) {
-        this.outputFileName = outputFileName;
+    public void setOutputFileUrl(String outputFileUrl) {
+        this.outputFileUrl = outputFileUrl;
     }
 
     public String getLimitType() {

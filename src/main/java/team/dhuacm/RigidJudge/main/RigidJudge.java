@@ -19,7 +19,7 @@ public class RigidJudge {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(DataProvider.RABBITMQ_HOST);
         factory.setPort(DataProvider.RABBITMQ_PORT);
-        factory.setUsername("judger");
+        factory.setUsername(DataProvider.RABBITMQ_USERNAME);
         factory.setPassword(DataProvider.RABBITMQ_PASSWORD);
         connection = factory.newConnection();
         logger.info("Initialization finished.");

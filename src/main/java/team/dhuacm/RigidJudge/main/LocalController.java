@@ -75,7 +75,12 @@ class LocalController implements Runnable {
             Map<Language, Integer> timeLimit = new HashMap<Language, Integer>();
             Map<Language, Integer> memoryLimit = new HashMap<Language, Integer>();
             for (Map.Entry<String, Object> entry : mapJudgeLimits.entrySet()) {
-                Language language = Language.valueOf(entry.getKey().toUpperCase());
+                Language language;
+                if (entry.getKey().equalsIgnoreCase("c++")) {
+                    language = Language.CPP;
+                } else {
+                    language = Language.valueOf(entry.getKey().toUpperCase());
+                }
                 Map<String, Object> limits = (Map<String, Object>) entry.getValue();
                 timeLimit.put(language, Integer.parseInt((String) limits.get("time")));
                 memoryLimit.put(language, Integer.parseInt((String) limits.get("memory")));
