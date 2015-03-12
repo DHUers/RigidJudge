@@ -42,8 +42,8 @@ class Prepare {
 
         prepareData(problem);
 
-        solution.setInput(FileUtils.getFileContent(new File("data/" + problem.getInputFileUrl())));
-        solution.setStdAns(FileUtils.getFileContent(new File("data/" + problem.getOutputFileUrl())));
+        solution.setInput(FileUtils.getFileContent(new File("data/" + problem.getInputFileUrl().replace("/store/", "").replace("/", "_"))));
+        solution.setStdAns(FileUtils.getFileContent(new File("data/" + problem.getOutputFileUrl().replace("/store/", "").replace("/", "_"))));
         if (!solution.getInput().endsWith("\n")) {  // normalize I/O to prevent PE
             solution.setInput(solution.getInput() + "\n");
         }
@@ -107,8 +107,8 @@ class Prepare {
         }
 
         String dataServerPrefix = "http://" + DataProvider.LOCAL_DATA_SERVER_URL + "/attachments/";
-        downloadIfNeed("data/" + problem.getInputFileUrl(), dataServerPrefix + getToken(problem.getInputFileUrl()) + problem.getInputFileUrl());
-        downloadIfNeed("data/" + problem.getOutputFileUrl(), dataServerPrefix + getToken(problem.getOutputFileUrl()) + problem.getOutputFileUrl());
+        downloadIfNeed("data/" + problem.getInputFileUrl().replace("/store/", "").replace("/", "_"), dataServerPrefix + getToken(problem.getInputFileUrl()) + problem.getInputFileUrl());
+        downloadIfNeed("data/" + problem.getOutputFileUrl().replace("/store/", "").replace("/", "_"), dataServerPrefix + getToken(problem.getOutputFileUrl()) + problem.getOutputFileUrl());
     }
 
     private static String getToken(String text) throws JudgeException {
@@ -124,6 +124,7 @@ class Prepare {
             logger.debug("'{}' => '{}'", text, hexString);
             return hexString;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new JudgeException(e.getMessage(), e.getCause());
         }
     }
@@ -156,6 +157,7 @@ class Prepare {
         return lastModified;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static void downloadIfNeed(String filename, String url) throws JudgeException, NetworkException {
         if (filename.contains("test.")) return;
         File file = new File(filename);

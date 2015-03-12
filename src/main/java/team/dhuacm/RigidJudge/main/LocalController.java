@@ -67,8 +67,8 @@ class LocalController implements Runnable {
             List<LinkedHashMap<String, Object>> listProblems = (List<LinkedHashMap<String, Object>>) maps.get("problems");
             String judgeType = (String) listProblems.get(0).get("judge_type");
             Map<String, Object> mapJudgeData = (Map<String, Object>) listProblems.get(0).get("judge_data");
-            String inputFileUrl = (String) mapJudgeData.get("input_file_url");
-            String outputFileUrl = (String) mapJudgeData.get("output_file_url");
+            String inputFileUrl = (String) mapJudgeData.get("input_file");
+            String outputFileUrl = (String) mapJudgeData.get("output_file");
             String limitType = (Boolean) mapJudgeData.get("per_case_limit") ? "per" : "all";
 
             Map<String, Object> mapJudgeLimits = (Map<String, Object>) mapJudgeData.get("judge_limits");  // TODO: test
