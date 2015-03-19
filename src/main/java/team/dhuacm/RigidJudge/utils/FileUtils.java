@@ -13,6 +13,8 @@ public class FileUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class.getSimpleName());
 
+    private FileUtils() {}
+
     public static String getFileContent(File file) throws IOException {
         String fileContent;
 

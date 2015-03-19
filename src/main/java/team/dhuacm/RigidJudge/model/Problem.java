@@ -3,7 +3,7 @@ package team.dhuacm.RigidJudge.model;
 /**
  * Created by wujy on 15-1-7.
  */
-public class Problem {
+public abstract class Problem {
     private int id;
 
     Problem(int id) {

@@ -20,6 +20,8 @@ import java.net.UnknownHostException;
  */
 public class HttpClientUtil {
 
+    private HttpClientUtil() {}
+
     public static CloseableHttpClient get(final int retryCount, int socketTimeout, int connectionTimeout, CredentialsProvider credentialsProvider) {
 
         System.setProperty("jsse.enableSNIExtension", "false");  // Resolve https issues
