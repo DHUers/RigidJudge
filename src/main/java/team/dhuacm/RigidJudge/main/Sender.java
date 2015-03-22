@@ -50,7 +50,12 @@ class Sender implements Runnable {
             }
             mapInfo.put("time_usage", solution.getTime());
             mapInfo.put("memory_usage", solution.getMemory());
-            mapInfo.put("report", solution.getCompileInfo() + "\n" + solution.getExecuteInfo() + "\n" + solution.getCompareInfo());
+            String report = "<div class=\"row\"><b>" + solution.getResult() + "</b></div>";
+            if (solution.getResult().equals(Result.Compile_Error)) {
+                report += "<div><pre>" + solution.getCompileInfo() + "</pre></div>";
+            }
+            mapInfo.put("report", report);
+            mapInfo.put("detailed_report", "<div><pre>" + solution.getExecuteInfo() + "</pre><div>" + solution.getCompareInfo());
             mapSolution.put("solution", mapInfo);
         } catch (Exception e) {
             logger.error("Serialize to JSON error!", e);
