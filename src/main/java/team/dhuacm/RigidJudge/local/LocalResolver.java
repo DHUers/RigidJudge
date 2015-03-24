@@ -10,6 +10,7 @@ import team.dhuacm.RigidJudge.exception.NetworkException;
 import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 
 /**
@@ -45,7 +46,9 @@ public class LocalResolver {
                 logger.info("Compile failed!");
             }
 
-            Clean.doClean();
+            if (DataProvider.LOCAL_CLEAN_AFTER_JUDGE) {
+                Clean.doClean();
+            }
         } catch (IOException e) {
             logger.error("Fetch problem data failed!", e);
             solution.setResult(Result.Judge_Error);

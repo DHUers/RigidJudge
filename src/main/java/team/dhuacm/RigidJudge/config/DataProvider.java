@@ -36,6 +36,7 @@ public class DataProvider {
     public static final Integer LOCAL_OUTPUT_LENGTH_LIMIT;
     public static final Integer LOCAL_SPECIAL_JUDGE_TIME_LIMIT;
     public static final Boolean LOCAL_DIFF_REPORT;
+    public static final Boolean LOCAL_CLEAN_AFTER_JUDGE;
     public static final Map<Language, String> LOCAL_FILE_SUFFIX = new HashMap<Language, String>();
     public static final Map<Language, String> LOCAL_COMPILE_COMMAND = new HashMap<Language, String>();
     public static final Map<Language, String> LOCAL_RUN_COMMAND = new HashMap<Language, String>();
@@ -74,6 +75,7 @@ public class DataProvider {
         LOCAL_OUTPUT_LENGTH_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_Output_Length_Limit", "5242880"));
         LOCAL_SPECIAL_JUDGE_TIME_LIMIT = Integer.parseInt(getEnvIfNotEmpty("Local_Special_Judge_Time_Limit", "5"));
         LOCAL_DIFF_REPORT = Boolean.parseBoolean(getEnvIfNotEmpty("Local_Diff_Report", "true"));
+        LOCAL_CLEAN_AFTER_JUDGE = Boolean.parseBoolean(getEnvIfNotEmpty("Clean_After_Judge", "true"));
 
         REMOTE_CONCURRENCY = Integer.parseInt(getEnvIfNotEmpty("Remote_Concurrency", "10"));
         REMOTE_RETRY_TIMES = Integer.parseInt(getEnvIfNotEmpty("Remote_Retry_Times", "3"));
