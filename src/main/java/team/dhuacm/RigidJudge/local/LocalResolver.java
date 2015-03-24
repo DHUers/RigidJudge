@@ -10,7 +10,6 @@ import team.dhuacm.RigidJudge.exception.NetworkException;
 import team.dhuacm.RigidJudge.model.LocalProblem;
 import team.dhuacm.RigidJudge.model.Solution;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 
 /**

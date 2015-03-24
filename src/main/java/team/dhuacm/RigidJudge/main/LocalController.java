@@ -92,6 +92,9 @@ class LocalController implements Runnable {
             } else if (judgeType.equals("program_comparison")) {
                 String judgerProgramCode = (String) mapJudgeData.get("judger_program_source");
                 String judgerProgramLanguage = (String) mapJudgeData.get("judger_program_platform");
+                if (judgerProgramLanguage.equalsIgnoreCase("c++")) {
+                    judgerProgramLanguage = "cpp";
+                }
                 problem = new LocalSpecialProblem(problemId, inputFileUrl, outputFileUrl, limitType, timeLimit, memoryLimit, judgerProgramCode, Language.valueOf(judgerProgramLanguage.toUpperCase()));
             }
             solution.setProblem(problem);
