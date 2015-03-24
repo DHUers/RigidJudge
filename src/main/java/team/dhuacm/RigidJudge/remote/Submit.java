@@ -9,6 +9,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.dhuacm.RigidJudge.config.OJAccount;
@@ -35,12 +36,7 @@ class Submit {
 
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 
-        NameValuePair problemNvp = new BasicNameValuePair(ojProperty.getSubmitProblem(), ((RemoteProblem) solution.getProblem()).getOjIndex() + "");
-        NameValuePair languageNVP = new BasicNameValuePair(ojProperty.getSubmitLanguage(), ojProperty.getOjLanguages()[(solution.getLanguage().ordinal())]);
-        NameValuePair codeNVP = new BasicNameValuePair(ojProperty.getSubmitCode(), solution.getCode());
-        nvps.add(problemNvp);
-        nvps.add(languageNVP);
-        nvps.add(codeNVP);
+        String ojIndex = ((RemoteProblem) solution.getProblem()).getOjIndex();
         if (ojProperty.getOjName().equals("sgu")) {  // TODO: move additional form values to OJProperty
             nvps.add(new BasicNameValuePair("id", ojAccount.getUsername()));
             nvps.add(new BasicNameValuePair("pass", ojAccount.getPassword()));
@@ -56,6 +52,20 @@ class Submit {
         if (ojProperty.getOjName().equals("aizu")) {  // TODO: move additional form values to OJProperty
             nvps.add(new BasicNameValuePair("userID", ojAccount.getUsername()));
             nvps.add(new BasicNameValuePair("password", ojAccount.getPassword()));
+            int index = ojIndex.lastIndexOf('_');
+            if (index != -1) {
+                nvps.add(new BasicNameValuePair("problemNO", ojIndex.substring(ojIndex.lastIndexOf('_') + 1)));
+                nvps.add(new BasicNameValuePair("lessonID", ojIndex.substring(0, ojIndex.lastIndexOf('_'))));
+            }
+        }
+        NameValuePair problemNVP = new BasicNameValuePair(ojProperty.getSubmitProblem(), ojIndex);
+        NameValuePair languageNVP = new BasicNameValuePair(ojProperty.getSubmitLanguage(), ojProperty.getOjLanguages()[(solution.getLanguage().ordinal())]);
+        NameValuePair codeNVP = new BasicNameValuePair(ojProperty.getSubmitCode(), solution.getCode());
+        nvps.add(problemNVP);
+        nvps.add(languageNVP);
+        nvps.add(codeNVP);
+        for (NameValuePair nvp : nvps) {
+            System.out.println(nvp.getName() + ": " + nvp.getValue());
         }
         post.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
 
